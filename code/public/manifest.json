@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Arc Port",
+  "version": "1.0.0",
+  "description": "Port Arc browser features into chrome",
+  "icons": {
+    "16": "icon/arc-port-16.png",
+    "48": "icon/arc-port-48.png",
+    "128": "icon/arc-port-128.png"
+  },
+  "action": {
+    "default_popup": "index.html"
+  }
+}
