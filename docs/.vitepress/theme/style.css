@@ -1,0 +1,34 @@
+:root {
+    /* Brand color palette */
+    --brand-deep-blue: #185894;
+    --brand-bright-blue: #276cff;
+    --brand-red: #b92325;
+    --brand-orange: #f79a2f;
+
+    /* VitePress color overrides */
+    --vp-c-brand-1: var(--brand-deep-blue);
+    --vp-c-brand-2: var(--brand-red);
+    --vp-c-brand-3: var(--brand-orange);
+
+    --vp-button-brand-text: #3c3c43;
+
+    /* Background tint */
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: linear-gradient(120deg,
+            var(--brand-bright-blue),
+            var(--brand-orange),
+            var(--brand-red));
+}
+
+.dark {
+    --vp-c-brand-1: var(--brand-bright-blue);
+    --vp-c-brand-2: var(--brand-red);
+    --vp-c-brand-3: var(--brand-orange);
+
+    /* Background tint */
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: linear-gradient(120deg,
+            var(--brand-bright-blue),
+            var(--brand-orange),
+            var(--brand-red));
+}
