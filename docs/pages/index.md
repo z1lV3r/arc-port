@@ -4,18 +4,18 @@ layout: home
 
 hero:
   name: "Arc Port"
-  text: "Chrome extension to port Arc browser features into chrome"
-  tagline: My great project tagline
+  text: "Chrome extension"
+  tagline: Port Arc browser features into chrome
   image:
     src: /global/icon/arc-port-256.png
     alt: Arc Port
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /features/markdown-examples
+      text: Download
+      link: /
     - theme: alt
-      text: API Examples
-      link: /features/api-examples
+      text: Beta
+      link: /
 
 features:
   - title: Feature A
