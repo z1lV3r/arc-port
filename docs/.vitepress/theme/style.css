@@ -10,6 +10,7 @@
     --vp-c-brand-2: var(--brand-red);
     --vp-c-brand-3: var(--brand-orange);
 
+    
     --vp-button-brand-text: #3c3c43;
 
     /* Background tint */
@@ -24,11 +25,4 @@
     --vp-c-brand-1: var(--brand-bright-blue);
     --vp-c-brand-2: var(--brand-red);
     --vp-c-brand-3: var(--brand-orange);
-
-    /* Background tint */
-    --vp-home-hero-name-color: transparent;
-    --vp-home-hero-name-background: linear-gradient(120deg,
-            var(--brand-bright-blue),
-            var(--brand-orange),
-            var(--brand-red));
 }
