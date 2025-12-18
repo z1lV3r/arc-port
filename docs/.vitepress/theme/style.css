@@ -1,3 +1,4 @@
+/* https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 :root {
     /* Brand color palette */
     --brand-deep-blue: #185894;
@@ -5,12 +6,10 @@
     --brand-red: #b92325;
     --brand-orange: #f79a2f;
 
-    /* VitePress color overrides */
-    --vp-c-brand-1: var(--brand-deep-blue);
+    /* Brand color overrides */
+    --vp-c-brand-1: var(--brand-orange);
     --vp-c-brand-2: var(--brand-red);
-    --vp-c-brand-3: var(--brand-orange);
-    
-    --vp-button-brand-text: #3c3c43;
+    --vp-c-brand-3: var(--brand-deep-blue);
 
     /* Background tint */
     --vp-home-hero-name-color: transparent;
@@ -21,7 +20,7 @@
 }
 
 .dark {
-    --vp-c-brand-1: var(--brand-bright-blue);
+    --vp-c-brand-1: var(--brand-orange);
     --vp-c-brand-2: var(--brand-red);
-    --vp-c-brand-3: var(--brand-orange);
+    --vp-c-brand-3: var(--brand-bright-blue);
 }

@@ -7,7 +7,7 @@ hero:
   text: "Chrome extension"
   tagline: Port Arc browser features into chrome
   image:
-    src: /global/icon/arc-port-256.png
+    src: /global/assets/icon/arc-port-256.png
     alt: Arc Port
   actions:
     - theme: brand
@@ -21,9 +21,5 @@ features:
   - title: Feature A
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
     link: /features/markdown-examples
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
 
