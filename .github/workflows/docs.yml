@@ -3,7 +3,7 @@ name: Deploy docs to Pages
 on:
   push:
     branches:
-      - 3-base-code
+      - main
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages

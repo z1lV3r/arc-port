@@ -7,7 +7,7 @@ export default defineConfig({
   title: "Arc Port",
   description: "Chrome extension to port Arc browser features into chrome",
   head: [['link', { rel: 'icon', href: '/global/assets/icon/arc-port-16.png' }]],
-  
+
   // https://vitepress.dev/reference/site-config#build
   srcDir: "src",
   outDir: "dist",
