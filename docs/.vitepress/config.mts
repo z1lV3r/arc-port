@@ -12,6 +12,9 @@ export default defineConfig({
   srcDir: "src",
   outDir: "dist",
 
+  // https://vitepress.dev/reference/site-config#base
+  base: '/arc-port/',
+
   // https://vitepress.dev/reference/default-theme-config
   themeConfig: {
     logo: '/global/assets/icon/arc-port-128.png',
