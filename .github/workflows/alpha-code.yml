@@ -1,0 +1,50 @@
+name: Release alpha code
+
+on:
+  push:
+    branches:
+      - alpha
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: code/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Extension
+        run: npm run build
+
+      - name: Get Version
+        id: version
+        run: |
+          VERSION=$(jq -r .version public/manifest.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Zip Extension
+        run: zip -r arc-port.zip dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}-alpha
+          name: Release v${{ steps.version.outputs.version }} (Alpha)
+          files: code/arc-port.zip
+          draft: false
+          prerelease: true
