@@ -7,7 +7,7 @@ hero:
   text: "Chrome extension"
   tagline: Port Arc browser features into chrome
   image:
-    src: /global/assets/icon/arc-port-256.png
+    src: /app/assets/icon/arc-port-256.png
     alt: Arc Port
   actions:
     - theme: brand

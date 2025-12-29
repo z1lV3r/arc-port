@@ -4,9 +4,9 @@
   "version": "0.0.0.1",
   "description": "Port Arc browser features into chrome",
   "icons": {
-    "16": "/assets/icon/arc-port-16.png",
-    "48": "/assets/icon/arc-port-48.png",
-    "128": "/assets/icon/arc-port-128.png"
+    "16": "app/assets/icon/arc-port-16.png",
+    "48": "app/assets/icon/arc-port-48.png",
+    "128": "app/assets/icon/arc-port-128.png"
   },
   "action": {
     "default_popup": "index.html"
