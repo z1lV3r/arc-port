@@ -22,4 +22,3 @@ features:
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
     link: /features/markdown-examples
 ---
-
