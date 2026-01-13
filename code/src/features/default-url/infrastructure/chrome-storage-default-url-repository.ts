@@ -8,6 +8,10 @@ export class ChromeStorageDefaultUrlRepository implements DefaultUrlRepository {
   }
 
   async save(tabId: string, url: string): Promise<void> {
+    if (url.startsWith("chrome://")) {
+      return;
+    }
+
     if (!chrome || !chrome.storage) {
       return;
     }

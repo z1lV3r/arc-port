@@ -1,21 +1,17 @@
 import type { TabsService } from "./interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./interfaces/default-url-repository";
-import type { BrowserService } from "./interfaces/browser-service";
 import { Tab } from "./models/tab";
 
 export class DefaultUrlUseCases {
   private tabsService: TabsService;
   private defaultUrlRepository: DefaultUrlRepository;
-  private browserService: BrowserService;
 
   constructor(
     tabsService: TabsService,
     defaultUrlRepository: DefaultUrlRepository,
-    browserService: BrowserService,
   ) {
     this.tabsService = tabsService;
     this.defaultUrlRepository = defaultUrlRepository;
-    this.browserService = browserService;
   }
 
   async setCurrentTabDefaultUrl(): Promise<string> {
@@ -45,6 +41,14 @@ export class DefaultUrlUseCases {
     const defaultUrl: string = await this.defaultUrlRepository.get(
       currentTab.id,
     );
-    await this.browserService.loadPage(defaultUrl);
+
+    if (defaultUrl) {
+      const newTab: Tab = await this.tabsService.createTab(
+        defaultUrl,
+        currentTab.index,
+      );
+      await this.defaultUrlRepository.save(newTab.id, defaultUrl);
+      await this.tabsService.closeTab(currentTab.id);
+    }
   }
 }
