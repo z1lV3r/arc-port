@@ -16,18 +16,10 @@ import { Separator } from "@/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDefaultUrlContext } from "./context-provider";
-import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 
 function PopUp() {
+  const { defaultUrlUseCases } = useDefaultUrlContext();
   const [url, setUrl] = useState("");
-  const { tabsService, defaultUrlRepository, browserService } =
-    useDefaultUrlContext();
-
-  const defaultUrlUseCases = new DefaultUrlUseCases(
-    tabsService,
-    defaultUrlRepository,
-    browserService,
-  );
 
   useEffect(() => {
     const fetchDefaultUrl = async () => {
