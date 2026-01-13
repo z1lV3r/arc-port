@@ -10,8 +10,8 @@ export class ResetTabToDefaultUrl implements Shortcut {
   name = "default-url-reset-tab-to-default-url";
   description = "Reset tab to default URL";
   key = {
-    default: "Ctrl+Shift+J",
-    mac: "Command+Shift+J",
+    default: "Alt+Shift+R",
+    mac: "Option+Shift+R",
   };
   command = async () => {
     await this.defaultUrlUseCases.resetTabToDefaultUrl();

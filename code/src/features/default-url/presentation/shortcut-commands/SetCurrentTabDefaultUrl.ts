@@ -11,8 +11,8 @@ export class SetCurrentTabDefaultUrl implements Shortcut {
   name = "default-url-set-current-tab-default-url";
   description = "Set current tab default URL";
   key = {
-    default: "Ctrl+Shift+L",
-    mac: "Command+Shift+L",
+    default: "Alt+Shift+S",
+    mac: "Option+Shift+S",
   };
   command = async () => {
     await this.defaultUrlUseCases.setCurrentTabDefaultUrl();

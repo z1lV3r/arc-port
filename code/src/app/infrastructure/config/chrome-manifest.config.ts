@@ -11,8 +11,14 @@ export default {
   action: {
     default_popup: "src/index.html",
   },
-  permissions: ["activeTab", "tabs", "storage"],
+  permissions: ["activeTab", "tabs", "storage", "scripting"],
   background: {
     service_worker: "background.js",
   },
+  web_accessible_resources: [
+    {
+      resources: ["app/assets/icon/arc-port-48.png"],
+      matches: ["<all_urls>"],
+    },
+  ],
 };

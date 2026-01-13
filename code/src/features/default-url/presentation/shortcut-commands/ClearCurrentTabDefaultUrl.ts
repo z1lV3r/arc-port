@@ -10,8 +10,8 @@ export class ClearCurrentTabDefaultUrl implements Shortcut {
   name = "default-url-clear-current-tab-default-url";
   description = "Clear current tab default URL";
   key = {
-    default: "Ctrl+Shift+K",
-    mac: "Command+Shift+K",
+    default: "Alt+Shift+K",
+    mac: "Option+Shift+K",
   };
   command = async () => {
     await this.defaultUrlUseCases.clearCurrentTabDefaultUrl();

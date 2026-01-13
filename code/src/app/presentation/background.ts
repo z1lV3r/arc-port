@@ -1,21 +1,18 @@
-import { getShortcuts as getDefaultUrlShortcuts } from "@/features/default-url/presentation/shortcuts";
 import type { Shortcut } from "@/app/domain/shortcut";
+import { getDependencies } from "@/app/dependency-provider";
+import { getShortcuts as getDefaultUrlShortcuts } from "@/features/default-url/presentation/shortcuts";
 
 const shortcuts = new Map<string, Shortcut>();
 
 export function registerShortcuts() {
   const defaultUrlShortcuts = getDefaultUrlShortcuts();
-  registerShortcut(defaultUrlShortcuts);
-
-  chrome.commands.onCommand.addListener((shortcutName) => {
-    const shortcut = shortcuts.get(shortcutName);
-    if (shortcut) {
-      shortcut.command();
-    }
-  });
+  storeShortcut(defaultUrlShortcuts);
+  const dependencies = getDependencies();
+  const browserService = dependencies.get("browserService");
+  browserService.registerShortcuts(shortcuts);
 }
 
-function registerShortcut(newShortcuts: Map<string, Shortcut>) {
+function storeShortcut(newShortcuts: Map<string, Shortcut>) {
   newShortcuts.forEach((shortcut) => {
     shortcuts.set(shortcut.name, shortcut);
   });
