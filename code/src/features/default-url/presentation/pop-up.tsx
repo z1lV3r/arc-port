@@ -15,7 +15,7 @@ import { Button } from "@/shared/presentation/button";
 import { Separator } from "@/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useDefaultUrlContext } from "./context-provider";
+import { useDefaultUrlContext } from "./pop-up-context";
 
 function PopUp() {
   const { defaultUrlUseCases } = useDefaultUrlContext();

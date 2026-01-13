@@ -1,5 +1,5 @@
 import { PopUp as DefaultUrl } from "@/features/default-url/presentation/pop-up";
-import { ContextProvider } from "@/features/default-url/presentation/context-provider";
+import { ContextProvider } from "@/features/default-url/presentation/pop-up-context";
 
 function PopUp() {
   return (
