@@ -12,6 +12,7 @@ export default {
     default_popup: "src/index.html",
   },
   permissions: ["activeTab", "tabs", "storage", "scripting"],
+  host_permissions: ["<all_urls>"],
   background: {
     service_worker: "background.js",
   },

@@ -12,12 +12,14 @@ export default class ChromeBrowserService implements BrowserService {
           active: true,
           currentWindow: true,
         });
-        if (tab?.id) {
-          chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: showToast,
-            args: [`${shortcut.description}`],
-          });
+        if (tab?.id && tab.url && !tab.url.startsWith("chrome://")) {
+          chrome.scripting
+            .executeScript({
+              target: { tabId: tab.id },
+              func: showToast,
+              args: [`${shortcut.description}`],
+            })
+            .catch((e) => console.error("Failed to execute toast script:", e));
         }
       }
     });

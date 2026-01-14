@@ -2,6 +2,7 @@ import type { Shortcut } from "@/app/domain/shortcut";
 import { SetCurrentTabDefaultUrl } from "./shortcut-commands/SetCurrentTabDefaultUrl";
 import { ClearCurrentTabDefaultUrl } from "./shortcut-commands/ClearCurrentTabDefaultUrl";
 import { ResetTabToDefaultUrl } from "./shortcut-commands/ResetTabToDefaultUrl";
+import { CloseOrResetCurrentTabToDefaultUrl } from "./shortcut-commands/CloseOrResetCurrentTabToDefaultUrl";
 import { getDependencies } from "../dependency-provider";
 
 export function getShortcuts() {
@@ -18,6 +19,9 @@ export function getShortcuts() {
 
   const resetShortcut = new ResetTabToDefaultUrl(useCases);
   shortcuts.set(resetShortcut.name, resetShortcut);
+
+  const closeOrResetShortcut = new CloseOrResetCurrentTabToDefaultUrl(useCases);
+  shortcuts.set(closeOrResetShortcut.name, closeOrResetShortcut);
 
   return shortcuts;
 }

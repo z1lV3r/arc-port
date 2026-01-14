@@ -36,19 +36,35 @@ export class DefaultUrlUseCases {
     await this.defaultUrlRepository.delete(currentTab.id);
   }
 
-  async resetTabToDefaultUrl(): Promise<void> {
+  async resetCurrentTabToDefaultUrl(): Promise<void> {
+    const currentTab: Tab = await this.tabsService.getCurrentTab();
+    const defaultUrl: string = await this.defaultUrlRepository.get(
+      currentTab.id,
+    );
+    await this.resetTabToDefaultUrl(currentTab, defaultUrl);
+  }
+
+  async closeOrResetCurrentTabToDefaultUrl(): Promise<void> {
     const currentTab: Tab = await this.tabsService.getCurrentTab();
     const defaultUrl: string = await this.defaultUrlRepository.get(
       currentTab.id,
     );
 
+    if (defaultUrl === currentTab.url) {
+      await this.tabsService.closeTab(currentTab.id);
+    } else {
+      await this.resetTabToDefaultUrl(currentTab, defaultUrl);
+    }
+  }
+
+  async resetTabToDefaultUrl(tab: Tab, defaultUrl: string): Promise<void> {
     if (defaultUrl) {
       const newTab: Tab = await this.tabsService.createTab(
         defaultUrl,
-        currentTab.index,
+        tab.index,
       );
       await this.defaultUrlRepository.save(newTab.id, defaultUrl);
-      await this.tabsService.closeTab(currentTab.id);
+      await this.tabsService.closeTab(tab.id);
     }
   }
 }

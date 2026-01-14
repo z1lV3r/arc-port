@@ -38,7 +38,7 @@ function PopUp() {
   };
 
   const handleResetTabToDefaultUrl = async () => {
-    await defaultUrlUseCases.resetTabToDefaultUrl();
+    await defaultUrlUseCases.resetCurrentTabToDefaultUrl();
   };
 
   const handleClearDefaultUrl = async () => {
