@@ -1,9 +1,9 @@
 import { getDependencies } from "../dependency-provider";
-import type { TabEventListener } from "@/app/domain/tab-event-listener";
+import type { TabEventListener } from "@/app/domain/models/tab-event-listener";
 import { OnCloseRemoveDefaultUrl } from "./tab-event-listeners/on-close-delete-default-url";
 import type { DefaultUrlUseCases } from "../domain/default-url-use-cases";
 
-export function getDefaultUrlBrowserTabEventListeners() {
+export function getTabEventListeners() {
   const dependencies = getDependencies();
   const useCases = dependencies.get("defaultUrlUseCases") as DefaultUrlUseCases;
 

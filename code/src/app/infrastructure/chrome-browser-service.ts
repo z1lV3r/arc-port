@@ -1,13 +1,15 @@
 import type { BrowserService } from "../domain/interfaces/browser-service";
-import type { Shortcut } from "../domain/shortcut";
-import type { TabEventListener } from "../domain/tab-event-listener";
+import type { ShortcutListener } from "../domain/models/shortcut-listener";
+import type { TabEventListener } from "../domain/models/tab-event-listener";
 
 export default class ChromeBrowserService implements BrowserService {
-  async registerShortcuts(shortcuts: Map<string, Shortcut>) {
-    chrome.commands.onCommand.addListener(async (shortcutName) => {
-      const shortcut = shortcuts.get(shortcutName);
-      if (shortcut) {
-        await shortcut.command();
+  async registerShortcutListeners(
+    shortcutListeners: Map<string, ShortcutListener>,
+  ) {
+    chrome.commands.onCommand.addListener(async (listenerName) => {
+      const listener = shortcutListeners.get(listenerName);
+      if (listener) {
+        await listener.command();
 
         const [tab] = await chrome.tabs.query({
           active: true,
@@ -18,7 +20,7 @@ export default class ChromeBrowserService implements BrowserService {
             .executeScript({
               target: { tabId: tab.id },
               func: showToast,
-              args: [`${shortcut.description}`],
+              args: [`${listener.description}`],
             })
             .catch((e) => console.error("Failed to execute toast script:", e));
         }

@@ -24,7 +24,7 @@ export function makeManifestPlugin(): PluginOption {
             manifestChunks.push(fullPath);
           } else if (
             file.name.endsWith(".ts") &&
-            path.basename(dir) === "shortcut-commands"
+            path.basename(dir) === "shortcut-listeners"
           ) {
             shortcutFiles.push(fullPath);
           }

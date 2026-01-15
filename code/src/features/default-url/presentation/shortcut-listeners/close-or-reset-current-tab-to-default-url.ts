@@ -1,7 +1,7 @@
-import type { Shortcut } from "@/app/domain/shortcut";
+import type { ShortcutListener } from "@/app/domain/models/shortcut-listener";
 import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 
-export class CloseOrResetCurrentTabToDefaultUrl implements Shortcut {
+export class CloseOrResetCurrentTabToDefaultUrl implements ShortcutListener {
   private readonly defaultUrlUseCases: DefaultUrlUseCases;
 
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {

@@ -1,8 +1,10 @@
-import type { Shortcut } from "../shortcut";
-import type { TabEventListener } from "../tab-event-listener";
+import type { ShortcutListener } from "../models/shortcut-listener";
+import type { TabEventListener } from "../models/tab-event-listener";
 
 export interface BrowserService {
-  registerShortcuts(shortcuts: Map<string, Shortcut>): Promise<void>;
+  registerShortcutListeners(
+    shortcuts: Map<string, ShortcutListener>,
+  ): Promise<void>;
   registerTabEventListeners(
     tabEventListeners: Map<string, TabEventListener>,
   ): Promise<void>;

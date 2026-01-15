@@ -1,4 +1,4 @@
-export interface Shortcut {
+export interface ShortcutListener {
   name: string;
   description: string;
   key: {

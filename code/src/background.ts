@@ -1,5 +1,13 @@
-import { registerShortcuts } from "./app/presentation/background";
-import { registerTabEventListeners } from "./app/presentation/background";
+import {
+  registerShortcutListeners,
+  registerTabEventListeners,
+} from "./app/presentation/background";
+import { getDependencies } from "./app/dependency-provider";
+import type { BrowserService } from "./app/domain/interfaces/browser-service";
 
-registerShortcuts();
-registerTabEventListeners();
+const browserService = getDependencies().get(
+  "browserService",
+) as BrowserService;
+
+registerShortcutListeners(browserService);
+registerTabEventListeners(browserService);
