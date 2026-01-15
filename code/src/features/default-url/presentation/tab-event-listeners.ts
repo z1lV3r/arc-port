@@ -8,13 +8,8 @@ export function getDefaultUrlBrowserTabEventListeners() {
 
   const tabEventListeners = new Map<string, TabEventListener>();
 
-  const onCloseRemoveDefaultUrl = new OnCloseRemoveDefaultUrl(
-    repository,
-  );
-  tabEventListeners.set(
-    onCloseRemoveDefaultUrl.name,
-    onCloseRemoveDefaultUrl,
-  );
+  const onCloseRemoveDefaultUrl = new OnCloseRemoveDefaultUrl(repository);
+  tabEventListeners.set(onCloseRemoveDefaultUrl.name, onCloseRemoveDefaultUrl);
 
   return tabEventListeners;
 }

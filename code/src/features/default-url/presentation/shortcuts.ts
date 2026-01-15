@@ -1,8 +1,8 @@
 import type { Shortcut } from "@/app/domain/shortcut";
-import { SetCurrentTabDefaultUrl } from "./shortcut-commands/SetCurrentTabDefaultUrl";
-import { ClearCurrentTabDefaultUrl } from "./shortcut-commands/ClearCurrentTabDefaultUrl";
-import { ResetTabToDefaultUrl } from "./shortcut-commands/ResetTabToDefaultUrl";
-import { CloseOrResetCurrentTabToDefaultUrl } from "./shortcut-commands/CloseOrResetCurrentTabToDefaultUrl";
+import { SetCurrentTabDefaultUrl } from "./shortcut-commands/set-current-tab-default-url";
+import { ClearCurrentTabDefaultUrl } from "./shortcut-commands/clear-current-tab-default-url";
+import { ResetTabToDefaultUrl } from "./shortcut-commands/reset-tab-to-default-url";
+import { CloseOrResetCurrentTabToDefaultUrl } from "./shortcut-commands/close-or-reset-current-tab-to-default-url";
 import { getDependencies } from "../dependency-provider";
 
 export function getShortcuts() {

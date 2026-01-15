@@ -30,7 +30,9 @@ export function registerTabEventListeners() {
   browserService.registerTabEventListeners(tabEventListeners);
 }
 
-function storeTabEventListener(newTabEventListeners: Map<string, TabEventListener>) {
+function storeTabEventListener(
+  newTabEventListeners: Map<string, TabEventListener>,
+) {
   newTabEventListeners.forEach((tabEventListener) => {
     tabEventListeners.set(tabEventListener.name, tabEventListener);
   });
