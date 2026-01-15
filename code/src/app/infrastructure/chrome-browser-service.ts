@@ -1,5 +1,6 @@
 import type { BrowserService } from "../domain/interfaces/browser-service";
 import type { Shortcut } from "../domain/shortcut";
+import type { TabEventListener } from "../domain/tab-event-listener";
 
 export default class ChromeBrowserService implements BrowserService {
   async registerShortcuts(shortcuts: Map<string, Shortcut>) {
@@ -24,6 +25,14 @@ export default class ChromeBrowserService implements BrowserService {
       }
     });
   }
+
+  async registerTabEventListeners(tabEventListeners: Map<string, TabEventListener>) {
+    chrome.tabs.onRemoved.addListener(async (tabId) => {
+      for (const [_, tabEventListener] of tabEventListeners.entries()) {
+        await tabEventListener.command(tabId.toString());
+      }
+    });
+    }
 }
 
 function showToast(message: string) {
