@@ -1,15 +1,15 @@
 import type { TabEventListener } from "@/app/domain/tab-event-listener";
-import type { DefaultUrlRepository } from "@/features/default-url/domain/interfaces/default-url-repository";
+import type { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 
 export class OnCloseRemoveDefaultUrl implements TabEventListener {
-  private readonly defaultUrlRepository: DefaultUrlRepository;
+  private readonly defaultUrlUseCases: DefaultUrlUseCases;
 
-  constructor(defaultUrlRepository: DefaultUrlRepository) {
-    this.defaultUrlRepository = defaultUrlRepository;
+  constructor(useCases: DefaultUrlUseCases) {
+    this.defaultUrlUseCases = useCases;
   }
 
   name = "default-url-on-tab-close-remove-default-url";
   command = async (tabId: string) => {
-    await this.defaultUrlRepository.delete(tabId);
+    await this.defaultUrlUseCases.clearTabDefaultUrl(tabId);
   };
 }

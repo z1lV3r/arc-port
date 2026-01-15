@@ -4,10 +4,11 @@ import { ClearCurrentTabDefaultUrl } from "./shortcut-commands/clear-current-tab
 import { ResetTabToDefaultUrl } from "./shortcut-commands/reset-tab-to-default-url";
 import { CloseOrResetCurrentTabToDefaultUrl } from "./shortcut-commands/close-or-reset-current-tab-to-default-url";
 import { getDependencies } from "../dependency-provider";
+import type { DefaultUrlUseCases } from "../domain/default-url-use-cases";
 
 export function getShortcuts() {
   const dependencies = getDependencies();
-  const useCases = dependencies.get("defaultUrlUseCases");
+  const useCases = dependencies.get("defaultUrlUseCases") as DefaultUrlUseCases;
 
   const shortcuts = new Map<string, Shortcut>();
 

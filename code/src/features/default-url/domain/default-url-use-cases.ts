@@ -33,7 +33,11 @@ export class DefaultUrlUseCases {
 
   async clearCurrentTabDefaultUrl(): Promise<void> {
     const currentTab: Tab = await this.tabsService.getCurrentTab();
-    await this.defaultUrlRepository.delete(currentTab.id);
+    await this.clearTabDefaultUrl(currentTab.id);
+  }
+
+  async clearTabDefaultUrl(tabId: string): Promise<void> {
+    await this.defaultUrlRepository.delete(tabId);
   }
 
   async resetCurrentTabToDefaultUrl(): Promise<void> {
@@ -63,8 +67,10 @@ export class DefaultUrlUseCases {
         defaultUrl,
         tab.index,
       );
-      await this.defaultUrlRepository.save(newTab.id, defaultUrl);
-      await this.tabsService.closeTab(tab.id);
+      await Promise.all([
+        this.defaultUrlRepository.save(newTab.id, defaultUrl),
+        this.tabsService.closeTab(tab.id),
+      ]);
     }
   }
 }

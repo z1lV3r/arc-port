@@ -10,7 +10,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
   const dependencies = getDependencies();
 
   const defaultUrlUseCases = useMemo(
-    () => dependencies.get("defaultUrlUseCases"),
+    () => dependencies.get("defaultUrlUseCases") as DefaultUrlUseCases,
     [],
   );
 

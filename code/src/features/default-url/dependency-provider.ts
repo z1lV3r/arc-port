@@ -1,6 +1,8 @@
 import { ChromeTabsService } from "./infrastructure/chrome-tabs-service";
 import { ChromeStorageDefaultUrlRepository } from "./infrastructure/chrome-storage-default-url-repository";
 import { DefaultUrlUseCases } from "./domain/default-url-use-cases";
+import type { TabsService } from "./domain/interfaces/tabs-service";
+import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 
 export function getDependencies(): Map<string, any> {
   const dependencies = new Map<string, any>();
@@ -15,8 +17,8 @@ export function getDependencies(): Map<string, any> {
   dependencies.set(
     "defaultUrlUseCases",
     new DefaultUrlUseCases(
-      dependencies.get("tabsService"),
-      dependencies.get("defaultUrlRepository"),
+      dependencies.get("tabsService") as TabsService,
+      dependencies.get("defaultUrlRepository") as DefaultUrlRepository,
     ),
   );
 
