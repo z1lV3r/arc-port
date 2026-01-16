@@ -1,3 +1,4 @@
+import type { ContextMenuListener } from "../models/context-menu-listener";
 import type { ShortcutListener } from "../models/shortcut-listener";
 import type { TabEventListener } from "../models/tab-event-listener";
 
@@ -7,5 +8,9 @@ export interface BrowserService {
   ): Promise<void>;
   registerTabEventListeners(
     tabEventListeners: Map<string, TabEventListener>,
+  ): Promise<void>;
+  registerContextMenuListeners(
+    featureName: string,
+    contextMenuListeners: Map<string, ContextMenuListener>,
   ): Promise<void>;
 }

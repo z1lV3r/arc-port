@@ -11,7 +11,7 @@ export default {
   action: {
     default_popup: "src/index.html",
   },
-  permissions: ["activeTab", "tabs", "storage", "scripting"],
+  permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus"],
   host_permissions: ["<all_urls>"],
   background: {
     service_worker: "background.js",

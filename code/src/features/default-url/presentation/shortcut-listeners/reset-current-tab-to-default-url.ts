@@ -7,8 +7,8 @@ export class ResetTabToDefaultUrl implements ShortcutListener {
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
-  name = "default-url-reset-tab-to-default-url";
-  description = "Reset tab to default URL";
+  name = "default-url-reset-current-tab-to-default-url";
+  description = "Reset current tab to default URL";
   key = {
     default: "Alt+Shift+R",
     mac: "Option+Shift+R",

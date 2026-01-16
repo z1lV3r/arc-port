@@ -1,6 +1,7 @@
 import {
   registerShortcutListeners,
   registerTabEventListeners,
+  registerContextMenuListeners,
 } from "./app/presentation/background";
 import { getDependencies } from "./app/dependency-provider";
 import type { BrowserService } from "./app/domain/interfaces/browser-service";
@@ -11,3 +12,4 @@ const browserService = getDependencies().get(
 
 registerShortcutListeners(browserService);
 registerTabEventListeners(browserService);
+registerContextMenuListeners(browserService);

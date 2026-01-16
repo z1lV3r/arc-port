@@ -3,6 +3,7 @@ import type { ShortcutListener } from "@/app/domain/models/shortcut-listener";
 import type { TabEventListener } from "@/app/domain/models/tab-event-listener";
 import { getShortcutListeners as getDefaultUrlShortcutListeners } from "@/features/default-url/presentation/shortcut-listeners";
 import { getTabEventListeners as getDefaultUrlTabEventListeners } from "@/features/default-url/presentation/tab-event-listeners";
+import { getContextMenus as getDefaultUrlContextMenus } from "@/features/default-url/presentation/context-menu-listeners";
 
 export function registerShortcutListeners(browserService: BrowserService) {
   const shortcutListeners = new Map<string, ShortcutListener>();
@@ -16,6 +17,15 @@ export function registerTabEventListeners(browserService: BrowserService) {
   const defaultUrlTabEventListeners = getDefaultUrlTabEventListeners();
   storeListeners(defaultUrlTabEventListeners, tabEventListeners);
   browserService.registerTabEventListeners(tabEventListeners);
+}
+
+export function registerContextMenuListeners(browserService: BrowserService) {
+  const { featureName: featureName, contextMenus: defaultUrlContextMenus } =
+    getDefaultUrlContextMenus();
+  browserService.registerContextMenuListeners(
+    featureName,
+    defaultUrlContextMenus,
+  );
 }
 
 function storeListeners<T extends { name: string }>(

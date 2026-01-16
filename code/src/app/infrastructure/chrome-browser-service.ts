@@ -1,6 +1,7 @@
 import type { BrowserService } from "../domain/interfaces/browser-service";
 import type { ShortcutListener } from "../domain/models/shortcut-listener";
 import type { TabEventListener } from "../domain/models/tab-event-listener";
+import type { ContextMenuListener } from "../domain/models/context-menu-listener";
 
 export default class ChromeBrowserService implements BrowserService {
   async registerShortcutListeners(
@@ -15,15 +16,7 @@ export default class ChromeBrowserService implements BrowserService {
           active: true,
           currentWindow: true,
         });
-        if (tab?.id && tab.url && !tab.url.startsWith("chrome://")) {
-          chrome.scripting
-            .executeScript({
-              target: { tabId: tab.id },
-              func: showToast,
-              args: [`${listener.description}`],
-            })
-            .catch((e) => console.error("Failed to execute toast script:", e));
-        }
+        showToast(tab, listener.description);
       }
     });
   }
@@ -37,9 +30,50 @@ export default class ChromeBrowserService implements BrowserService {
       }
     });
   }
+
+  async registerContextMenuListeners(
+    featureName: string,
+    contextMenuListeners: Map<string, ContextMenuListener>,
+  ) {
+    chrome.runtime.onInstalled.addListener(async () => {
+      chrome.contextMenus.create({
+        id: featureName,
+        title: featureName,
+        contexts: ["all"],
+      });
+      for (const [_, contextMenuListener] of contextMenuListeners.entries()) {
+        chrome.contextMenus.create({
+          parentId: featureName,
+          id: contextMenuListener.name,
+          title: contextMenuListener.description,
+          contexts: ["all"],
+        });
+      }
+    });
+
+    chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+      const listener = contextMenuListeners.get(info.menuItemId.toString());
+      if (listener && tab?.id) {
+        await listener.command(tab.id.toString());
+        showToast(tab, listener.description);
+      }
+    });
+  }
 }
 
-function showToast(message: string) {
+function showToast(tab: chrome.tabs.Tab, command: string) {
+  if (tab?.id && tab.url && !tab.url.startsWith("chrome://")) {
+    chrome.scripting
+      .executeScript({
+        target: { tabId: tab.id },
+        func: createToast,
+        args: [`${command} executed`],
+      })
+      .catch((e) => console.error("Failed to execute toast script:", e));
+  }
+}
+
+function createToast(message: string) {
   // Remove existing toasts
   const existing = document.getElementById("arc-port-toast");
   if (existing) existing.remove();
