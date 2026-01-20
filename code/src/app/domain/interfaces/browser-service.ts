@@ -6,7 +6,13 @@ export interface BrowserService {
   registerShortcutListeners(
     shortcuts: Map<string, ShortcutListener>,
   ): Promise<void>;
-  registerTabEventListeners(
+  registerOnCloseTabEventListeners(
+    tabEventListeners: Map<string, TabEventListener>,
+  ): Promise<void>;
+  registerOnUpdateTabEventListeners(
+    tabEventListeners: Map<string, TabEventListener>,
+  ): Promise<void>;
+  registerOnCreateTabEventListeners(
     tabEventListeners: Map<string, TabEventListener>,
   ): Promise<void>;
   registerContextMenuListeners(

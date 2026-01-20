@@ -1,6 +1,8 @@
 import {
   registerShortcutListeners,
-  registerTabEventListeners,
+  registerOnCloseTabEventListeners,
+  registerOnUpdateTabEventListeners,
+  registerOnCreateTabEventListeners,
   registerContextMenuListeners,
 } from "./app/presentation/background";
 import { getDependencies } from "./app/dependency-provider";
@@ -11,5 +13,7 @@ const browserService = getDependencies().get(
 ) as BrowserService;
 
 registerShortcutListeners(browserService);
-registerTabEventListeners(browserService);
+registerOnCloseTabEventListeners(browserService);
+registerOnUpdateTabEventListeners(browserService);
+registerOnCreateTabEventListeners(browserService);
 registerContextMenuListeners(browserService);

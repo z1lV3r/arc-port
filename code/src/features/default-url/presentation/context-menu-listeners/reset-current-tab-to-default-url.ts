@@ -7,7 +7,7 @@ export class ResetCurrentTabToDefaultUrl implements ContextMenuListener {
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
-  name = "default-url-reset-current-tab-to-default-url";
+  name = "context-menu-reset-current-tab-to-default-url";
   description = "Reset current tab to default URL";
   command = async () => {
     await this.defaultUrlUseCases.resetCurrentTabToDefaultUrl();

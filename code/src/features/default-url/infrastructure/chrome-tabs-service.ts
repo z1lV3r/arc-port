@@ -20,6 +20,18 @@ export class ChromeTabsService implements TabsService {
     );
   }
 
+  async getTab(id: string): Promise<Tab> {
+    if (!chrome || !chrome.tabs) {
+      return new Tab("", "", 0);
+    }
+    const tab = await chrome.tabs.get(parseInt(id));
+    if (!tab) {
+      return new Tab("", "", 0);
+    }
+    const url = tab.url || tab.pendingUrl || "";
+    return new Tab(tab.id?.toString() || "", url, tab.index);
+  }
+
   async createTab(url: string, index: number): Promise<Tab> {
     const tab = await chrome.tabs.create({ url, index });
     return new Tab(tab.id?.toString() || "", tab.url || "", tab.index);

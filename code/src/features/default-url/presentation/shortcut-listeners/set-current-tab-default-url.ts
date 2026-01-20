@@ -7,7 +7,7 @@ export class SetCurrentTabDefaultUrl implements ShortcutListener {
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
-  name = "default-url-set-current-tab-default-url";
+  name = "shortcut-set-current-tab-default-url";
   description = "Set current tab default URL";
   key = {
     default: "Alt+Shift+S",

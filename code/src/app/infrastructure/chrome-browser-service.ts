@@ -21,12 +21,57 @@ export default class ChromeBrowserService implements BrowserService {
     });
   }
 
-  async registerTabEventListeners(
+  async registerOnCloseTabEventListeners(
     tabEventListeners: Map<string, TabEventListener>,
   ) {
     chrome.tabs.onRemoved.addListener(async (tabId) => {
       for (const [_, tabEventListener] of tabEventListeners.entries()) {
         await tabEventListener.command(tabId.toString());
+      }
+    });
+  }
+
+  async registerOnUpdateTabEventListeners(
+    tabEventListeners: Map<string, TabEventListener>,
+  ) {
+    const onPinEventListeners: TabEventListener[] = [];
+    const onSetToGroupEventListeners: TabEventListener[] = [];
+    for (const [name, tabEventListener] of tabEventListeners.entries()) {
+      if (name.startsWith("on-pin")) {
+        onPinEventListeners.push(tabEventListener);
+      }
+      if (name.startsWith("on-set-to-group")) {
+        onSetToGroupEventListeners.push(tabEventListener);
+      }
+    }
+    chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, _) => {
+      if (changeInfo.pinned && changeInfo.pinned === true) {
+        for (const tabEventListener of onPinEventListeners) {
+          await tabEventListener.command(tabId.toString());
+        }
+      }
+      if (changeInfo.groupId && changeInfo.groupId !== -1) {
+        for (const tabEventListener of onSetToGroupEventListeners) {
+          await tabEventListener.command(tabId.toString());
+        }
+      }
+    });
+  }
+
+  async registerOnCreateTabEventListeners(
+    tabEventListeners: Map<string, TabEventListener>,
+  ) {
+    const onCreatePinnedTabEventListeners: TabEventListener[] = [];
+    for (const [name, tabEventListener] of tabEventListeners.entries()) {
+      if (name.startsWith("on-create-pinned")) {
+        onCreatePinnedTabEventListeners.push(tabEventListener);
+      }
+    }
+    chrome.tabs.onCreated.addListener(async (tab) => {
+      if(tab.pinned && tab.id) {
+        for (const tabEventListener of onCreatePinnedTabEventListeners) {
+          await tabEventListener.command(tab.id.toString());  
+        }
       }
     });
   }

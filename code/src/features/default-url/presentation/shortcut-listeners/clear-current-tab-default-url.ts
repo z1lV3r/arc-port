@@ -7,7 +7,7 @@ export class ClearCurrentTabDefaultUrl implements ShortcutListener {
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
-  name = "default-url-clear-current-tab-default-url";
+  name = "shortcut-clear-current-tab-default-url";
   description = "Clear current tab default URL";
   key = {
     default: "Alt+Shift+K",

@@ -7,7 +7,7 @@ export class ClearCurrentTabDefaultUrl implements ContextMenuListener {
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
-  name = "default-url-clear-current-tab-default-url";
+  name = "context-menu-clear-current-tab-default-url";
   description = "Clear default url";
   command = async () => {
     await this.defaultUrlUseCases.clearCurrentTabDefaultUrl();

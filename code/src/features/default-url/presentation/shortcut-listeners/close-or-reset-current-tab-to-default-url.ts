@@ -7,7 +7,7 @@ export class CloseOrResetCurrentTabToDefaultUrl implements ShortcutListener {
   constructor(defaultUrlUseCases: DefaultUrlUseCases) {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
-  name = "default-url-close-or-reset-current-tab-to-default-url";
+  name = "shortcut-close-or-reset-current-tab-to-default-url";
   description = "Close or reset current tab to default URL";
   key = {
     default: "Alt+Shift+W",
