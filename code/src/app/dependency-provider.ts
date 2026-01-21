@@ -1,18 +1,21 @@
+import type { BrowserService } from "./domain/interfaces/browser-service";
 import ChromeBrowserService from "./infrastructure/chrome-browser-service";
 
-export function getDependencies(): Map<string, any> {
-  const dependencies = new Map<string, any>();
+export class DependencyProvider {
+  private browserService: BrowserService;
 
-  const userAgent = navigator.userAgent.toLowerCase();
-  const browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
+  constructor() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
 
-  if (browserName === "chrome") {
-    setChromeDependencies(dependencies);
+    if (browserName === "chrome") {
+      this.browserService = new ChromeBrowserService();
+    } else {
+      throw new Error("Unsupported browser");
+    }
   }
 
-  return dependencies;
-}
-
-function setChromeDependencies(dependencies: Map<string, any>) {
-  dependencies.set("browserService", new ChromeBrowserService());
+  getBrowserService(): BrowserService {
+    return this.browserService;
+  }
 }

@@ -1,16 +1,16 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
-import { getDependencies } from "@/features/default-url/dependency-provider";
+import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
 
 interface DefaultUrlContextType {
   defaultUrlUseCases: DefaultUrlUseCases;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
-  const dependencies = getDependencies();
+  const dependencies = new DefaultUrlDependencyProvider();
 
   const defaultUrlUseCases = useMemo(
-    () => dependencies.get("defaultUrlUseCases") as DefaultUrlUseCases,
+    () => dependencies.getDefaultUrlUseCases(),
     [],
   );
 

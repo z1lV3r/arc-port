@@ -4,31 +4,39 @@ import { DefaultUrlUseCases } from "./domain/default-url-use-cases";
 import type { TabsService } from "./domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 
-export function getDependencies(): Map<string, any> {
-  const dependencies = new Map<string, any>();
+export class DefaultUrlDependencyProvider {
+  private tabsService: TabsService;
+  private defaultUrlRepository: DefaultUrlRepository;
+  private defaultUrlUseCases: DefaultUrlUseCases;
 
-  const userAgent = navigator.userAgent.toLowerCase();
-  const browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
+  constructor() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
 
-  if (browserName === "chrome") {
-    setChromeDependencies(dependencies);
+    if (browserName === "chrome") {
+      this.tabsService = new ChromeTabsService();
+      this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
+    } else {
+      throw new Error("Unsupported browser");
+    }
+
+    this.defaultUrlUseCases = new DefaultUrlUseCases(
+      this.tabsService,
+      this.defaultUrlRepository,
+    );
+
+    return this;
   }
 
-  dependencies.set(
-    "defaultUrlUseCases",
-    new DefaultUrlUseCases(
-      dependencies.get("tabsService") as TabsService,
-      dependencies.get("defaultUrlRepository") as DefaultUrlRepository,
-    ),
-  );
+  getTabsService(): TabsService {
+    return this.tabsService;
+  }
 
-  return dependencies;
-}
+  getDefaultUrlRepository(): DefaultUrlRepository {
+    return this.defaultUrlRepository;
+  }
 
-function setChromeDependencies(dependencies: Map<string, any>) {
-  dependencies.set("tabsService", new ChromeTabsService());
-  dependencies.set(
-    "defaultUrlRepository",
-    new ChromeStorageDefaultUrlRepository(),
-  );
+  getDefaultUrlUseCases(): DefaultUrlUseCases {
+    return this.defaultUrlUseCases;
+  }
 }

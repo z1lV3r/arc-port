@@ -1,19 +1,14 @@
-import {
-  registerShortcutListeners,
-  registerOnCloseTabEventListeners,
-  registerOnUpdateTabEventListeners,
-  registerOnCreateTabEventListeners,
-  registerContextMenuListeners,
-} from "./app/presentation/background";
-import { getDependencies } from "./app/dependency-provider";
-import type { BrowserService } from "./app/domain/interfaces/browser-service";
+import { TabEventListenerProvider } from "./app/presentation/background/tab-event-listener-provider";
+import { ContextMenuListenerProvider } from "./app/presentation/background/context-menu-listener-provider";
+import { ShortcutListenerProvider } from "./app/presentation/background/shortcut-listener-provider";
 
-const browserService = getDependencies().get(
-  "browserService",
-) as BrowserService;
+const contextMenuListenerProvider = new ContextMenuListenerProvider();
+contextMenuListenerProvider.registerContextMenuListeners();
 
-registerShortcutListeners(browserService);
-registerOnCloseTabEventListeners(browserService);
-registerOnUpdateTabEventListeners(browserService);
-registerOnCreateTabEventListeners(browserService);
-registerContextMenuListeners(browserService);
+const shortcutListenerProvider = new ShortcutListenerProvider();
+shortcutListenerProvider.registerShortcutListeners();
+
+const tabEventListenerProvider = new TabEventListenerProvider();
+tabEventListenerProvider.registerOnCloseTabEventListeners();
+tabEventListenerProvider.registerOnUpdateTabEventListeners();
+tabEventListenerProvider.registerOnCreateTabEventListeners();
