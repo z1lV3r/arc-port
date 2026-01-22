@@ -8,8 +8,9 @@ export class OnSetToGroupSetTabDefaultUrl implements TabEventListener {
     this.defaultUrlUseCases = useCases;
   }
 
-  name = "on-set-to-group-set-tab-default-url";
-  command = async (tabId: string) => {
-    await this.defaultUrlUseCases.setTabDefaultUrlIfUnsetByTabId(tabId);
+  name = "on-set-to-group-set-tab-default-url"; 
+  description = "Set tab default url if unset by tab id";
+  command = async (args: { tabId: string }) => {
+    await this.defaultUrlUseCases.setTabDefaultUrlIfUnsetByTabId(args.tabId);
   };
 }

@@ -1,4 +1,3 @@
-import type { ShortcutListener } from "@/app/domain/models/shortcut-listener";
 import { DefaultUrlShortcutListenerProvider } from "@/features/default-url/presentation/background/shortcut-listener-provider";
 import { AppListenerProvider } from "./app-listener-provider";
 import type { BrowserService } from "@/app/domain/interfaces/browser-service";
@@ -12,11 +11,9 @@ export class ShortcutListenerProvider extends AppListenerProvider {
   }
 
   registerShortcutListeners() {
-    const shortcutListeners = new Map<string, ShortcutListener>();
-    this.storeListeners(
+    this.listenersStore.addListeners([
       new DefaultUrlShortcutListenerProvider().getShortcutListeners(),
-      shortcutListeners,
-    );
-    this.browserService.registerShortcutListeners(shortcutListeners);
+    ]);
+    this.browserService.registerShortcutListeners(this.listenersStore);
   }
 }

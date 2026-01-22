@@ -8,6 +8,7 @@ export class SetCurrentTabDefaultUrl implements ContextMenuListener {
     this.defaultUrlUseCases = defaultUrlUseCases;
   }
   name = "context-menu-set-current-tab-default-url";
+  featureName = "Default URL";
   description = "Set current tab default URL";
   command = async () => {
     await this.defaultUrlUseCases.setCurrentTabDefaultUrl();

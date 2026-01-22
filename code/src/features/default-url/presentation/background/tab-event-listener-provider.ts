@@ -15,49 +15,18 @@ export class DefaultUrlTabEventListenerProvider {
     this.useCases = useCases;
   }
 
-  getOnCloseTabEventListeners() {
-    const tabEventListeners = new Map<string, TabEventListener>();
-
-    const onCloseRemoveDefaultUrl = new OnCloseRemoveDefaultUrl(this.useCases);
-    tabEventListeners.set(
-      onCloseRemoveDefaultUrl.name,
-      onCloseRemoveDefaultUrl,
-    );
-
-    return tabEventListeners;
+  getOnCloseTabEventListeners() : TabEventListener[] {
+    return [new OnCloseRemoveDefaultUrl(this.useCases)];
   }
 
   getOnUpdateTabEventListeners() {
-    const tabUpdateEventListeners = new Map<string, TabEventListener>();
-
-    const onPinSetTabDefaultUrl = new OnPinSetTabDefaultUrl(this.useCases);
-    tabUpdateEventListeners.set(
-      onPinSetTabDefaultUrl.name,
-      onPinSetTabDefaultUrl,
-    );
-
-    const onSetToGroupSetTabDefaultUrl = new OnSetToGroupSetTabDefaultUrl(
-      this.useCases,
-    );
-    tabUpdateEventListeners.set(
-      onSetToGroupSetTabDefaultUrl.name,
-      onSetToGroupSetTabDefaultUrl,
-    );
-
-    return tabUpdateEventListeners;
+    return [
+      new OnPinSetTabDefaultUrl(this.useCases),
+      new OnSetToGroupSetTabDefaultUrl(this.useCases),
+    ];
   }
 
   getOnCreateTabEventListeners() {
-    const tabUpdateEventListeners = new Map<string, TabEventListener>();
-
-    const onCreatePinnedSetTabDefaultUrl = new OnCreatePinnedSetTabDefaultUrl(
-      this.useCases,
-    );
-    tabUpdateEventListeners.set(
-      onCreatePinnedSetTabDefaultUrl.name,
-      onCreatePinnedSetTabDefaultUrl,
-    );
-
-    return tabUpdateEventListeners;
+    return [new OnCreatePinnedSetTabDefaultUrl(this.useCases)];
   }
 }

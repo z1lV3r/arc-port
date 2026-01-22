@@ -1,5 +1,5 @@
-export interface ContextMenuListener {
-  name: string;
-  description: string;
-  command: (tabId: string) => Promise<void>;
+import type { Listener } from "./listener";
+
+export interface ContextMenuListener extends Listener {
+  featureName: string;
 }

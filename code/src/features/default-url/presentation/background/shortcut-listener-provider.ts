@@ -15,23 +15,12 @@ export class DefaultUrlShortcutListenerProvider {
     this.useCases = useCases;
   }
 
-  getShortcutListeners() {
-    const shortcutListeners = new Map<string, ShortcutListener>();
-
-    const setShortCut = new SetCurrentTabDefaultUrl(this.useCases);
-    shortcutListeners.set(setShortCut.name, setShortCut);
-
-    const clearShortcut = new ClearCurrentTabDefaultUrl(this.useCases);
-    shortcutListeners.set(clearShortcut.name, clearShortcut);
-
-    const resetShortcut = new ResetTabToDefaultUrl(this.useCases);
-    shortcutListeners.set(resetShortcut.name, resetShortcut);
-
-    const closeOrResetShortcut = new CloseOrResetCurrentTabToDefaultUrl(
-      this.useCases,
-    );
-    shortcutListeners.set(closeOrResetShortcut.name, closeOrResetShortcut);
-
-    return shortcutListeners;
+  getShortcutListeners(): ShortcutListener[] {
+    return [
+      new SetCurrentTabDefaultUrl(this.useCases),
+      new ClearCurrentTabDefaultUrl(this.useCases),
+      new ResetTabToDefaultUrl(this.useCases),
+      new CloseOrResetCurrentTabToDefaultUrl(this.useCases),
+    ];
   }
 }

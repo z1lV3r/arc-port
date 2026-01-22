@@ -1,4 +1,4 @@
-export interface TabEventListener {
-  name: string;
-  command: (tabId: string) => Promise<void>;
+import type { Listener } from "./listener";
+
+export interface TabEventListener extends Listener {
 }

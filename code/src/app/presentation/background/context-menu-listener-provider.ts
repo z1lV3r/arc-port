@@ -11,11 +11,11 @@ export class ContextMenuListenerProvider extends AppListenerProvider {
   }
 
   registerContextMenuListeners() {
-    const { featureName: featureName, contextMenuListeners: defaultUrlContextMenus } =
-      new DefaultUrlContextMenuListenerProvider().getContextMenuListeners();
+    this.listenersStore.addListeners([
+      new DefaultUrlContextMenuListenerProvider().getContextMenuListeners(),
+    ]);
     this.browserService.registerContextMenuListeners(
-      featureName,
-      defaultUrlContextMenus,
+      this.listenersStore,
     );
   }
 }

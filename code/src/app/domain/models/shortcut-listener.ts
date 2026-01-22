@@ -1,9 +1,8 @@
-export interface ShortcutListener {
-  name: string;
-  description: string;
+import type { Listener } from "./listener";
+
+export interface ShortcutListener extends Listener {
   key: {
     default: string;
     mac: string;
   };
-  command: () => Promise<void>;
 }

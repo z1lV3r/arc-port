@@ -1,22 +1,19 @@
-import type { ContextMenuListener } from "../models/context-menu-listener";
-import type { ShortcutListener } from "../models/shortcut-listener";
-import type { TabEventListener } from "../models/tab-event-listener";
+import type { ListenersStore } from "../models/listeners-store";
 
 export interface BrowserService {
   registerShortcutListeners(
-    shortcuts: Map<string, ShortcutListener>,
+    listenersStore: ListenersStore,
   ): Promise<void>;
   registerOnCloseTabEventListeners(
-    tabEventListeners: Map<string, TabEventListener>,
+    listenersStore: ListenersStore,
   ): Promise<void>;
   registerOnUpdateTabEventListeners(
-    tabEventListeners: Map<string, TabEventListener>,
+    listenersStore: ListenersStore,
   ): Promise<void>;
   registerOnCreateTabEventListeners(
-    tabEventListeners: Map<string, TabEventListener>,
+    listenersStore: ListenersStore,
   ): Promise<void>;
   registerContextMenuListeners(
-    featureName: string,
-    contextMenuListeners: Map<string, ContextMenuListener>,
+    listenersStore: ListenersStore,
   ): Promise<void>;
 }

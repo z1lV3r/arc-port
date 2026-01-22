@@ -4,7 +4,6 @@ import { ResetCurrentTabToDefaultUrl } from "./context-menu-listeners/reset-curr
 import { SetCurrentTabDefaultUrl } from "./context-menu-listeners/set-current-tab-default-url";
 import type { DefaultUrlUseCases } from "../../domain/default-url-use-cases";
 import { DefaultUrlDependencyProvider } from "../../dependency-provider";
-import { FeatureContextMenuListeners } from "@/app/domain/models/feature-menu-listeners";
 
 export class DefaultUrlContextMenuListenerProvider {
   private useCases: DefaultUrlUseCases;
@@ -15,25 +14,11 @@ export class DefaultUrlContextMenuListenerProvider {
     this.useCases = useCases;
   }
 
-  getContextMenuListeners() {
-    const contextMenus = new Map<string, ContextMenuListener>();
-
-    const resetCurrentTabToDefaultUrl = new ResetCurrentTabToDefaultUrl(
-      this.useCases,
-    );
-    contextMenus.set(
-      resetCurrentTabToDefaultUrl.name,
-      resetCurrentTabToDefaultUrl,
-    );
-
-    const setCurrentTabDefaultUrl = new SetCurrentTabDefaultUrl(this.useCases);
-    contextMenus.set(setCurrentTabDefaultUrl.name, setCurrentTabDefaultUrl);
-
-    const clearCurrentTabDefaultUrl = new ClearCurrentTabDefaultUrl(
-      this.useCases,
-    );
-    contextMenus.set(clearCurrentTabDefaultUrl.name, clearCurrentTabDefaultUrl);
-
-    return new FeatureContextMenuListeners("Default Url", contextMenus);
+  getContextMenuListeners(): ContextMenuListener[] {
+    return [
+      new ResetCurrentTabToDefaultUrl(this.useCases),
+      new SetCurrentTabDefaultUrl(this.useCases),
+      new ClearCurrentTabDefaultUrl(this.useCases),
+    ];
   }
 }
