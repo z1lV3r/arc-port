@@ -1,9 +1,6 @@
 import type { ListenersStore } from "../models/listeners-store";
 
-export interface BrowserService {
-  registerShortcutListeners(
-    listenersStore: ListenersStore,
-  ): Promise<void>;
+export interface BrowserTabEventService {
   registerOnCloseTabEventListeners(
     listenersStore: ListenersStore,
   ): Promise<void>;
@@ -11,9 +8,6 @@ export interface BrowserService {
     listenersStore: ListenersStore,
   ): Promise<void>;
   registerOnCreateTabEventListeners(
-    listenersStore: ListenersStore,
-  ): Promise<void>;
-  registerContextMenuListeners(
     listenersStore: ListenersStore,
   ): Promise<void>;
 }

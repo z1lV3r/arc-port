@@ -1,78 +1,8 @@
-import type { BrowserService } from "../domain/interfaces/browser-service";
 import type { ContextMenuListener } from "../domain/models/context-menu-listener";
 import type { ListenersStore } from "../domain/models/listeners-store";
-import type { TabEventListener } from "../domain/models/tab-event-listener";
+import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 
-export default class ChromeBrowserService implements BrowserService {
-  async registerShortcutListeners(listenersStore: ListenersStore) {
-    chrome.commands.onCommand.addListener(async (listenerName) => {
-      const listener = listenersStore.getListener(listenerName);
-      if (listener) {
-        await listener.command();
-
-        const [tab] = await chrome.tabs.query({
-          active: true,
-          currentWindow: true,
-        });
-        showToast(tab, listener.description);
-      }
-    });
-  }
-
-  async registerOnCloseTabEventListeners(
-    listenersStore: ListenersStore,
-  ) {
-    chrome.tabs.onRemoved.addListener(async (tabId) => {
-      for (const [_, tabEventListener] of listenersStore.getAllListeners()) {
-        await tabEventListener.command(tabId.toString());
-      }
-    });
-  }
-
-  async registerOnUpdateTabEventListeners(
-    listenersStore: ListenersStore,
-  ) {
-    const onPinEventListeners: TabEventListener[] = [];
-    const onSetToGroupEventListeners: TabEventListener[] = [];
-    for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
-      if (name.startsWith("on-pin")) {
-        onPinEventListeners.push(tabEventListener);
-      }
-      if (name.startsWith("on-set-to-group")) {
-        onSetToGroupEventListeners.push(tabEventListener);
-      }
-    }
-    chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, _) => {
-      if (changeInfo.pinned && changeInfo.pinned === true) {
-        for (const tabEventListener of onPinEventListeners) {
-          await tabEventListener.command(tabId.toString());
-        }
-      }
-      if (changeInfo.groupId && changeInfo.groupId !== -1) {
-        for (const tabEventListener of onSetToGroupEventListeners) {
-          await tabEventListener.command(tabId.toString());
-        }
-      }
-    });
-  }
-
-  async registerOnCreateTabEventListeners(
-    listenersStore: ListenersStore,
-  ) {
-    const onCreatePinnedTabEventListeners: TabEventListener[] = [];
-    for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
-      if (name.startsWith("on-create-pinned")) {
-        onCreatePinnedTabEventListeners.push(tabEventListener);
-      }
-    }
-    chrome.tabs.onCreated.addListener(async (tab) => {
-      if (tab.pinned && tab.id) {
-        for (const tabEventListener of onCreatePinnedTabEventListeners) {
-          await tabEventListener.command(tab.id.toString());
-        }
-      }
-    });
-  }
+export default class ChromeContextMenuService implements BrowserContextMenuService {
 
   async registerContextMenuListeners(
     listenersStore: ListenersStore,
@@ -80,9 +10,7 @@ export default class ChromeBrowserService implements BrowserService {
     chrome.runtime.onInstalled.addListener(async () => {
       const features : string[] = [];
 
-      // for all the features in listenersStore
       for (const [listenerName, listener] of listenersStore.getAllListeners() as unknown as [string, ContextMenuListener][]) {
-        //if the feature is not in features array, add it
         const featureName = listener.featureName;
         if (!features.includes(featureName)) {
           chrome.contextMenus.create({

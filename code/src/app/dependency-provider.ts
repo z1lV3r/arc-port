@@ -1,21 +1,33 @@
-import type { BrowserService } from "./domain/interfaces/browser-service";
-import ChromeBrowserService from "./infrastructure/chrome-browser-service";
+import type { BrowserContextMenuService } from "./domain/interfaces/browser-context-menu-service";
+import type { BrowserTabEventService } from "./domain/interfaces/browser-tab-event-service";
+import type { BrowserShortcutService } from "./domain/interfaces/browser-shortcut-service";
+import ChromeTabEventService from "./infrastructure/chrome-tab-event-service";
+import ChromeContextMenuService from "./infrastructure/chrome-context-menu-service";
+import ChromeShortcutService from "./infrastructure/chrome-shortcut-service";
 
 export class DependencyProvider {
-  private browserService: BrowserService;
+  private browserTabEventService: BrowserTabEventService;
+  private browserContextMenuService: BrowserContextMenuService;
+  private browserShortcutService: BrowserShortcutService;
 
   constructor() {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
+    this.browserTabEventService = new ChromeTabEventService();
+    this.browserContextMenuService = new ChromeContextMenuService();
+    this.browserShortcutService = new ChromeShortcutService();
 
-    if (browserName === "chrome") {
-      this.browserService = new ChromeBrowserService();
-    } else {
-      throw new Error("Unsupported browser");
+    for (const property of Object.keys(this)) {
+      if (!(this as any)[property]) {
+        throw new Error(`Property ${property} is not initialized`);
+      }
     }
   }
-
-  getBrowserService(): BrowserService {
-    return this.browserService;
+  getBrowserTabEventService(): BrowserTabEventService {
+    return this.browserTabEventService;
+  }
+  getBrowserContextMenuService(): BrowserContextMenuService {
+    return this.browserContextMenuService;
+  }
+  getBrowserShortcutService(): BrowserShortcutService {
+    return this.browserShortcutService;
   }
 }

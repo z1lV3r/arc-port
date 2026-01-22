@@ -1,39 +1,45 @@
-import type { BrowserService } from "@/app/domain/interfaces/browser-service";
 import { DefaultUrlTabEventListenerProvider } from "@/features/default-url/presentation/background/tab-event-listener-provider";
 import { DependencyProvider } from "@/app/dependency-provider";
-import { AppListenerProvider } from "./app-listener-provider";
+import type { BrowserTabEventService } from "@/app/domain/interfaces/browser-tab-event-service";
+import { ListenersStore } from "@/app/domain/models/listeners-store";
 
-export class TabEventListenerProvider extends AppListenerProvider {
+export class TabEventListenerProvider {
+
+  private browserTabEventService: BrowserTabEventService;
+
   constructor(
-    browserService: BrowserService = new DependencyProvider().getBrowserService(),
+    browserTabEventService: BrowserTabEventService = new DependencyProvider().getBrowserTabEventService(),
   ) {
-    super(browserService);
+    this.browserTabEventService = browserTabEventService;
   }
 
   registerOnCloseTabEventListeners() {
-    this.listenersStore.addListeners([
+    const listenersStore = new ListenersStore();
+    listenersStore.addListeners([
       new DefaultUrlTabEventListenerProvider().getOnCloseTabEventListeners(),
     ]);
-    this.browserService.registerOnCloseTabEventListeners(
-      this.listenersStore,
+    this.browserTabEventService.registerOnCloseTabEventListeners(
+      listenersStore,
     );
   }
 
   registerOnUpdateTabEventListeners() {
-    this.listenersStore.addListeners([
+    const listenersStore = new ListenersStore();
+    listenersStore.addListeners([
       new DefaultUrlTabEventListenerProvider().getOnUpdateTabEventListeners(),
     ]);
-    this.browserService.registerOnUpdateTabEventListeners(
-      this.listenersStore,
+    this.browserTabEventService.registerOnUpdateTabEventListeners(
+      listenersStore,
     );
   }
 
   registerOnCreateTabEventListeners() {
-    this.listenersStore.addListeners([
+    const listenersStore = new ListenersStore();
+    listenersStore.addListeners([
       new DefaultUrlTabEventListenerProvider().getOnCreateTabEventListeners(),
     ]);
-    this.browserService.registerOnCreateTabEventListeners(
-      this.listenersStore,
+    this.browserTabEventService.registerOnCreateTabEventListeners(
+      listenersStore,
     );
   }
 }
