@@ -1,45 +1,32 @@
 import { DefaultUrlTabEventListenerProvider } from "@/features/default-url/presentation/background/tab-event-listener-provider";
 import { DependencyProvider } from "@/app/dependency-provider";
-import type { BrowserTabEventService } from "@/app/domain/interfaces/browser-tab-event-service";
-import { ListenersStore } from "@/app/domain/models/listeners-store";
+import { TabEventListenerUseCase } from "@/app/domain/use-cases/tab-event-listener-use-case";
 
 export class TabEventListenerProvider {
 
-  private browserTabEventService: BrowserTabEventService;
+  private useCase: TabEventListenerUseCase;
 
   constructor(
-    browserTabEventService: BrowserTabEventService = new DependencyProvider().getBrowserTabEventService(),
+    useCase: TabEventListenerUseCase = new DependencyProvider().getTabEventListenerUseCase(),
   ) {
-    this.browserTabEventService = browserTabEventService;
+    this.useCase = useCase;
   }
 
-  registerOnCloseTabEventListeners() {
-    const listenersStore = new ListenersStore();
-    listenersStore.addListeners([
+  registerFeaturesOnCloseTabEventListeners() {
+    this.useCase.registerOnCloseTabEventListeners([
       new DefaultUrlTabEventListenerProvider().getOnCloseTabEventListeners(),
     ]);
-    this.browserTabEventService.registerOnCloseTabEventListeners(
-      listenersStore,
-    );
   }
 
-  registerOnUpdateTabEventListeners() {
-    const listenersStore = new ListenersStore();
-    listenersStore.addListeners([
+  registerFeaturesOnUpdateTabEventListeners() {
+    this.useCase.registerOnUpdateTabEventListeners([
       new DefaultUrlTabEventListenerProvider().getOnUpdateTabEventListeners(),
     ]);
-    this.browserTabEventService.registerOnUpdateTabEventListeners(
-      listenersStore,
-    );
   }
 
-  registerOnCreateTabEventListeners() {
-    const listenersStore = new ListenersStore();
-    listenersStore.addListeners([
+  registerFeaturesOnCreateTabEventListeners() {
+    this.useCase.registerOnCreateTabEventListeners([
       new DefaultUrlTabEventListenerProvider().getOnCreateTabEventListeners(),
     ]);
-    this.browserTabEventService.registerOnCreateTabEventListeners(
-      listenersStore,
-    );
   }
 }

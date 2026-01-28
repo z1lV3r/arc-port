@@ -1,4 +1,4 @@
-import type { ContextMenuListener } from "../domain/models/context-menu-listener";
+import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 import type { ListenersStore } from "../domain/models/listeners-store";
 import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 

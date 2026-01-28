@@ -1,4 +1,4 @@
-import type { ContextMenuListener } from "@/app/domain/models/context-menu-listener";
+import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 
 export class SetCurrentTabDefaultUrl implements ContextMenuListener {

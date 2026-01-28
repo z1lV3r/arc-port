@@ -1,23 +1,18 @@
-import type { BrowserContextMenuService } from "@/app/domain/interfaces/browser-context-menu-service";
 import { DefaultUrlContextMenuListenerProvider } from "@/features/default-url/presentation/background/context-menu-listener-provider";
+import { ContextMenuListenerUseCase } from "@/app/domain/use-cases/context-menu-listener-use-case";
 import { DependencyProvider } from "@/app/dependency-provider";
-import { ListenersStore } from "@/app/domain/models/listeners-store";
 
 export class ContextMenuListenerProvider {
-  browserContextMenuService: BrowserContextMenuService;
+  contextMenuListenerUseCase: ContextMenuListenerUseCase;
   constructor(
-    browserContextMenuService: BrowserContextMenuService = new DependencyProvider().getBrowserContextMenuService(),
+    contextMenuListenerUseCase: ContextMenuListenerUseCase = new DependencyProvider().getContextMenuListenerUseCase(),
   ) {
-    this.browserContextMenuService = browserContextMenuService;
+    this.contextMenuListenerUseCase = contextMenuListenerUseCase;
   }
 
-  registerContextMenuListeners() {
-    const listenersStore = new ListenersStore();
-    listenersStore.addListeners([
+  registerFeaturesContextMenuListeners() {
+    this.contextMenuListenerUseCase.registerContextMenuListeners([
       new DefaultUrlContextMenuListenerProvider().getContextMenuListeners(),
     ]);
-    this.browserContextMenuService.registerContextMenuListeners(
-      listenersStore,
-    );
   }
 }

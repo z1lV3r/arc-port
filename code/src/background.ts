@@ -3,12 +3,12 @@ import { ContextMenuListenerProvider } from "./app/presentation/background/conte
 import { ShortcutListenerProvider } from "./app/presentation/background/shortcut-listener-provider";
 
 const contextMenuListenerProvider = new ContextMenuListenerProvider();
-contextMenuListenerProvider.registerContextMenuListeners();
+contextMenuListenerProvider.registerFeaturesContextMenuListeners();
 
 const shortcutListenerProvider = new ShortcutListenerProvider();
-shortcutListenerProvider.registerShortcutListeners();
+shortcutListenerProvider.registerFeaturesShortcutListeners();
 
 const tabEventListenerProvider = new TabEventListenerProvider();
-tabEventListenerProvider.registerOnCloseTabEventListeners();
-tabEventListenerProvider.registerOnUpdateTabEventListeners();
-tabEventListenerProvider.registerOnCreateTabEventListeners();
+tabEventListenerProvider.registerFeaturesOnCloseTabEventListeners();
+tabEventListenerProvider.registerFeaturesOnUpdateTabEventListeners();
+tabEventListenerProvider.registerFeaturesOnCreateTabEventListeners();

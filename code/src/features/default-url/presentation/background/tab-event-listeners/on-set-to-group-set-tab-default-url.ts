@@ -1,4 +1,4 @@
-import type { TabEventListener } from "@/app/domain/models/tab-event-listener";
+import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
 import type { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 
 export class OnSetToGroupSetTabDefaultUrl implements TabEventListener {

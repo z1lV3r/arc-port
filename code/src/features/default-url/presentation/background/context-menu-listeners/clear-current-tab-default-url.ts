@@ -1,5 +1,5 @@
 import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
-import type { ContextMenuListener } from "@/app/domain/models/context-menu-listener";
+import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 
 export class ClearCurrentTabDefaultUrl implements ContextMenuListener {
   private readonly defaultUrlUseCases: DefaultUrlUseCases;

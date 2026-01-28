@@ -1,5 +1,5 @@
 import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
-import type { ShortcutListener } from "@/app/domain/models/shortcut-listener";
+import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 
 export class SetCurrentTabDefaultUrl implements ShortcutListener {
   private readonly defaultUrlUseCases: DefaultUrlUseCases;

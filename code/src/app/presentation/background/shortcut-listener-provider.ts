@@ -1,19 +1,16 @@
 import { DefaultUrlShortcutListenerProvider } from "@/features/default-url/presentation/background/shortcut-listener-provider";
-import type { BrowserShortcutService } from "@/app/domain/interfaces/browser-shortcut-service";
 import { DependencyProvider } from "@/app/dependency-provider";
-import { ListenersStore } from "@/app/domain/models/listeners-store";
+import { ShortcutListenerUseCase } from "@/app/domain/use-cases/shortcut-listener-use-case";
 
 export class ShortcutListenerProvider {
-  private browserShortcutService: BrowserShortcutService;
-  constructor(browserShortcutService: BrowserShortcutService = new DependencyProvider().getBrowserShortcutService()) {
-    this.browserShortcutService = browserShortcutService;
+  private shortcutListenerUseCase: ShortcutListenerUseCase;
+  constructor(shortcutListenerUseCase: ShortcutListenerUseCase = new DependencyProvider().getShortcutListenerUseCase()) {
+    this.shortcutListenerUseCase = shortcutListenerUseCase;
   }
 
-  registerShortcutListeners() {
-    const listenersStore = new ListenersStore();
-    listenersStore.addListeners([
+  registerFeaturesShortcutListeners() {
+    this.shortcutListenerUseCase.registerShortcutListeners([
       new DefaultUrlShortcutListenerProvider().getShortcutListeners(),
     ]);
-    this.browserShortcutService.registerShortcutListeners(listenersStore);
   }
 }

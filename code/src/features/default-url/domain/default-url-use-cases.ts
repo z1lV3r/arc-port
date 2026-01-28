@@ -28,7 +28,7 @@ export class DefaultUrlUseCases {
     return await this.setTabDefaultUrl(tab);
   }
 
-  async setTabDefaultUrl(tab: Tab): Promise<string> {
+  private async setTabDefaultUrl(tab: Tab): Promise<string> {
     if (!tab.url) {
       return "";
     }
@@ -68,14 +68,14 @@ export class DefaultUrlUseCases {
       currentTab.id,
     );
 
-    if (defaultUrl === currentTab.url) {
+    if (!defaultUrl || defaultUrl === currentTab.url) {
       await this.tabsService.closeTab(currentTab.id);
     } else {
       await this.resetTabToDefaultUrl(currentTab, defaultUrl);
     }
   }
 
-  async resetTabToDefaultUrl(tab: Tab, defaultUrl: string): Promise<void> {
+  private async resetTabToDefaultUrl(tab: Tab, defaultUrl: string): Promise<void> {
     if (defaultUrl) {
       const createTabPromise = this.tabsService.createTab(defaultUrl, tab.index);
       const closeTabPromise = this.tabsService.closeTab(tab.id);

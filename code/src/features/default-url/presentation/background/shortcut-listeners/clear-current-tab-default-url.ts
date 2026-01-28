@@ -1,4 +1,4 @@
-import type { ShortcutListener } from "@/app/domain/models/shortcut-listener";
+import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 
 export class ClearCurrentTabDefaultUrl implements ShortcutListener {

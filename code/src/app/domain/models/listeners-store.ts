@@ -1,7 +1,7 @@
-import type { Listener } from "./listener";
+import type { Listener } from "@/shared/domain/models/listener";
 
 export class ListenersStore {
-  listeners: Map<string, Listener>;
+  private listeners: Map<string, Listener>;
 
   constructor() {
     this.listeners = new Map<string, Listener>();

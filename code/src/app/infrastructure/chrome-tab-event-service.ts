@@ -1,6 +1,6 @@
 import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
 import type { ListenersStore } from "../domain/models/listeners-store";
-import type { TabEventListener } from "../domain/models/tab-event-listener";
+import type { TabEventListener } from "../../shared/domain/models/tab-event-listener";
 
 export default class ChromeTabEventService implements BrowserTabEventService {
 
