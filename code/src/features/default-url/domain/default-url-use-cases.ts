@@ -77,12 +77,11 @@ export class DefaultUrlUseCases {
 
   async resetTabToDefaultUrl(tab: Tab, defaultUrl: string): Promise<void> {
     if (defaultUrl) {
-      await this.tabsService.closeTab(tab.id);
-      const newTab: Tab = await this.tabsService.createTab(
-        defaultUrl,
-        tab.index,
-      );
+      const createTabPromise = this.tabsService.createTab(defaultUrl, tab.index);
+      const closeTabPromise = this.tabsService.closeTab(tab.id);
+      const newTab: Tab = await createTabPromise;
       await this.defaultUrlRepository.save(newTab.id, defaultUrl);
+      await closeTabPromise;
     }
   }
 }
