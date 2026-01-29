@@ -8,7 +8,7 @@ export class OnCloseRemoveDefaultUrl implements TabEventListener {
     this.clearDefaultUrlUseCases = clearDefaultUrlUseCases;
   }
 
-  name = "on-tab-close-remove-default-url";
+  name = "on-close-remove-default-url";
   description = "Remove default url when tab is closed";
   command = async (args: { tabId: string }) => {
     await this.clearDefaultUrlUseCases.clearTabDefaultUrl(args.tabId);
