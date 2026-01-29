@@ -11,6 +11,6 @@ export class OnPinSetTabDefaultUrl implements TabEventListener {
   name = "on-pin-set-tab-default-url";
   description = "Set tab default url if unset by tab id";
   command = async (args: { tabId: string }) => {
-    await this.setDefaultUrlUseCases.setTabDefaultUrlIfUnsetByTabId(args.tabId);
+    await this.setDefaultUrlUseCases.setTabDefaultUrlIfUnset(args.tabId);
   };
 }

@@ -1,10 +1,10 @@
 import type { DefaultUrlRepository } from "../domain/interfaces/default-url-repository";
 
 export class ChromeStorageDefaultUrlRepository implements DefaultUrlRepository {
-  private prefix: string;
+  private postfix: string;
 
-  constructor(prefix: string = "default-url-") {
-    this.prefix = prefix;
+  constructor(postfix: string = "-default-url") {
+    this.postfix = postfix;
   }
 
   async save(tabId: string, url: string): Promise<void> {
@@ -15,21 +15,21 @@ export class ChromeStorageDefaultUrlRepository implements DefaultUrlRepository {
     if (!chrome || !chrome.storage) {
       return;
     }
-    await chrome.storage.local.set({ [this.prefix + tabId]: url });
+    await chrome.storage.local.set({ [tabId + this.postfix]: url });
   }
 
   async get(tabId: string): Promise<string> {
     if (!chrome || !chrome.storage) {
       return "";
     }
-    const result = await chrome.storage.local.get(this.prefix + tabId);
-    return (result[this.prefix + tabId] as string) || "";
+    const result = await chrome.storage.local.get(tabId + this.postfix);
+    return (result[tabId + this.postfix] as string) || "";
   }
 
   async delete(tabId: string): Promise<void> {
     if (!chrome || !chrome.storage) {
       return;
     }
-    await chrome.storage.local.remove(this.prefix + tabId);
+    await chrome.storage.local.remove(tabId + this.postfix);
   }
 }

@@ -20,7 +20,7 @@ export class SetDefaultUrlUseCases {
     return await this.setTabDefaultUrl(currentTab);
   }
 
-  async setTabDefaultUrlIfUnsetByTabId(tabId: string): Promise<string> {
+  async setTabDefaultUrlIfUnset(tabId: string): Promise<string> {
     const tab: Tab = await this.tabsService.getTab(tabId);
     const defaultUrl: string = await this.defaultUrlRepository.get(tab.id);
     if (defaultUrl) {
