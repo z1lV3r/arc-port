@@ -1,11 +1,11 @@
 import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
-import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
+import type { ClearDefaultUrlUseCases } from "@/features/default-url/use-cases/clear-default-url-use-cases";
 
 export class ClearCurrentTabDefaultUrl implements ShortcutListener {
-  private readonly defaultUrlUseCases: DefaultUrlUseCases;
+  private readonly clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
 
-  constructor(defaultUrlUseCases: DefaultUrlUseCases) {
-    this.defaultUrlUseCases = defaultUrlUseCases;
+  constructor(clearDefaultUrlUseCases: ClearDefaultUrlUseCases) {
+    this.clearDefaultUrlUseCases = clearDefaultUrlUseCases;
   }
   name = "shortcut-clear-current-tab-default-url";
   description = "Clear current tab default URL";
@@ -14,6 +14,6 @@ export class ClearCurrentTabDefaultUrl implements ShortcutListener {
     mac: "Option+Shift+K",
   };
   command = async () => {
-    await this.defaultUrlUseCases.clearCurrentTabDefaultUrl();
+    await this.clearDefaultUrlUseCases.clearCurrentTabDefaultUrl();
   };
 }

@@ -1,16 +1,16 @@
 import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
-import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
+import type { SetDefaultUrlUseCases } from "@/features/default-url/use-cases/set-default-url-use-cases";
 
 export class SetCurrentTabDefaultUrl implements ContextMenuListener {
-  private readonly defaultUrlUseCases: DefaultUrlUseCases;
+  private readonly setDefaultUrlUseCases: SetDefaultUrlUseCases;
 
-  constructor(defaultUrlUseCases: DefaultUrlUseCases) {
-    this.defaultUrlUseCases = defaultUrlUseCases;
+  constructor(setDefaultUrlUseCases: SetDefaultUrlUseCases) {
+    this.setDefaultUrlUseCases = setDefaultUrlUseCases;
   }
   name = "context-menu-set-current-tab-default-url";
   featureName = "Default URL";
   description = "Set current tab default URL";
   command = async () => {
-    await this.defaultUrlUseCases.setCurrentTabDefaultUrl();
+    await this.setDefaultUrlUseCases.setCurrentTabDefaultUrl();
   }
 }

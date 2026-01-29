@@ -1,16 +1,16 @@
-import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
 import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
+import type { ClearDefaultUrlUseCases } from "@/features/default-url/use-cases/clear-default-url-use-cases";
 
 export class ClearCurrentTabDefaultUrl implements ContextMenuListener {
-  private readonly defaultUrlUseCases: DefaultUrlUseCases;
+  private readonly clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
 
-  constructor(defaultUrlUseCases: DefaultUrlUseCases) {
-    this.defaultUrlUseCases = defaultUrlUseCases;
+  constructor(clearDefaultUrlUseCases: ClearDefaultUrlUseCases) {
+    this.clearDefaultUrlUseCases = clearDefaultUrlUseCases;
   }
   name = "context-menu-clear-current-tab-default-url";
   description = "Clear default url";
   featureName = "Default URL";
   command = async () => {
-    await this.defaultUrlUseCases.clearCurrentTabDefaultUrl();
+    await this.clearDefaultUrlUseCases.clearCurrentTabDefaultUrl();
   }
 }

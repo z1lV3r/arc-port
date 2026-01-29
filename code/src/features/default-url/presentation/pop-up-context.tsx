@@ -1,21 +1,49 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import type { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
+import type { SetDefaultUrlUseCases } from "@/features/default-url/use-cases/set-default-url-use-cases";
+import type { ResetTabToDefaultUrlUseCases } from "@/features/default-url/use-cases/reset-tab-to-default-url-use-cases";
+import type { GetDefaultUrlUseCases } from "@/features/default-url/use-cases/get-default-url-use-cases";
+import type { ClearDefaultUrlUseCases } from "@/features/default-url/use-cases/clear-default-url-use-cases";
 import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
 
 interface DefaultUrlContextType {
-  defaultUrlUseCases: DefaultUrlUseCases;
+  setDefaultUrlUseCases: SetDefaultUrlUseCases;
+  resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
+  getDefaultUrlUseCases: GetDefaultUrlUseCases;
+  clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
   const dependencies = new DefaultUrlDependencyProvider();
 
-  const defaultUrlUseCases = useMemo(
-    () => dependencies.getDefaultUrlUseCases(),
+  const setDefaultUrlUseCases = useMemo(
+    () => dependencies.getSetDefaultUrlUseCases(),
+    [],
+  );
+
+  const resetTabToDefaultUrlUseCases = useMemo(
+    () => dependencies.getResetTabToDefaultUrlUseCases(),
+    [],
+  );
+
+  const getDefaultUrlUseCases = useMemo(
+    () => dependencies.getGetDefaultUrlUseCases(),
+    [],
+  );
+
+  const clearDefaultUrlUseCases = useMemo(
+    () => dependencies.getClearDefaultUrlUseCases(),
     [],
   );
 
   return (
-    <DefaultUrlContext.Provider value={{ defaultUrlUseCases }}>
+    <DefaultUrlContext.Provider
+      value={{
+        setDefaultUrlUseCases,
+        resetTabToDefaultUrlUseCases,
+        getDefaultUrlUseCases,
+        clearDefaultUrlUseCases,
+      }}
+    >
       {children}
     </DefaultUrlContext.Provider>
   );

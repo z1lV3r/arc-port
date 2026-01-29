@@ -1,8 +1,8 @@
-import type { BrowserShortcutService } from "@/app/domain/interfaces/browser-shortcut-service";
-import { ListenersStore } from "@/app/domain/models/listeners-store";
+import type { BrowserShortcutService } from "../domain/interfaces/browser-shortcut-service";
+import { ListenersStore } from "../domain/models/listeners-store";
 import type { Listener } from "@/shared/domain/models/listener";
 
-export class ShortcutListenerUseCase {
+export class ShortcutListenerUseCases {
 
   private browserShortcutService: BrowserShortcutService;
 

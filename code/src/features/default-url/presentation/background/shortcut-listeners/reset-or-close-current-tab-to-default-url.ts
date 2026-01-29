@@ -1,19 +1,19 @@
 import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 import type { ResetTabToDefaultUrlUseCases } from "@/features/default-url/use-cases/reset-tab-to-default-url-use-cases";
 
-export class ResetTabToDefaultUrl implements ShortcutListener {
+export class ResetOrCloseCurrentTabToDefaultUrl implements ShortcutListener {
   private readonly resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
 
   constructor(resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases) {
     this.resetTabToDefaultUrlUseCases = resetTabToDefaultUrlUseCases;
   }
-  name = "shortcut-reset-current-tab-to-default-url";
-  description = "Reset current tab to default URL";
+  name = "shortcut-reset-or-close-current-tab-to-default-url";
+  description = "Reset or close current tab to default URL";
   key = {
-    default: "Alt+Shift+R",
-    mac: "Option+Shift+R",
+    default: "Alt+Shift+W",
+    mac: "Option+Shift+W",
   };
   command = async () => {
-    await this.resetTabToDefaultUrlUseCases.resetCurrentTabToDefaultUrl();
+    await this.resetTabToDefaultUrlUseCases.resetOrCloseCurrentTabToDefaultUrl();
   };
 }

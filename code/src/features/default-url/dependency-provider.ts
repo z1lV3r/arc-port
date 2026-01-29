@@ -1,13 +1,19 @@
 import { ChromeTabsService } from "./infrastructure/chrome-tabs-service";
 import { ChromeStorageDefaultUrlRepository } from "./infrastructure/chrome-storage-default-url-repository";
-import { DefaultUrlUseCases } from "./domain/default-url-use-cases";
+import { SetDefaultUrlUseCases } from "./use-cases/set-default-url-use-cases";
+import { ResetTabToDefaultUrlUseCases } from "./use-cases/reset-tab-to-default-url-use-cases";
+import { GetDefaultUrlUseCases } from "./use-cases/get-default-url-use-cases";
+import { ClearDefaultUrlUseCases } from "./use-cases/clear-default-url-use-cases";
 import type { TabsService } from "./domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 
 export class DefaultUrlDependencyProvider {
   private tabsService: TabsService;
   private defaultUrlRepository: DefaultUrlRepository;
-  private defaultUrlUseCases: DefaultUrlUseCases;
+  private setDefaultUrlUseCases: SetDefaultUrlUseCases;
+  private resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
+  private getDefaultUrlUseCases: GetDefaultUrlUseCases;
+  private clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
 
   constructor() {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -20,7 +26,22 @@ export class DefaultUrlDependencyProvider {
       throw new Error("Unsupported browser");
     }
 
-    this.defaultUrlUseCases = new DefaultUrlUseCases(
+    this.setDefaultUrlUseCases = new SetDefaultUrlUseCases(
+      this.tabsService,
+      this.defaultUrlRepository,
+    );
+
+    this.resetTabToDefaultUrlUseCases = new ResetTabToDefaultUrlUseCases(
+      this.tabsService,
+      this.defaultUrlRepository,
+    );
+
+    this.getDefaultUrlUseCases = new GetDefaultUrlUseCases(
+      this.tabsService,
+      this.defaultUrlRepository,
+    );
+
+    this.clearDefaultUrlUseCases = new ClearDefaultUrlUseCases(
       this.tabsService,
       this.defaultUrlRepository,
     );
@@ -36,7 +57,19 @@ export class DefaultUrlDependencyProvider {
     return this.defaultUrlRepository;
   }
 
-  getDefaultUrlUseCases(): DefaultUrlUseCases {
-    return this.defaultUrlUseCases;
+  getSetDefaultUrlUseCases(): SetDefaultUrlUseCases {
+    return this.setDefaultUrlUseCases;
+  }
+
+  getResetTabToDefaultUrlUseCases(): ResetTabToDefaultUrlUseCases {
+    return this.resetTabToDefaultUrlUseCases;
+  }
+
+  getGetDefaultUrlUseCases(): GetDefaultUrlUseCases {
+    return this.getDefaultUrlUseCases;
+  }
+
+  getClearDefaultUrlUseCases(): ClearDefaultUrlUseCases {
+    return this.clearDefaultUrlUseCases;
   }
 }

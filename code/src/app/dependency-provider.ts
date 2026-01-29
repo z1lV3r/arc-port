@@ -4,17 +4,17 @@ import type { BrowserShortcutService } from "./domain/interfaces/browser-shortcu
 import ChromeTabEventService from "./infrastructure/chrome-tab-event-service";
 import ChromeContextMenuService from "./infrastructure/chrome-context-menu-service";
 import ChromeShortcutService from "./infrastructure/chrome-shortcut-service";
-import { ContextMenuListenerUseCase } from "./domain/use-cases/context-menu-listener-use-case";
-import { ShortcutListenerUseCase } from "./domain/use-cases/shortcut-listener-use-case";
-import { TabEventListenerUseCase } from "./domain/use-cases/tab-event-listener-use-case";
+import { ContextMenuListenerUseCases } from "./use-cases/context-menu-listener-use-cases";
+import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
+import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
 
 export class DependencyProvider {
   private browserTabEventService: BrowserTabEventService;
   private browserContextMenuService: BrowserContextMenuService;
   private browserShortcutService: BrowserShortcutService;
-  private contextMenuListenerUseCase: ContextMenuListenerUseCase;
-  private shortcutListenerUseCase: ShortcutListenerUseCase;
-  private tabEventListenerUseCase: TabEventListenerUseCase;
+  private contextMenuListenerUseCase: ContextMenuListenerUseCases;
+  private shortcutListenerUseCase: ShortcutListenerUseCases;
+  private tabEventListenerUseCase: TabEventListenerUseCases;
 
   constructor() {
     this.browserTabEventService = new ChromeTabEventService();
@@ -27,9 +27,9 @@ export class DependencyProvider {
       }
     }
 
-    this.contextMenuListenerUseCase = new ContextMenuListenerUseCase(this.getBrowserContextMenuService());
-    this.shortcutListenerUseCase = new ShortcutListenerUseCase(this.getBrowserShortcutService());
-    this.tabEventListenerUseCase = new TabEventListenerUseCase(this.getBrowserTabEventService());
+    this.contextMenuListenerUseCase = new ContextMenuListenerUseCases(this.getBrowserContextMenuService());
+    this.shortcutListenerUseCase = new ShortcutListenerUseCases(this.getBrowserShortcutService());
+    this.tabEventListenerUseCase = new TabEventListenerUseCases(this.getBrowserTabEventService());
   }
   getBrowserTabEventService(): BrowserTabEventService {
     return this.browserTabEventService;
@@ -40,13 +40,13 @@ export class DependencyProvider {
   getBrowserShortcutService(): BrowserShortcutService {
     return this.browserShortcutService;
   }
-  getContextMenuListenerUseCase(): ContextMenuListenerUseCase {
+  getContextMenuListenerUseCase(): ContextMenuListenerUseCases {
     return this.contextMenuListenerUseCase;
   }
-  getShortcutListenerUseCase(): ShortcutListenerUseCase {
+  getShortcutListenerUseCase(): ShortcutListenerUseCases {
     return this.shortcutListenerUseCase;
   }
-  getTabEventListenerUseCase(): TabEventListenerUseCase {
+  getTabEventListenerUseCase(): TabEventListenerUseCases {
     return this.tabEventListenerUseCase;
   }
 }

@@ -18,13 +18,13 @@ import { useState, useEffect } from "react";
 import { useDefaultUrlContext } from "./pop-up-context";
 
 function PopUp() {
-  const { defaultUrlUseCases } = useDefaultUrlContext();
+  const { getDefaultUrlUseCases, setDefaultUrlUseCases, resetTabToDefaultUrlUseCases, clearDefaultUrlUseCases } = useDefaultUrlContext();
   const [url, setUrl] = useState("");
 
   useEffect(() => {
     const fetchDefaultUrl = async () => {
       const defaultUrl: string =
-        await defaultUrlUseCases.getCurrentTabDefaultUrl();
+        await getDefaultUrlUseCases.getCurrentTabDefaultUrl();
       setUrl(defaultUrl);
     };
 
@@ -33,16 +33,16 @@ function PopUp() {
 
   const handleSetCurrentTabDefaultUrl = async () => {
     const defaultUrl: string =
-      await defaultUrlUseCases.setCurrentTabDefaultUrl();
+      await setDefaultUrlUseCases.setCurrentTabDefaultUrl();
     setUrl(defaultUrl);
   };
 
   const handleResetTabToDefaultUrl = async () => {
-    await defaultUrlUseCases.resetCurrentTabToDefaultUrl();
+    await resetTabToDefaultUrlUseCases.resetCurrentTabToDefaultUrl();
   };
 
   const handleClearDefaultUrl = async () => {
-    await defaultUrlUseCases.clearCurrentTabDefaultUrl();
+    await clearDefaultUrlUseCases.clearCurrentTabDefaultUrl();
     setUrl("");
   };
 

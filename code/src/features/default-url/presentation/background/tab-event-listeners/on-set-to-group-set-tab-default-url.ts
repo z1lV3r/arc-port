@@ -1,16 +1,16 @@
 import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
-import type { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
+import type { SetDefaultUrlUseCases } from "@/features/default-url/use-cases/set-default-url-use-cases";
 
 export class OnSetToGroupSetTabDefaultUrl implements TabEventListener {
-  private readonly defaultUrlUseCases: DefaultUrlUseCases;
+  private readonly setDefaultUrlUseCases: SetDefaultUrlUseCases;
 
-  constructor(useCases: DefaultUrlUseCases) {
-    this.defaultUrlUseCases = useCases;
+  constructor(setDefaultUrlUseCases: SetDefaultUrlUseCases) {
+    this.setDefaultUrlUseCases = setDefaultUrlUseCases;
   }
 
   name = "on-set-to-group-set-tab-default-url"; 
   description = "Set tab default url if unset by tab id";
   command = async (args: { tabId: string }) => {
-    await this.defaultUrlUseCases.setTabDefaultUrlIfUnsetByTabId(args.tabId);
+    await this.setDefaultUrlUseCases.setTabDefaultUrlIfUnsetByTabId(args.tabId);
   };
 }

@@ -1,11 +1,11 @@
-import { DefaultUrlUseCases } from "@/features/default-url/domain/default-url-use-cases";
+import type { SetDefaultUrlUseCases } from "@/features/default-url/use-cases/set-default-url-use-cases";
 import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 
 export class SetCurrentTabDefaultUrl implements ShortcutListener {
-  private readonly defaultUrlUseCases: DefaultUrlUseCases;
+  private readonly setDefaultUrlUseCases: SetDefaultUrlUseCases;
 
-  constructor(defaultUrlUseCases: DefaultUrlUseCases) {
-    this.defaultUrlUseCases = defaultUrlUseCases;
+  constructor(setDefaultUrlUseCases: SetDefaultUrlUseCases) {
+    this.setDefaultUrlUseCases = setDefaultUrlUseCases;
   }
   name = "shortcut-set-current-tab-default-url";
   description = "Set current tab default URL";
@@ -14,6 +14,6 @@ export class SetCurrentTabDefaultUrl implements ShortcutListener {
     mac: "Option+Shift+S",
   };
   command = async () => {
-    await this.defaultUrlUseCases.setCurrentTabDefaultUrl();
+    await this.setDefaultUrlUseCases.setCurrentTabDefaultUrl();
   };
 }

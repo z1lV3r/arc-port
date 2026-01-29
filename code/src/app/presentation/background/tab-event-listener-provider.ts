@@ -1,13 +1,13 @@
 import { DefaultUrlTabEventListenerProvider } from "@/features/default-url/presentation/background/tab-event-listener-provider";
 import { DependencyProvider } from "@/app/dependency-provider";
-import { TabEventListenerUseCase } from "@/app/domain/use-cases/tab-event-listener-use-case";
+import { TabEventListenerUseCases } from "@/app/use-cases/tab-event-listener-use-cases";
 
 export class TabEventListenerProvider {
 
-  private useCase: TabEventListenerUseCase;
+  private useCase: TabEventListenerUseCases;
 
   constructor(
-    useCase: TabEventListenerUseCase = new DependencyProvider().getTabEventListenerUseCase(),
+    useCase: TabEventListenerUseCases = new DependencyProvider().getTabEventListenerUseCase(),
   ) {
     this.useCase = useCase;
   }
