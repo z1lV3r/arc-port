@@ -1,0 +1,131 @@
+## Default url feature
+### Use cases
+#### set current tab url
+When set current tab url given the current tab has no url
+- it should not save the current tab url as the default url in the local storage.
+
+When set current tab url given the current tab has an url
+- it should save the current tab url as the default url in the local storage.
+
+When set current tab default url given the current tab has an url
+- it should replace the current tab url as the default url in the local storage.
+
+When set tab default url if unset by tab id given the tab has no default url
+- it should save the tab url as the default url in the local storage.
+
+When set tab default url if unset by tab id given the tab has an url
+- it should not save the tab url as the default url in the local storage.
+
+#### get current tab default url
+When get current tab default url given the current tab has no default url
+- it should return an empty string.
+
+When get current tab default url given the current tab has an url
+- it should return the default url.
+
+#### clear current tab default url
+When clear current tab default url given the current tab has no default url
+- it should not do anything.
+
+When clear current tab default url given the current tab has an url
+- it should clear the default url in the local storage.
+
+#### reset current tab to default url
+When reset current tab to default url given the current tab has no default url
+- it should not do anything.
+
+When reset current tab to default url given the current tab has an url
+- it should close the current tab.
+- it should open a new tab with the default url.
+- it should save the new tab url as the default url in the local storage.
+
+#### close or reset current tab to default url
+When close or reset current tab to default url given the current tab has no default url
+- it should close the current tab.
+
+When close or reset current tab to default url given the current tab has an url and the default url is the same as the current tab url
+- it should close the current tab.
+
+When close or reset current tab to default url given the current tab has an url and the default url is different from the current tab url
+- it should close the current tab.
+- it should open a new tab with the default url.
+- it should save the new tab url as the default url in the local storage.
+
+### Presentation
+#### pop up
+When the pop up is open given there is a default url
+- it should render the default url content.
+- it should be able to click on the set current tab url button.
+- it should be able to click on the clear current tab url button.
+- it should be able to click on the reset current tab to default url button.
+- it should be able to click on the copy current tab url to clipboard button.
+
+When the pop up is open given there is no default url
+- it should render the default url content.
+- it should be able to click on the set current tab url button.
+- it should be able to click on the clear current tab url button.
+- it should not be able to click on the reset current tab to default url button.
+- it should not be able to click on the copy current tab url to clipboard button.
+
+When the user clicks on the set current tab url button and there is no default url
+- it should execute the set current tab url use case.
+- it should update the url input value with the default url.
+
+When the user clicks on the set current tab url button and there is already a default url
+- it should execute the set current tab url use case.
+- it should update the url input value with the default url.
+
+When the user clicks on the clear current tab url button and there is no default url
+- it should execute the clear current tab url use case.
+
+When the user clicks on the clear current tab url button and there is an url
+- it should execute the clear current tab url use case.
+
+When the user clicks on the reset current tab to default url button
+- it should execute the reset current tab to default url use case.
+
+When the user clicks on the copy current tab url to clipboard button
+- it should copy the current tab url to the clipboard.
+
+#### Context menu
+When the user right clicks on the browser
+- it should show the context menu with the default url feature items.
+- it should be a "Default URL" group in the context menu.
+- it should be a "Set current tab url" item in the "Default URL" group.
+- it should be a "Clear current tab url" item in the "Default URL" group.
+- it should be a "Reset current tab to default url" item in the "Default URL" group.
+
+When the user clicks on the "Set current tab url" item in the context menu
+- it should execute the set current tab url use case.
+
+When the user clicks on the "Clear current tab url" item in the context menu
+- it should execute the clear current tab url use case.
+
+When the user clicks on the "Reset current tab to default url" item in the context menu
+- it should execute the reset current tab to default url use case.
+
+#### Shortcuts
+When the user presses the set current tab url shortcut
+- it should execute the set current tab url use case.
+
+When the user presses the clear current tab url shortcut
+- it should execute the clear current tab url use case.
+
+When the user presses the reset current tab to default url shortcut
+- it should execute the reset current tab to default url use case.
+
+When the user presses the close or reset current tab to default url shortcut
+- it should execute the close or reset current tab to default url use case.
+
+#### Tab event listeners
+When a tab is closed
+- it should execute the clear tab default url use case.
+
+When a pinned tab is created
+- it should execute the set tab default url if unset by tab id use case.
+
+When a normal tab is pinned
+- it should execute the set tab default url if unset by tab id use case.
+
+When a normal tab is moved to a group
+- it should execute the set tab default url if unset by tab id use case.

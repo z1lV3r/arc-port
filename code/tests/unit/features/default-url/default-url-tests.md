@@ -1,0 +1,279 @@
+# Tests
+## Default URL Feature - Black Box Testing Approach
+
+> **Testing Philosophy**: These tests validate observable behaviors - what gets stored, what gets returned, what tabs exist, and what the UI displays.
+
+#### Tab Event Listeners
+
+
+
+### AI Test Generation Prompts
+
+#### For Use Cases
+Generate black-box unit tests for the refactored use case classes using Vitest. Each use case class should be tested independently.
+
+**Setup Pattern:**
+```javascript
+describe('SetDefaultUrlUseCases', () => {
+  let useCases: SetDefaultUrlUseCases;
+  let mockTabsService: TabsService;
+  let mockRepository: DefaultUrlRepository;
+  
+  beforeEach(() => {
+    // Create mocks that track state (like a real storage would)
+    mockRepository = createMockRepository(); // maintains state across calls
+    mockTabsService = createMockTabsService();
+    useCases = new SetDefaultUrlUseCases(mockTabsService, mockRepository);
+  });
+});
+```
+
+**Test Focus:**
+1. **Return values**: Verify what the method returns.
+2. **Storage state**: Check what's in storage after the operation.
+3. **Tab state**: Verify which tabs exist and their properties.
+4. **DO NOT**: Check internal method calls or implementation details.
+
+**Example Tests for SetDefaultUrlUseCases:**
+```javascript
+describe('SetDefaultUrlUseCases', () => {
+  describe('setCurrentTabDefaultUrl', () => {
+    it('should save and return the current tab URL when called', async () => {
+      // Arrange
+      mockTabsService.setCurrentTab({ id: '123', url: 'https://example.com', index: 0 });
+      
+      // Act
+      const result = await useCases.setCurrentTabDefaultUrl();
+      
+      // Assert - Check observable outputs
+      expect(result).toBe('https://example.com');
+      expect(await mockRepository.get('123')).toBe('https://example.com');
+    });
+
+    it('should return empty string when tab has no URL', async () => {
+      // Arrange
+      mockTabsService.setCurrentTab({ id: '123', url: '', index: 0 });
+      
+      // Act
+      const result = await useCases.setCurrentTabDefaultUrl();
+      
+      // Assert
+      expect(result).toBe('');
+      expect(await mockRepository.get('123')).toBeUndefined();
+    });
+  });
+
+  describe('setTabDefaultUrlIfUnsetByTabId', () => {
+    it('should not overwrite existing default URL when called', async () => {
+      // Arrange
+      await mockRepository.save('123', 'https://first.com');
+      mockTabsService.setTab('123', { id: '123', url: 'https://second.com', index: 0 });
+      
+      // Act
+      const result = await useCases.setTabDefaultUrlIfUnsetByTabId('123');
+      
+      // Assert - Verify state is unchanged
+      expect(result).toBe('https://first.com');
+      expect(await mockRepository.get('123')).toBe('https://first.com');
+    });
+
+    it('should set default URL when none exists', async () => {
+      // Arrange
+      mockTabsService.setTab('123', { id: '123', url: 'https://example.com', index: 0 });
+      
+      // Act
+      const result = await useCases.setTabDefaultUrlIfUnsetByTabId('123');
+      
+      // Assert
+      expect(result).toBe('https://example.com');
+      expect(await mockRepository.get('123')).toBe('https://example.com');
+    });
+  });
+});
+```
+
+**Example Tests for GetDefaultUrlUseCases:**
+```javascript
+describe('GetDefaultUrlUseCases', () => {
+  describe('getCurrentTabDefaultUrl', () => {
+    it('should return the stored default URL', async () => {
+      // Arrange
+      mockTabsService.setCurrentTab({ id: '123', url: 'https://current.com', index: 0 });
+      await mockRepository.save('123', 'https://default.com');
+      
+      // Act
+      const result = await useCases.getCurrentTabDefaultUrl();
+      
+      // Assert
+      expect(result).toBe('https://default.com');
+    });
+
+    it('should return empty string when no default URL exists', async () => {
+      // Arrange
+      mockTabsService.setCurrentTab({ id: '123', url: 'https://current.com', index: 0 });
+      
+      // Act
+      const result = await useCases.getCurrentTabDefaultUrl();
+      
+      // Assert
+      expect(result).toBe('');
+    });
+  });
+});
+```
+
+**Example Tests for ClearDefaultUrlUseCases:**
+```javascript
+describe('ClearDefaultUrlUseCases', () => {
+  describe('clearCurrentTabDefaultUrl', () => {
+    it('should remove default URL from storage', async () => {
+      // Arrange
+      mockTabsService.setCurrentTab({ id: '123', url: 'https://current.com', index: 0 });
+      await mockRepository.save('123', 'https://default.com');
+      
+      // Act
+      await useCases.clearCurrentTabDefaultUrl();
+      
+      // Assert
+      expect(await mockRepository.get('123')).toBeUndefined();
+    });
+  });
+
+  describe('clearTabDefaultUrl', () => {
+    it('should remove default URL for specific tab ID', async () => {
+      // Arrange
+      await mockRepository.save('123', 'https://default.com');
+      
+      // Act
+      await useCases.clearTabDefaultUrl('123');
+      
+      // Assert
+      expect(await mockRepository.get('123')).toBeUndefined();
+    });
+  });
+});
+```
+
+**Example Tests for ResetTabToDefaultUrlUseCases:**
+```javascript
+describe('ResetTabToDefaultUrlUseCases', () => {
+  describe('resetCurrentTabToDefaultUrl', () => {
+    it('should close tab and create new one with default URL', async () => {
+      // Arrange
+      const currentTab = { id: '123', url: 'https://current.com', index: 2 };
+      const newTab = { id: '456', url: 'https://default.com', index: 2 };
+      mockTabsService.setCurrentTab(currentTab);
+      await mockRepository.save('123', 'https://default.com');
+      mockTabsService.setFutureCreatedTab(newTab);
+      
+      // Act
+      await useCases.resetCurrentTabToDefaultUrl();
+      
+      // Assert
+      expect(mockTabsService.isTabClosed('123')).toBe(true);
+      expect(mockTabsService.getTab('456')).toEqual(newTab);
+      expect(await mockRepository.get('456')).toBe('https://default.com');
+    });
+
+    it('should do nothing when no default URL exists', async () => {
+      // Arrange
+      const currentTab = { id: '123', url: 'https://current.com', index: 2 };
+      mockTabsService.setCurrentTab(currentTab);
+      
+      // Act
+      await useCases.resetCurrentTabToDefaultUrl();
+      
+      // Assert
+      expect(mockTabsService.isTabClosed('123')).toBe(false);
+      expect(mockTabsService.getAllTabs().length).toBe(1);
+    });
+  });
+
+  describe('resetOrCloseCurrentTabToDefaultUrl', () => {
+    it('should just close tab when current URL matches default', async () => {
+      // Arrange
+      const currentTab = { id: '123', url: 'https://example.com', index: 2 };
+      mockTabsService.setCurrentTab(currentTab);
+      await mockRepository.save('123', 'https://example.com');
+      
+      // Act
+      await useCases.resetOrCloseCurrentTabToDefaultUrl();
+      
+      // Assert
+      expect(mockTabsService.isTabClosed('123')).toBe(true);
+      expect(mockTabsService.getAllTabs().length).toBe(0);
+    });
+
+    it('should reset tab when current URL differs from default', async () => {
+      // Arrange
+      const currentTab = { id: '123', url: 'https://current.com', index: 2 };
+      const newTab = { id: '456', url: 'https://default.com', index: 2 };
+      mockTabsService.setCurrentTab(currentTab);
+      await mockRepository.save('123', 'https://default.com');
+      mockTabsService.setFutureCreatedTab(newTab);
+      
+      // Act
+      await useCases.resetOrCloseCurrentTabToDefaultUrl();
+      
+      // Assert
+      expect(mockTabsService.isTabClosed('123')).toBe(true);
+      expect(mockTabsService.getTab('456')).toEqual(newTab);
+    });
+  });
+});
+```
+
+#### For Presentation Components
+Generate black-box tests for React components using Vitest + React Testing Library:
+
+**Test Focus:**
+1. **What renders**: Verify the DOM structure and content.
+2. **User interactions**: Simulate clicks, typing, etc.
+3. **Observable results**: Check DOM updates, storage changes, or API calls.
+
+**Example Test:**
+```javascript
+it('should display the default URL when pop-up opens', () => {
+  // Arrange
+  mockStorage.set('currentTab', 'https://example.com');
+  
+  // Act
+  render(<PopUp />);
+  
+  // Assert
+  expect(screen.getByDisplayValue('https://example.com')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /reset/i })).toBeEnabled();
+});
+
+it('should disable reset button when no default URL exists', () => {
+  // Arrange - no default URL
+  
+  // Act
+  render(<PopUp />);
+  
+  // Assert
+  expect(screen.getByRole('button', { name: /reset/i })).toBeDisabled();
+});
+```
+
+#### General Black Box Testing Guidelines
+
+**What to Test:**
+- ✅ Return values from methods
+- ✅ State changes in storage/database
+- ✅ Tab creation/closure/navigation
+- ✅ UI rendering and user interactions
+- ✅ Error handling and edge cases
+
+**What NOT to Test:**
+- ❌ Internal method calls (e.g., "it should call tabsService.getCurrentTab()")
+- ❌ Number of times dependencies are called
+- ❌ Order of internal operations
+- ❌ Private method behavior
+
+**Best Practices:**
+- Mock external dependencies (browser APIs, storage) to maintain state like the real thing.
+- Test from the user's or consumer's perspective.
+- Use realistic test data (real URLs, tab IDs, etc.).
+- Test complete scenarios, not isolated steps.
+- Verify end state, not intermediate steps.
