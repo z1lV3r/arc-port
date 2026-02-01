@@ -10,7 +10,7 @@
 ### AI Test Generation Prompts
 
 #### For Use Cases
-Generate black-box unit tests for the refactored use case classes using Vitest. Each use case class should be tested independently.
+Generate black-box unit tests using Vitest. Each use case class should be tested independently.
 
 **Setup Pattern:**
 ```javascript

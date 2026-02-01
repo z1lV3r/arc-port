@@ -1,14 +1,45 @@
-/*
-**File:** `code/src/features/default-url/use-cases/clear-default-url-use-cases.ts`
+import { describe, it, expect, beforeEach } from 'vitest';
+import { ClearDefaultUrlUseCases } from '@/features/default-url/use-cases/clear-default-url-use-cases';
+import type { DefaultUrlRepository } from '@/features/default-url/domain/interfaces/default-url-repository';
+import { InMemoryDefaultUrlRepository } from '../../infrastructure/in-memory-default-url-repository';
+import { MockTabsService } from '../../infrastructure/mock-tabs-service';
 
-**Method:** `clearCurrentTabDefaultUrl()`
+describe('ClearDefaultUrlUseCases - clearCurrentTabDefaultUrl', () => {
+  let useCases: ClearDefaultUrlUseCases;
+  let mockTabsService: MockTabsService;
+  let mockRepository: DefaultUrlRepository;
 
-When called for a tab with no default URL in storage
-- the method should complete without error.
-- the storage should remain empty for that tab.
+  beforeEach(() => {
+    mockRepository = new InMemoryDefaultUrlRepository();
+    mockTabsService = new MockTabsService();
+    useCases = new ClearDefaultUrlUseCases(mockTabsService, mockRepository);
+  });
 
-When called for a tab with a default URL in storage
-- the method should complete without error.
-- the default URL should be removed from storage.
-- calling `GetDefaultUrlUseCases.getCurrentTabDefaultUrl()` should return an empty string.
-*/
+  it('should complete without error and keep storage empty if no default URL exists', async () => {
+    // Arrange
+    const tabId = 'tab-no-default';
+    mockTabsService.setTabs([{ tabId, expectedUrl: 'https://example.com' }]);
+    
+    // Act
+    await useCases.clearCurrentTabDefaultUrl();
+    
+    // Assert
+    const storedUrl = await mockRepository.get(tabId);
+    expect(storedUrl).toBe('');
+  });
+
+  it('should remove the default URL from storage if it exists', async () => {
+    // Arrange
+    const tabId = 'tab-has-default';
+    const defaultUrl = 'https://default.com';
+    mockTabsService.setTabs([{ tabId, expectedUrl: 'https://current.com' }]);
+    await mockRepository.save(tabId, defaultUrl);
+    
+    // Act
+    await useCases.clearCurrentTabDefaultUrl();
+    
+    // Assert
+    const storedUrl = await mockRepository.get(tabId);
+    expect(storedUrl).toBe('');
+  });
+});

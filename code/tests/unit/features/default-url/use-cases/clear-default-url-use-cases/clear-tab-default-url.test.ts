@@ -1,13 +1,43 @@
-/*
-**File:** `code/src/features/default-url/use-cases/clear-default-url-use-cases.ts`
+import { describe, it, expect, beforeEach } from 'vitest';
+import { ClearDefaultUrlUseCases } from '@/features/default-url/use-cases/clear-default-url-use-cases';
+import type { DefaultUrlRepository } from '@/features/default-url/domain/interfaces/default-url-repository';
+import { InMemoryDefaultUrlRepository } from '../../infrastructure/in-memory-default-url-repository';
+import { MockTabsService } from '../../infrastructure/mock-tabs-service';
 
-**Method:** `clearTabDefaultUrl(tabId: string)`
+describe('ClearDefaultUrlUseCases - clearTabDefaultUrl', () => {
+  let useCases: ClearDefaultUrlUseCases;
+  let mockTabsService: MockTabsService;
+  let mockRepository: DefaultUrlRepository;
 
-When called for a tab ID with no default URL in storage
-- the method should complete without error.
-- the storage should remain empty for that tab.
+  beforeEach(() => {
+    mockRepository = new InMemoryDefaultUrlRepository();
+    mockTabsService = new MockTabsService();
+    useCases = new ClearDefaultUrlUseCases(mockTabsService, mockRepository);
+  });
 
-When called for a tab ID with a default URL in storage
-- the method should complete without error.
-- the default URL should be removed from storage for that specific tab ID.
-*/
+  it('should complete without error and keep storage empty if tab has no default URL', async () => {
+    // Arrange
+    const tabId = 'tab-no-default-specific';
+    
+    // Act
+    await useCases.clearTabDefaultUrl(tabId);
+    
+    // Assert
+    const storedUrl = await mockRepository.get(tabId);
+    expect(storedUrl).toBe('');
+  });
+
+  it('should remove the default URL from storage for the specific tab ID', async () => {
+    // Arrange
+    const tabId = 'tab-has-default-specific';
+    const defaultUrl = 'https://default.com';
+    await mockRepository.save(tabId, defaultUrl);
+    
+    // Act
+    await useCases.clearTabDefaultUrl(tabId);
+    
+    // Assert
+    const storedUrl = await mockRepository.get(tabId);
+    expect(storedUrl).toBe('');
+  });
+});

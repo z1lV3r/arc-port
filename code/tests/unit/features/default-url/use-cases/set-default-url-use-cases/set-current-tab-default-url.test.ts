@@ -1,17 +1,81 @@
-/*
-**File:** `code/src/features/default-url/use-cases/set-default-url-use-cases.ts`
-**Method:** `setCurrentTabDefaultUrl()`
+import { describe, it, expect, beforeEach } from 'vitest';
+import { SetDefaultUrlUseCases } from '@/features/default-url/use-cases/set-default-url-use-cases';
+import type { TabsService } from '@/features/default-url/domain/interfaces/tabs-service';
+import type { DefaultUrlRepository } from '@/features/default-url/domain/interfaces/default-url-repository';
+import { Tab } from '@/features/default-url/domain/models/tab';
+import { InMemoryDefaultUrlRepository } from '../../infrastructure/in-memory-default-url-repository';
+import { MockTabsService } from '../../infrastructure/mock-tabs-service';
 
-When called with a tab that has no URL (e.g., new tab page)
-- the method should return an empty string.
-- no default URL should be saved to storage.
+describe('SetDefaultUrlUseCases - setCurrentTabDefaultUrl', () => {
+  let useCases: SetDefaultUrlUseCases;
+  let mockTabsService: MockTabsService;
+  let mockRepository: DefaultUrlRepository;
 
-When called with a tab that has a valid URL (e.g., "https://example.com")
-- the method should return the tab's current URL.
-- the default URL should be saved in storage for that tab ID.
-- calling `GetDefaultUrlUseCases.getCurrentTabDefaultUrl()` should return the same URL.
+  beforeEach(() => {
+    mockRepository = new InMemoryDefaultUrlRepository();
+    mockTabsService = new MockTabsService();
+    useCases = new SetDefaultUrlUseCases(mockTabsService, mockRepository);
+  });
 
-When called multiple times on the same tab with different URLs
-- the method should return the new URL each time.
-- the storage should contain the most recent URL (not the first one).
-*/
+  it("should set the current tab's URL as the default URL and return it", async () => {
+    // Arrange
+    const tabId = 'tab-123';
+    const expectedUrl = 'https://example.com';
+    mockTabsService.setTabs([{ tabId, expectedUrl }]);
+    mockTabsService.setCurrentTab(tabId);
+
+    // Act
+    const result = await useCases.setCurrentTabDefaultUrl();
+
+    // Assert
+    // 1. Return values
+    expect(result).toBe(expectedUrl);
+
+    // 2. Storage state
+    const savedUrl = await mockRepository.get(tabId);
+    expect(savedUrl).toBe(expectedUrl);
+  });
+
+  it('should not set a default URL if the current tab has no URL', async () => {
+    // Arrange
+    const tabId = 'tab-empty';
+    mockTabsService.setTabs([{ tabId, expectedUrl: '' }]);
+    mockTabsService.setCurrentTab(tabId);
+
+    // Act
+    const result = await useCases.setCurrentTabDefaultUrl();
+
+    // Assert
+    // 1. Return values
+    expect(result).toBe('');
+
+    // 2. Storage state
+    const savedUrl = await mockRepository.get(tabId);
+    expect(savedUrl).toBe('');
+  });
+
+  it('should overwrite an existing default URL for the current tab', async () => {
+    // Arrange
+    const tabId = 'tab-overwrite';
+    const oldUrl = 'https://old.com';
+    const newUrl = 'https://new.com';
+    
+    // Set initial state
+    await mockRepository.save(tabId, oldUrl);
+    
+    // Setup tab with new URL
+    mockTabsService.setTabs([{ tabId, expectedUrl: newUrl }]);
+    mockTabsService.setCurrentTab(tabId);
+
+    // Act
+    const result = await useCases.setCurrentTabDefaultUrl();
+
+    // Assert
+    // 1. Return values
+    expect(result).toBe(newUrl);
+
+    // 2. Storage state
+    const savedUrl = await mockRepository.get(tabId);
+    expect(savedUrl).toBe(newUrl);
+  });
+});
