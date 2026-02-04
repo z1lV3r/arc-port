@@ -25,3 +25,7 @@ dist-ssr
 
 # VitePress
 docs/.vitepress/cache
+
+# Playwright
+playwright-report/
+test-results/
