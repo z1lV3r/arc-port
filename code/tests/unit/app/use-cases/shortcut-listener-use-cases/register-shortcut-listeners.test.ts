@@ -1,25 +1,61 @@
-/*
-# Tests
-## App - Black Box Testing Approach
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ShortcutListenerUseCases } from '@/app/use-cases/shortcut-listener-use-cases';
+import type { Listener } from '@/shared/domain/models/listener';
+import { MockBrowserShortcutService } from '../../infrastructure/mock-browser-shortcut-service';
 
-> **Testing Philosophy**: These tests treat components as black boxes, validating observable behaviors and outputs based on inputs without checking internal implementation details.
+describe('ShortcutListenerUseCases - registerShortcutListeners', () => {
+  let useCases: ShortcutListenerUseCases;
+  let mockService: MockBrowserShortcutService;
 
-### Domain Layer - Use Cases
+  beforeEach(() => {
+    mockService = new MockBrowserShortcutService();
+    useCases = new ShortcutListenerUseCases(mockService);
+  });
 
-#### Shortcut Listener Use Case
-**File:** `code/src/app/domain/use-cases/shortcut-listener-use-cases.ts`
+  const createListener = (name: string): Listener => ({
+    name,
+    description: `Description for ${name}`,
+    command: vi.fn().mockResolvedValue(undefined),
+  });
 
-When `registerShortcutListeners` is called with a single feature's listener array
-- the browser shortcut service should have listeners available for that feature.
+  it('should register listeners for a single feature', () => {
+    // Arrange
+    const featureListeners = [createListener('listener1'), createListener('listenerA')];
 
-When `registerShortcutListeners` is called with multiple features' listener arrays
-- the browser shortcut service should have listeners available for all features.
-- listeners from different features should be aggregated together.
+    // Act
+    useCases.registerShortcutListeners([featureListeners]);
 
-When `registerShortcutListeners` is called with an empty array
-- the browser shortcut service should be called without errors.
-- no shortcuts should be registered.
+    // Assert
+    expect(mockService.registeredStore).not.toBeNull();
+    expect(mockService.registeredStore!.getListener('listener1')).toBeDefined();
+    expect(mockService.registeredStore!.getListener('listenerA')).toBeDefined();
+  });
 
-When `registerShortcutListeners` is called with invalid listener data
-- the system should handle the error gracefully without crashing.
-*/
+  it('should register aggregated listeners from multiple features', () => {
+    // Arrange
+    const feature1Listeners = [createListener('f1_l1')];
+    const feature2Listeners = [createListener('f2_l1'), createListener('f2_l2')];
+
+    // Act
+    useCases.registerShortcutListeners([feature1Listeners, feature2Listeners]);
+
+    // Assert
+    expect(mockService.registeredStore).not.toBeNull();
+    expect(mockService.registeredStore!.getListener('f1_l1')).toBeDefined();
+    expect(mockService.registeredStore!.getListener('f2_l1')).toBeDefined();
+    expect(mockService.registeredStore!.getListener('f2_l2')).toBeDefined();
+  });
+
+  it('should call service without errors but register no items when input is empty', () => {
+    // Arrange
+    const emptyListeners: Listener[][] = [];
+
+    // Act
+    useCases.registerShortcutListeners(emptyListeners);
+
+    // Assert
+    expect(mockService.registeredStore).not.toBeNull();
+    const allListeners = Array.from(mockService.registeredStore!.getAllListeners());
+    expect(allListeners).toHaveLength(0);
+  });
+});

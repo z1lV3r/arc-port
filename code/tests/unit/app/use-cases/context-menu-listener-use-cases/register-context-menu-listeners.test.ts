@@ -1,25 +1,63 @@
-/*
-# Tests
-## App - Black Box Testing Approach
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ContextMenuListenerUseCases } from '@/app/use-cases/context-menu-listener-use-cases';
+import type { Listener } from '@/shared/domain/models/listener';
+import { MockBrowserContextMenuService } from '../../infrastructure/mock-browser-context-menu-service';
 
-> **Testing Philosophy**: These tests treat components as black boxes, validating observable behaviors and outputs based on inputs without checking internal implementation details.
+describe('ContextMenuListenerUseCases - registerContextMenuListeners', () => {
+  let useCases: ContextMenuListenerUseCases;
+  let mockService: MockBrowserContextMenuService;
 
-### Domain Layer - Use Cases
+  beforeEach(() => {
+    mockService = new MockBrowserContextMenuService();
+    useCases = new ContextMenuListenerUseCases(mockService);
+  });
 
-#### Context Menu Listener Use Case
-**File:** `code/src/app/domain/use-cases/context-menu-listener-use-cases.ts`
+  const createListener = (name: string): Listener => ({
+    name,
+    description: `Description for ${name}`,
+    command: vi.fn().mockResolvedValue(undefined),
+  });
 
-When `registerContextMenuListeners` is called with a single feature's listener array
-- the browser context menu service should have listeners available for that feature.
+  it('should register listeners for a single feature', () => {
+    // Arrange
+    const featureListeners = [createListener('listener1'), createListener('listenerA')];
+    
+    // Act
+    useCases.registerContextMenuListeners([featureListeners]);
+    
+    // Assert
+    expect(mockService.registeredStore).not.toBeNull();
+    expect(mockService.registeredStore!.getListener('listener1')).toBeDefined();
+    expect(mockService.registeredStore!.getListener('listenerA')).toBeDefined();
+  });
 
-When `registerContextMenuListeners` is called with multiple features' listener arrays
-- the browser context menu service should have listeners available for all features.
-- listeners from different features should be aggregated together.
+  it('should register aggregated listeners from multiple features', () => {
+    // Arrange
+    const feature1Listeners = [createListener('f1_l1')];
+    const feature2Listeners = [createListener('f2_l1'), createListener('f2_l2')];
+    
+    // Act
+    useCases.registerContextMenuListeners([feature1Listeners, feature2Listeners]);
+    
+    // Assert
+    expect(mockService.registeredStore).not.toBeNull();
+    expect(mockService.registeredStore!.getListener('f1_l1')).toBeDefined();
+    expect(mockService.registeredStore!.getListener('f2_l1')).toBeDefined();
+    expect(mockService.registeredStore!.getListener('f2_l2')).toBeDefined();
+  });
 
-When `registerContextMenuListeners` is called with an empty array
-- the browser context menu service should be called without errors.
-- no context menu items should be registered.
+  it('should call service without errors but register no items when input is empty', () => {
+    // Arrange
+    const emptyListeners: Listener[][] = [];
+    
+    // Act
+    useCases.registerContextMenuListeners(emptyListeners);
+    
+    // Assert
+    expect(mockService.registeredStore).not.toBeNull();
 
-When `registerContextMenuListeners` is called with invalid listener data
-- the system should handle the error gracefully without crashing.
-*/
+    const allListeners = Array.from(mockService.registeredStore!.getAllListeners());
+    expect(allListeners).toHaveLength(0);
+  });
+
+});

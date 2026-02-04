@@ -1,18 +1,61 @@
-/*
-# Tests
-## App - Black Box Testing Approach
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { TabEventListenerUseCases } from '@/app/use-cases/tab-event-listener-use-cases';
+import type { Listener } from '@/shared/domain/models/listener';
+import { MockBrowserTabEventService } from '../../infrastructure/mock-browser-tab-event-service';
 
-> **Testing Philosophy**: These tests treat components as black boxes, validating observable behaviors and outputs based on inputs without checking internal implementation details.
+describe('TabEventListenerUseCases - registerOnCloseTabEventListeners', () => {
+  let useCases: TabEventListenerUseCases;
+  let mockService: MockBrowserTabEventService;
 
-### Domain Layer - Use Cases
+  beforeEach(() => {
+    mockService = new MockBrowserTabEventService();
+    useCases = new TabEventListenerUseCases(mockService);
+  });
 
+  const createListener = (name: string): Listener => ({
+    name,
+    description: `Description for ${name}`,
+    command: vi.fn().mockResolvedValue(undefined),
+  });
 
-#### Tab Event Listener Use Case
-**File:** `code/src/app/domain/use-cases/tab-event-listener-use-cases.ts`
+  it('should register close listeners for a single feature', () => {
+    // Arrange
+    const featureListeners = [createListener('listener1'), createListener('listenerA')];
 
-When `registerOnCloseTabEventListeners` is called with listener arrays
-- the browser should execute those listeners when a tab is closed.
+    // Act
+    useCases.registerOnCloseTabEventListeners([featureListeners]);
 
-When `registerOnCloseTabEventListeners` is called with an empty array
-- no listeners should be executed when a tab is closed.
-*/
+    // Assert
+    expect(mockService.onCloseStore).not.toBeNull();
+    expect(mockService.onCloseStore!.getListener('listener1')).toBeDefined();
+    expect(mockService.onCloseStore!.getListener('listenerA')).toBeDefined();
+  });
+
+  it('should register aggregated close listeners from multiple features', () => {
+    // Arrange
+    const feature1Listeners = [createListener('f1_l1')];
+    const feature2Listeners = [createListener('f2_l1'), createListener('f2_l2')];
+
+    // Act
+    useCases.registerOnCloseTabEventListeners([feature1Listeners, feature2Listeners]);
+
+    // Assert
+    expect(mockService.onCloseStore).not.toBeNull();
+    expect(mockService.onCloseStore!.getListener('f1_l1')).toBeDefined();
+    expect(mockService.onCloseStore!.getListener('f2_l1')).toBeDefined();
+    expect(mockService.onCloseStore!.getListener('f2_l2')).toBeDefined();
+  });
+
+  it('should call service without errors but register no items when input is empty', () => {
+    // Arrange
+    const emptyListeners: Listener[][] = [];
+
+    // Act
+    useCases.registerOnCloseTabEventListeners(emptyListeners);
+
+    // Assert
+    expect(mockService.onCloseStore).not.toBeNull();
+    const allListeners = Array.from(mockService.onCloseStore!.getAllListeners());
+    expect(allListeners).toHaveLength(0);
+  });
+});
