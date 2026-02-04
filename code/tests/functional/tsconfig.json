@@ -6,6 +6,7 @@
       "@/*": ["./src/*"]
     },
     "types": ["@playwright/test", "chrome", "node"],
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

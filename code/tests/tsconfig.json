@@ -5,7 +5,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vitest/globals", "chrome", "node"]
+    "types": ["vitest/globals", "chrome", "node"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   },
   "include": [".", "../src"]
 }
