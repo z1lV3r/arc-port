@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TabEventListenerUseCases } from '@/app/use-cases/tab-event-listener-use-cases';
-import type { Listener } from '@/shared/domain/models/listener';
+import type { TabEventListener } from '@/shared/domain/models/tab-event-listener';
 import { MockBrowserTabEventService } from '../../infrastructure/mock-browser-tab-event-service';
 
 describe('TabEventListenerUseCases - registerOnCloseTabEventListeners', () => {
@@ -12,7 +12,7 @@ describe('TabEventListenerUseCases - registerOnCloseTabEventListeners', () => {
     useCases = new TabEventListenerUseCases(mockService);
   });
 
-  const createListener = (name: string): Listener => ({
+  const createListener = (name: string): TabEventListener => ({
     name,
     description: `Description for ${name}`,
     command: vi.fn().mockResolvedValue(undefined),
@@ -48,7 +48,7 @@ describe('TabEventListenerUseCases - registerOnCloseTabEventListeners', () => {
 
   it('should call service without errors but register no items when input is empty', () => {
     // Arrange
-    const emptyListeners: Listener[][] = [];
+    const emptyListeners: TabEventListener[][] = [];
 
     // Act
     useCases.registerOnCloseTabEventListeners(emptyListeners);

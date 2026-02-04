@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ShortcutListenerUseCases } from '@/app/use-cases/shortcut-listener-use-cases';
-import type { Listener } from '@/shared/domain/models/listener';
+import type { ShortcutListener } from '@/shared/domain/models/shortcut-listener';
 import { MockBrowserShortcutService } from '../../infrastructure/mock-browser-shortcut-service';
 
 describe('ShortcutListenerUseCases - registerShortcutListeners', () => {
@@ -12,10 +12,14 @@ describe('ShortcutListenerUseCases - registerShortcutListeners', () => {
     useCases = new ShortcutListenerUseCases(mockService);
   });
 
-  const createListener = (name: string): Listener => ({
+  const createListener = (name: string): ShortcutListener => ({
     name,
     description: `Description for ${name}`,
     command: vi.fn().mockResolvedValue(undefined),
+    key: {
+      default: 'ctrl+shift+l',
+      mac: 'ctrl+shift+l',
+    },
   });
 
   it('should register listeners for a single feature', () => {
@@ -48,7 +52,7 @@ describe('ShortcutListenerUseCases - registerShortcutListeners', () => {
 
   it('should call service without errors but register no items when input is empty', () => {
     // Arrange
-    const emptyListeners: Listener[][] = [];
+    const emptyListeners: ShortcutListener[][] = [];
 
     // Act
     useCases.registerShortcutListeners(emptyListeners);

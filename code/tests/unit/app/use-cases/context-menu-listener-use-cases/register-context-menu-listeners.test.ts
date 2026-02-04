@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ContextMenuListenerUseCases } from '@/app/use-cases/context-menu-listener-use-cases';
 import type { Listener } from '@/shared/domain/models/listener';
 import { MockBrowserContextMenuService } from '../../infrastructure/mock-browser-context-menu-service';
+import { ContextMenuListener } from '@/shared/domain/models/context-menu-listener';
 
 describe('ContextMenuListenerUseCases - registerContextMenuListeners', () => {
   let useCases: ContextMenuListenerUseCases;
@@ -12,10 +13,11 @@ describe('ContextMenuListenerUseCases - registerContextMenuListeners', () => {
     useCases = new ContextMenuListenerUseCases(mockService);
   });
 
-  const createListener = (name: string): Listener => ({
+  const createListener = (name: string): ContextMenuListener => ({
     name,
     description: `Description for ${name}`,
     command: vi.fn().mockResolvedValue(undefined),
+    featureName: 'test',
   });
 
   it('should register listeners for a single feature', () => {
