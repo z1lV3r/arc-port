@@ -1,5 +1,5 @@
 /*
-When the browser context menu is opened (right-click)
+When the browser context menu is opened (right-click) in any empty space in the page
 - a "Default URL" parent menu item should be visible.
 - the menu should contain "Clear current tab URL" option.
 
