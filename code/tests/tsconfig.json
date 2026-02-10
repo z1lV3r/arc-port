@@ -8,7 +8,9 @@
     "types": ["vitest/globals", "chrome", "node"],
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "noEmit": true
   },
   "include": [".", "../src"]
 }

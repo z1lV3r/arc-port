@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
 /**
- * Playwright configuration for Chrome Extension functional testing
+ * Playwright configuration for Chrome Extension integration testing
  * 
  * This configuration is optimized for testing Chrome extensions by:
  * - Using Chromium browser
@@ -10,7 +10,7 @@ import * as path from 'path';
  * - Configuring proper test directories
  */
 export default defineConfig({
-  testDir: './tests/functional',
+  testDir: './tests/integration',
   testMatch: '**/*.test.ts',
   
   /* Maximum time one test can run */

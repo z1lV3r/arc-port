@@ -24,7 +24,7 @@ When `registerFeaturesShortcutListeners` is called given the browser has no exis
 - pressing a registered shortcut should trigger its associated functionality.
 
 When `registerFeaturesShortcutListeners` is called multiple times
-- the shortcuts should remain functional without duplication.
+- the shortcuts should remain integration without duplication.
 - each shortcut should trigger its functionality only once per keystroke.
 
 #### Tab Event Listener Provider

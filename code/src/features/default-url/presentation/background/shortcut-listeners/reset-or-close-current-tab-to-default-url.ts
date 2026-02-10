@@ -10,8 +10,8 @@ export class ResetOrCloseCurrentTabToDefaultUrl implements ShortcutListener {
   name = "shortcut-reset-or-close-current-tab-to-default-url";
   description = "Reset or close current tab to default URL";
   key = {
-    default: "Alt+Shift+W",
-    mac: "Option+Shift+W",
+    default: "Alt+Shift+D",
+    mac: "Option+Shift+D",
   };
   command = async () => {
     await this.resetTabToDefaultUrlUseCases.resetOrCloseCurrentTabToDefaultUrl();

@@ -1,6 +1,6 @@
 # Playwright Functional Tests
 
-This directory contains end-to-end functional tests for the Chrome extension using Playwright.
+This directory contains end-to-end integration tests for the Chrome extension using Playwright.
 
 ## Setup
 
@@ -14,7 +14,7 @@ Playwright has been configured for Chrome extension testing with:
 ## Running Tests
 
 ```bash
-# Run all functional tests
+# Run all integration tests
 npm run test:e2e
 
 # Run tests with UI mode (interactive)
@@ -29,7 +29,7 @@ npx playwright test on-click-set-current-tab-default-url.test.ts
 Functional tests are organized by feature:
 
 ```
-tests/functional/
+tests/integration/
 ├── fixtures.ts                    # Shared test fixtures for extension loading
 ├── features/                      # Feature-specific tests
 │   └── default-url/
@@ -39,7 +39,7 @@ tests/functional/
 │                   ├── on-click-set-current-tab-default-url.test.ts
 │                   ├── on-click-clear-current-tab-default-url.test.ts
 │                   └── on-click-reset-current-tab-to-default-url.test.ts
-└── tsconfig.json                  # TypeScript config for functional tests
+└── tsconfig.json                  # TypeScript config for integration tests
 ```
 
 ## Writing Tests
@@ -79,7 +79,7 @@ test.describe('Feature Name', () => {
 
 ## Notes
 
-- Extension must be built (`npm run build`) before running functional tests
+- Extension must be built (`npm run build`) before running integration tests
 - Tests run in headful mode (required for Chrome extensions)
 - TypeScript import resolution may show errors in IDE but tests will run correctly
 
