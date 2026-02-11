@@ -1,5 +1,4 @@
 import { defineConfig, devices } from '@playwright/test';
-import * as path from 'path';
 
 /**
  * Playwright configuration for Chrome Extension integration testing
