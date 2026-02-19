@@ -11,6 +11,10 @@ export default {
   action: {
     default_popup: "src/index.html",
   },
+  options_ui: {
+    page: "src/options.html",
+    open_in_tab: true,
+  },
   permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus"],
   host_permissions: ["<all_urls>"],
   background: {
