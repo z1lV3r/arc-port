@@ -2,21 +2,10 @@ import { test, expect } from '../../../../../fixtures';
 import type { Page, BrowserContext } from '@playwright/test';
 
 /*
- * Functional Test: Set Current Tab Default URL via Context Menu
- * 
- * End-to-end testing approach: We test the actual Chrome extension behavior
- * when the user interacts with the context menu to set the default URL.
- * 
- * Test Scenarios:
- * 1. When the browser context menu is opened (right-click) in any empty space in the page
- *    - a "Default URL" parent menu item should be visible
- *    - the menu should contain "Set current tab URL" option
- * 
- * 2. When the user selects "Set current tab URL" from context menu on "https://example.com"
- *    - the storage should contain "https://example.com" for this tab
+ * Functional Test: Clear Current Tab Default URL via Context Menu
  */
 
-test.describe('Context Menu - Set Current Tab Default URL', () => {
+test.describe('Context Menu - Clear Current Tab Default URL', () => {
   let page: Page;
 
   test.beforeEach(async ({ context }) => {
@@ -31,7 +20,7 @@ test.describe('Context Menu - Set Current Tab Default URL', () => {
     await page.close();
   });
 
-  test('should verify context-menu-set-current-tab-default-url listener is registered', async ({ context }) => {
+  test('should verify context-menu-clear-current-tab-default-url listener is registered', async ({ context }) => {
     // This test verifies that the specific context menu item is properly registered
     // by accessing the background service worker directly
     
@@ -47,7 +36,7 @@ test.describe('Context Menu - Set Current Tab Default URL', () => {
     await expect.poll(async () => {
       return await background.evaluate(async () => {
         return await new Promise<boolean>((resolve) => {
-          const menuItemId = 'context-menu-set-current-tab-default-url';
+          const menuItemId = 'context-menu-clear-current-tab-default-url';
           
           // Try to update the menu item - if it exists, this will succeed
           // If it doesn't exist, chrome.runtime.lastError will be set
