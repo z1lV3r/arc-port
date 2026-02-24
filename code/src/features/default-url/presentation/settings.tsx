@@ -12,15 +12,43 @@ import {
   ItemTitle,
   ItemDescription,
   ItemActions,
-  ItemSeparator,
 } from "@/shared/presentation/item";
-import { Separator } from "@/shared/presentation/separator";
-import { Info } from "lucide-react";
 import { useState, useEffect } from "react";
+import { SettingsShortcuts, type Shortcut } from "@/shared/presentation/settings-shortcuts";
+import { Separator } from "@/shared/presentation/separator";
+import { DefaultUrlShortcutListenerProvider } from "./background/shortcut-listener-provider";
+
+type SettingProps = {
+  title: string;
+  description: string;
+  isActive: boolean;
+  onToggle: () => void;
+};
+
+export function Setting({ title, description, isActive, onToggle }: SettingProps) {
+  return (
+    <Item>
+      <ItemContent>
+        <ItemTitle>{title}</ItemTitle>
+        <ItemDescription>{description}</ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <Button
+          variant={isActive ? "default" : "outline"}
+          size="sm"
+          onClick={onToggle}
+        >
+          {isActive ? "On" : "Off"}
+        </Button>
+      </ItemActions>
+    </Item>
+  );
+}
 
 export function Settings() {
   const [autoRedirect, setAutoRedirect] = useState(true);
   const [showNotifications, setShowNotifications] = useState(true);
+  const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
   // Load settings from storage on mount
   useEffect(() => {
@@ -30,6 +58,27 @@ export function Settings() {
       // Example: const settings = await defaultUrlRepository.getSettings();
       // setAutoRedirect(settings.autoRedirect);
       // setShowNotifications(settings.showNotifications);
+      
+      if (typeof chrome !== "undefined" && chrome.commands) {
+        const commands = await chrome.commands.getAll();
+        const shortcutListeners = new DefaultUrlShortcutListenerProvider().getShortcutListeners();
+
+        const currentShortcuts = commands.reduce<Shortcut[]>((shortcuts, cmd) => {
+          const listener = cmd.name ? shortcutListeners.find(l => l.name === cmd.name) : undefined;
+          
+          if (listener) {
+            shortcuts.push({
+              name: cmd.description || cmd.name || "Shortcut",
+              description: listener.description || "",
+              key: cmd.shortcut || "Not set"
+            });
+          }
+          
+          return shortcuts;
+        }, []);
+          
+        setShortcuts(currentShortcuts);
+      }
     };
 
     loadSettings();
@@ -54,6 +103,7 @@ export function Settings() {
     // Example: await defaultUrlRepository.resetSettings();
   };
 
+
   return (
     <GroupCard className="w-fit">
       <GroupCardHeader>
@@ -62,70 +112,38 @@ export function Settings() {
       <GroupCardContent>
         <div className="flex flex-col gap-4 min-w-[300px]">
           {/* Settings Options */}
-          <ItemGroup>
-            {/* Auto Redirect Setting */}
-            <Item>
-              <ItemContent>
-                <ItemTitle>Auto Redirect</ItemTitle>
-                <ItemDescription>
-                  Automatically redirect to default URL on tab open
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Button
-                  variant={autoRedirect ? "default" : "outline"}
-                  size="sm"
-                  onClick={handleToggleAutoRedirect}
-                >
-                  {autoRedirect ? "On" : "Off"}
-                </Button>
-              </ItemActions>
-            </Item>
+            <ItemGroup className="grid grid-cols-2 gap-4">
+              {/* Auto Redirect Setting */}
+              <Setting
+                title="Pop Up UI"
+                description="Show UI in extension pop up"
+                isActive={autoRedirect}
+                onToggle={handleToggleAutoRedirect}
+              />
 
-            <ItemSeparator />
+              {/* Notifications Setting */}
+              <Setting
+                title="Context Menu"
+                description="Show item on right click context menu"
+                isActive={showNotifications}
+                onToggle={handleToggleNotifications}
+              />
 
-            {/* Notifications Setting */}
-            <Item>
-              <ItemContent>
-                <ItemTitle>Notifications</ItemTitle>
-                <ItemDescription>
-                  Show notifications when redirecting to default URL
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Button
-                  variant={showNotifications ? "default" : "outline"}
-                  size="sm"
-                  onClick={handleToggleNotifications}
-                >
-                  {showNotifications ? "On" : "Off"}
-                </Button>
-              </ItemActions>
-            </Item>
-          </ItemGroup>
+              <Separator className="col-span-2" />
 
-          <Separator />
+              {/* Shortcuts */}
+              <SettingsShortcuts shortcuts={shortcuts} />
 
-          {/* Info Section */}
-          <div className="flex items-start gap-2 bg-muted/50 p-3 rounded-lg">
-            <Info className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium">Extension Info</span>
-              <span className="text-xs text-muted-foreground">
-                This extension helps you manage default URLs for tabs. Set a
-                default URL for any tab and quickly reset to it.
-              </span>
-            </div>
-          </div>
-
-          {/* Reset Button */}
-          <Button
-            variant="outline"
-            className="hover:text-destructive"
-            onClick={handleResetSettings}
-          >
-            Reset to Defaults
-          </Button>
+              <Separator className="col-span-2" />
+              
+              <Button
+                variant="outline"
+                className="hover:text-destructive col-span-2"
+                onClick={handleResetSettings}
+              >
+                Reset to Default
+              </Button>
+            </ItemGroup>
         </div>
       </GroupCardContent>
     </GroupCard>
