@@ -1,0 +1,48 @@
+import { createContext, useContext, useMemo, type ReactNode } from "react";
+import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcut-settings-service";
+import { DefaultUrlShortcutListenerProvider } from "./background/shortcut-listener-provider";
+import { DefaultUrlDependencyProvider } from "../dependency-provider";
+
+interface SettingsContextType {
+  shortcutSettingsService: ShortcutSettingsService;
+  defaultUrlShortcutListenerProvider: DefaultUrlShortcutListenerProvider;
+}
+
+export function ContextProvider({ children }: { children: ReactNode }) {
+  const dependencies = new DefaultUrlDependencyProvider();
+
+  const shortcutSettingsService = useMemo(
+    () => dependencies.getShortcutSettingsService(),
+    [],
+  );
+
+  const defaultUrlShortcutListenerProvider = useMemo(
+    () => new DefaultUrlShortcutListenerProvider(),
+    [],
+  );
+
+  return (
+    <SettingsContext.Provider
+      value={{
+        shortcutSettingsService,
+        defaultUrlShortcutListenerProvider,
+      }}
+    >
+      {children}
+    </SettingsContext.Provider>
+  );
+}
+
+const SettingsContext = createContext<SettingsContextType | undefined>(
+  undefined,
+);
+
+export function useSettingsContext() {
+  const context = useContext(SettingsContext);
+  if (!context) {
+    throw new Error(
+      "useSettingsContext must be used within a SettingsContextProvider",
+    );
+  }
+  return context;
+}

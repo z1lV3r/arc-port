@@ -4,15 +4,9 @@ import {
   Item,
   ItemContent,
   ItemTitle,
-  ItemDescription,
   ItemActions,
 } from "./item";
-
-export type Shortcut = {
-  name: string;
-  description: string;
-  key: string;
-};
+import type { Shortcut } from "../domain/models/shortcut-setting";
 
 export function SettingsShortcuts({ shortcuts }: { shortcuts: Shortcut[] }) {
   return (
@@ -21,7 +15,6 @@ export function SettingsShortcuts({ shortcuts }: { shortcuts: Shortcut[] }) {
         <Item key={idx}>
           <ItemContent>
             <ItemTitle>{shortcut.name}</ItemTitle>
-            <ItemDescription>{shortcut.description}</ItemDescription>
           </ItemContent>
           <ItemActions>
             <Input
@@ -36,7 +29,7 @@ export function SettingsShortcuts({ shortcuts }: { shortcuts: Shortcut[] }) {
       <Button
         variant={"outline"}
         size="sm"
-        className="col-span-2 hover:text-blue-500"
+        className="col-span-4 hover:text-blue-500"
       >
         Edit shortcuts
       </Button>

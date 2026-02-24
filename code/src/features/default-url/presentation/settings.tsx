@@ -14,9 +14,10 @@ import {
   ItemActions,
 } from "@/shared/presentation/item";
 import { useState, useEffect } from "react";
-import { SettingsShortcuts, type Shortcut } from "@/shared/presentation/settings-shortcuts";
+import { SettingsShortcuts } from "@/shared/presentation/settings-shortcuts";
 import { Separator } from "@/shared/presentation/separator";
-import { DefaultUrlShortcutListenerProvider } from "./background/shortcut-listener-provider";
+import type { Shortcut } from "@/shared/domain/models/shortcut-setting";
+import { useSettingsContext } from "./settings-context";
 
 type SettingProps = {
   title: string;
@@ -27,7 +28,7 @@ type SettingProps = {
 
 export function Setting({ title, description, isActive, onToggle }: SettingProps) {
   return (
-    <Item>
+    <Item className="col-span-2">
       <ItemContent>
         <ItemTitle>{title}</ItemTitle>
         <ItemDescription>{description}</ItemDescription>
@@ -46,59 +47,42 @@ export function Setting({ title, description, isActive, onToggle }: SettingProps
 }
 
 export function Settings() {
-  const [autoRedirect, setAutoRedirect] = useState(true);
-  const [showNotifications, setShowNotifications] = useState(true);
+  const [showPopUp, setShowPopUp] = useState(true);
+  const [showContextMenu, setShowContextMenu] = useState(true);
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
+
+  const { shortcutSettingsService, defaultUrlShortcutListenerProvider } = useSettingsContext();
 
   // Load settings from storage on mount
   useEffect(() => {
     const loadSettings = async () => {
-      // You can implement loading settings from Chrome storage here
-      // For now, using default values
-      // Example: const settings = await defaultUrlRepository.getSettings();
-      // setAutoRedirect(settings.autoRedirect);
-      // setShowNotifications(settings.showNotifications);
-      
-      if (typeof chrome !== "undefined" && chrome.commands) {
-        const commands = await chrome.commands.getAll();
-        const shortcutListeners = new DefaultUrlShortcutListenerProvider().getShortcutListeners();
-
-        const currentShortcuts = commands.reduce<Shortcut[]>((shortcuts, cmd) => {
-          const listener = cmd.name ? shortcutListeners.find(l => l.name === cmd.name) : undefined;
-          
-          if (listener) {
-            shortcuts.push({
-              name: cmd.description || cmd.name || "Shortcut",
-              description: listener.description || "",
-              key: cmd.shortcut || "Not set"
-            });
-          }
-          
-          return shortcuts;
-        }, []);
-          
-        setShortcuts(currentShortcuts);
-      }
+      // Load settings
+    };
+    const loadShortcuts = async () => {
+      const shortcuts = defaultUrlShortcutListenerProvider.getShortcutListeners().map(shortcut => shortcut.name);
+      const currentShortcuts = await shortcutSettingsService.getShortcuts(new Set(shortcuts));
+      setShortcuts(currentShortcuts);
     };
 
     loadSettings();
+    loadShortcuts();
   }, []);
 
-  const handleToggleAutoRedirect = () => {
-    setAutoRedirect(!autoRedirect);
+  const handleToggleShowPopUp = () => {
+    setShowPopUp(!showPopUp);
     // Save to Chrome storage
     // Example: await defaultUrlRepository.saveSetting('autoRedirect', !autoRedirect);
   };
 
-  const handleToggleNotifications = () => {
-    setShowNotifications(!showNotifications);
+  const handleToggleShowContextMenu = () => {
+    setShowContextMenu(!showContextMenu);
     // Save to Chrome storage
     // Example: await defaultUrlRepository.saveSetting('showNotifications', !showNotifications);
   };
 
   const handleResetSettings = async () => {
-    setAutoRedirect(true);
-    setShowNotifications(true);
+    setShowPopUp(true);
+    setShowContextMenu(true);
     // Reset in Chrome storage
     // Example: await defaultUrlRepository.resetSettings();
   };
@@ -112,33 +96,33 @@ export function Settings() {
       <GroupCardContent>
         <div className="flex flex-col gap-4 min-w-[300px]">
           {/* Settings Options */}
-            <ItemGroup className="grid grid-cols-2 gap-4">
+            <ItemGroup className="grid grid-cols-4 gap-4">
               {/* Auto Redirect Setting */}
               <Setting
                 title="Pop Up UI"
                 description="Show UI in extension pop up"
-                isActive={autoRedirect}
-                onToggle={handleToggleAutoRedirect}
+                isActive={showPopUp}
+                onToggle={handleToggleShowPopUp}
               />
 
               {/* Notifications Setting */}
               <Setting
                 title="Context Menu"
                 description="Show item on right click context menu"
-                isActive={showNotifications}
-                onToggle={handleToggleNotifications}
+                isActive={showContextMenu}
+                onToggle={handleToggleShowContextMenu}
               />
 
-              <Separator className="col-span-2" />
+              <Separator className="col-span-4" />
 
               {/* Shortcuts */}
               <SettingsShortcuts shortcuts={shortcuts} />
 
-              <Separator className="col-span-2" />
+              <Separator className="col-span-4" />
               
               <Button
                 variant="outline"
-                className="hover:text-destructive col-span-2"
+                className="hover:text-destructive col-span-4"
                 onClick={handleResetSettings}
               >
                 Reset to Default

@@ -6,6 +6,8 @@ import { GetDefaultUrlUseCases } from "./use-cases/get-default-url-use-cases";
 import { ClearDefaultUrlUseCases } from "./use-cases/clear-default-url-use-cases";
 import type { TabsService } from "./domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
+import { ChromeShortcutSettingsService } from "@/shared/infrastructure/chrome-shortcut-settings-service";
+import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcut-settings-service";
 
 export class DefaultUrlDependencyProvider {
   private tabsService: TabsService;
@@ -14,6 +16,7 @@ export class DefaultUrlDependencyProvider {
   private resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
   private getDefaultUrlUseCases: GetDefaultUrlUseCases;
   private clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
+  private shortcutSettingsService: ShortcutSettingsService;
 
   constructor() {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -46,6 +49,8 @@ export class DefaultUrlDependencyProvider {
       this.defaultUrlRepository,
     );
 
+    this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
+
     return this;
   }
 
@@ -71,5 +76,9 @@ export class DefaultUrlDependencyProvider {
 
   getClearDefaultUrlUseCases(): ClearDefaultUrlUseCases {
     return this.clearDefaultUrlUseCases;
+  }
+
+  getShortcutSettingsService(): ShortcutSettingsService {
+    return this.shortcutSettingsService;
   }
 }
