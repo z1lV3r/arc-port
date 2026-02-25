@@ -23,7 +23,7 @@ export class SettingsUseCases {
     }
 
     async resetShowPopUp(): Promise<void> {
-        await this.setShowPopUp(this.showPopUpDefaultValue);
+        this.setShowPopUp(this.showPopUpDefaultValue);
     }
 
     async getShowContextMenu(): Promise<boolean> {
@@ -35,6 +35,6 @@ export class SettingsUseCases {
     }
 
     async resetShowContextMenu(): Promise<void> {
-        await this.setShowContextMenu(this.showContextMenuDefaultValue);
+        this.setShowContextMenu(this.showContextMenuDefaultValue);
     }
 }
