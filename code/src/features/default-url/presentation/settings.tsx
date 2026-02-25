@@ -80,7 +80,10 @@ export function Settings() {
   };
 
   const handleResetSettings = async () => {
-    await settingsUseCases.resetSettings();
+    const resetShowPopUp = settingsUseCases.resetShowPopUp();
+    const resetShowContextMenu = settingsUseCases.resetShowContextMenu();
+    await resetShowPopUp;
+    await resetShowContextMenu;
     setShowPopUp(await settingsUseCases.getShowPopUp());
     setShowContextMenu(await settingsUseCases.getShowContextMenu());
   };
