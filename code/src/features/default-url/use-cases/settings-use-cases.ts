@@ -23,8 +23,9 @@ export class SettingsUseCases {
     }
 
     async resetShowPopUp(): Promise<void> {
-        this.settingsRepository.set(this.showPopUpKey, this.showPopUpDefaultValue);
+        await this.setShowPopUp(this.showPopUpDefaultValue);
     }
+
     async getShowContextMenu(): Promise<boolean> {
         return this.settingsRepository.get(this.showContextMenuKey, this.showContextMenuDefaultValue);
     }
@@ -34,6 +35,6 @@ export class SettingsUseCases {
     }
 
     async resetShowContextMenu(): Promise<void> {
-        this.settingsRepository.set(this.showContextMenuKey, this.showContextMenuDefaultValue);
+        await this.setShowContextMenu(this.showContextMenuDefaultValue);
     }
 }
