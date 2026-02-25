@@ -2,10 +2,12 @@ import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcut-settings-service";
 import { DefaultUrlShortcutListenerProvider } from "./background/shortcut-listener-provider";
 import { DefaultUrlDependencyProvider } from "../dependency-provider";
+import type { SettingsUseCases } from "../use-cases/settings-use-cases";
 
 interface SettingsContextType {
   shortcutSettingsService: ShortcutSettingsService;
   defaultUrlShortcutListenerProvider: DefaultUrlShortcutListenerProvider;
+  settingsUseCases: SettingsUseCases;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
@@ -21,11 +23,17 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const settingsUseCases = useMemo(
+    () => dependencies.getSettingsUseCases(),
+    [],
+  );
+
   return (
     <SettingsContext.Provider
       value={{
         shortcutSettingsService,
         defaultUrlShortcutListenerProvider,
+        settingsUseCases,
       }}
     >
       {children}

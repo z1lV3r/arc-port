@@ -8,6 +8,9 @@ import type { TabsService } from "./domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 import { ChromeShortcutSettingsService } from "@/shared/infrastructure/chrome-shortcut-settings-service";
 import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcut-settings-service";
+import type { SettingsRepository } from "@/shared/domain/interfaces/settings-repository";
+import { ChromeStorageSettingsRepository } from "@/shared/infrastructure/chrome-storage-settings-repository";
+import { SettingsUseCases } from "./use-cases/settings-use-cases";
 
 export class DefaultUrlDependencyProvider {
   private tabsService: TabsService;
@@ -17,6 +20,8 @@ export class DefaultUrlDependencyProvider {
   private getDefaultUrlUseCases: GetDefaultUrlUseCases;
   private clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
   private shortcutSettingsService: ShortcutSettingsService;
+  private settingsRepository: SettingsRepository;
+  private settingsUseCases: SettingsUseCases;
 
   constructor() {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -51,6 +56,12 @@ export class DefaultUrlDependencyProvider {
 
     this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
 
+    this.settingsRepository = new ChromeStorageSettingsRepository();
+
+    this.settingsUseCases = new SettingsUseCases(
+      this.settingsRepository,
+    );
+
     return this;
   }
 
@@ -80,5 +91,13 @@ export class DefaultUrlDependencyProvider {
 
   getShortcutSettingsService(): ShortcutSettingsService {
     return this.shortcutSettingsService;
+  }
+
+  getSettingsRepository(): SettingsRepository {
+    return this.settingsRepository;
+  }
+
+  getSettingsUseCases(): SettingsUseCases {
+    return this.settingsUseCases;
   }
 }

@@ -51,12 +51,13 @@ export function Settings() {
   const [showContextMenu, setShowContextMenu] = useState(true);
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
-  const { shortcutSettingsService, defaultUrlShortcutListenerProvider } = useSettingsContext();
+  const { shortcutSettingsService, defaultUrlShortcutListenerProvider, settingsUseCases } = useSettingsContext();
 
   // Load settings from storage on mount
   useEffect(() => {
     const loadSettings = async () => {
-      // Load settings
+      setShowPopUp(await settingsUseCases.getShowPopUp());
+      setShowContextMenu(await settingsUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
       const shortcuts = defaultUrlShortcutListenerProvider.getShortcutListeners().map(shortcut => shortcut.name);
@@ -68,23 +69,20 @@ export function Settings() {
     loadShortcuts();
   }, []);
 
-  const handleToggleShowPopUp = () => {
-    setShowPopUp(!showPopUp);
-    // Save to Chrome storage
-    // Example: await defaultUrlRepository.saveSetting('autoRedirect', !autoRedirect);
+  const handleToggleShowPopUp = async () => {
+    await settingsUseCases.setShowPopUp(!showPopUp);
+    setShowPopUp(await settingsUseCases.getShowPopUp());
   };
 
-  const handleToggleShowContextMenu = () => {
-    setShowContextMenu(!showContextMenu);
-    // Save to Chrome storage
-    // Example: await defaultUrlRepository.saveSetting('showNotifications', !showNotifications);
+  const handleToggleShowContextMenu = async () => {
+    await settingsUseCases.setShowContextMenu(!showContextMenu);
+    setShowContextMenu(await settingsUseCases.getShowContextMenu());
   };
 
   const handleResetSettings = async () => {
-    setShowPopUp(true);
-    setShowContextMenu(true);
-    // Reset in Chrome storage
-    // Example: await defaultUrlRepository.resetSettings();
+    await settingsUseCases.resetSettings();
+    setShowPopUp(await settingsUseCases.getShowPopUp());
+    setShowContextMenu(await settingsUseCases.getShowContextMenu());
   };
 
 
