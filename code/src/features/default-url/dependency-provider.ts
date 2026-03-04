@@ -1,10 +1,10 @@
-import { ChromeTabsService } from "./infrastructure/chrome-tabs-service";
+import { ChromeTabsService } from "@/shared/infrastructure/chrome-tabs-service";
 import { ChromeStorageDefaultUrlRepository } from "./infrastructure/chrome-storage-default-url-repository";
 import { SetDefaultUrlUseCases } from "./use-cases/set-default-url-use-cases";
 import { ResetTabToDefaultUrlUseCases } from "./use-cases/reset-tab-to-default-url-use-cases";
 import { GetDefaultUrlUseCases } from "./use-cases/get-default-url-use-cases";
 import { ClearDefaultUrlUseCases } from "./use-cases/clear-default-url-use-cases";
-import type { TabsService } from "./domain/interfaces/tabs-service";
+import type { TabsService } from "@/shared/domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 import { ChromeShortcutSettingsService } from "@/shared/infrastructure/chrome-shortcut-settings-service";
 import type { BrowserShortcutSettingsService } from "@/shared/domain/interfaces/browser-shortcut-settings-service";

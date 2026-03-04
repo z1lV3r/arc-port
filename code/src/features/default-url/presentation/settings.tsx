@@ -51,7 +51,7 @@ export function Settings() {
   const [showContextMenu, setShowContextMenu] = useState(true);
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
-  const { shortcutSettingsService, shortcutListeners, settingsUseCases } = useSettingsContext();
+  const { tabsService, shortcutSettingsService, shortcutListeners, settingsUseCases } = useSettingsContext();
 
   // Load settings from storage on mount
   useEffect(() => {
@@ -117,7 +117,7 @@ export function Settings() {
               <Separator className="col-span-4" />
 
               {/* Shortcuts */}
-              <SettingsShortcuts shortcuts={shortcuts} />
+              <SettingsShortcuts tabsService={tabsService} shortcuts={shortcuts} />
 
               <Separator className="col-span-4" />
               

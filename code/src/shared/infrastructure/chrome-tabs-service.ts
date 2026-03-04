@@ -1,4 +1,4 @@
-import type { TabsService } from "@/features/default-url/domain/interfaces/tabs-service";
+import type { TabsService } from "@/shared/domain/interfaces/tabs-service";
 import { Tab } from "@/features/default-url/domain/models/tab";
 
 export class ChromeTabsService implements TabsService {
@@ -32,8 +32,9 @@ export class ChromeTabsService implements TabsService {
     return new Tab(tab.id?.toString() || "", url, tab.index);
   }
 
-  async createTab(url: string, index: number): Promise<Tab> {
-    const tab = await chrome.tabs.create({ url, index });
+  async createTab(url: string, index?: number): Promise<Tab> {
+    const options = index !== undefined ? { url, index } : { url };
+    const tab = await chrome.tabs.create(options);
     return new Tab(tab.id?.toString() || "", tab.url || "", tab.index);
   }
 

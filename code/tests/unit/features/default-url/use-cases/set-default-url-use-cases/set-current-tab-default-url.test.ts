@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SetDefaultUrlUseCases } from '@/features/default-url/use-cases/set-default-url-use-cases';
-import type { TabsService } from '@/features/default-url/domain/interfaces/tabs-service';
+import type { TabsService } from '@/shared/domain/interfaces/tabs-service';
 import type { DefaultUrlRepository } from '@/features/default-url/domain/interfaces/default-url-repository';
 import { Tab } from '@/features/default-url/domain/models/tab';
 import { InMemoryDefaultUrlRepository } from '../../infrastructure/in-memory-default-url-repository';

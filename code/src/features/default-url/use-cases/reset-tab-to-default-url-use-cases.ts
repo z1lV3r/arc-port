@@ -1,4 +1,4 @@
-import type { TabsService } from "../domain/interfaces/tabs-service";
+import type { TabsService } from "@/shared/domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "../domain/interfaces/default-url-repository";
 import { Tab } from "../domain/models/tab";
 

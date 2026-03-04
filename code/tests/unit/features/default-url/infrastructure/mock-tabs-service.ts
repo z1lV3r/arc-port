@@ -1,4 +1,4 @@
-import { TabsService } from "@/features/default-url/domain/interfaces/tabs-service";
+import { TabsService } from "@/shared/domain/interfaces/tabs-service";
 import { Tab } from "@/features/default-url/domain/models/tab";
 
 export class MockTabsService implements TabsService {
