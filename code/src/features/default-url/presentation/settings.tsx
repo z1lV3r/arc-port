@@ -51,7 +51,7 @@ export function Settings() {
   const [showContextMenu, setShowContextMenu] = useState(true);
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
-  const { shortcutSettingsService, defaultUrlShortcutListenerProvider, settingsUseCases } = useSettingsContext();
+  const { shortcutSettingsService, shortcutListeners, settingsUseCases } = useSettingsContext();
 
   // Load settings from storage on mount
   useEffect(() => {
@@ -60,7 +60,7 @@ export function Settings() {
       setShowContextMenu(await settingsUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
-      const shortcuts = defaultUrlShortcutListenerProvider.getShortcutListeners().map(shortcut => shortcut.name);
+      const shortcuts = shortcutListeners.map(shortcut => shortcut.name);
       const currentShortcuts = await shortcutSettingsService.getShortcuts(new Set(shortcuts));
       setShortcuts(currentShortcuts);
     };

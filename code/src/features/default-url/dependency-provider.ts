@@ -11,6 +11,20 @@ import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcu
 import type { SettingsRepository } from "@/shared/domain/interfaces/settings-repository";
 import { ChromeStorageSettingsRepository } from "@/shared/infrastructure/chrome-storage-settings-repository";
 import { SettingsUseCases } from "./use-cases/settings-use-cases";
+import { ResetCurrentTabToDefaultUrlContextMenuListener } from "./presentation/background/context-menu-listeners/reset-current-tab-to-default-url-context-menu-listener";
+import { SetCurrentTabDefaultUrlContextMenuListener } from "./presentation/background/context-menu-listeners/set-current-tab-default-url-context-menu-listener";
+import { ClearCurrentTabDefaultUrlContextMenuListener } from "./presentation/background/context-menu-listeners/clear-current-tab-default-url-context-menu-listener";
+import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
+import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
+import { SetCurrentTabDefaultUrlShortcutListener } from "./presentation/background/shortcut-listeners/set-current-tab-default-url-shortcut-listener";
+import { ClearCurrentTabDefaultUrlShortcutListener } from "./presentation/background/shortcut-listeners/clear-current-tab-default-url-shortcut-listener";
+import { ResetCurrentTabToDefaultUrlShortcutListener } from "./presentation/background/shortcut-listeners/reset-current-tab-to-default-url-shortcut-listener";
+import { ResetOrCloseCurrentTabToDefaultUrlShortcutListener } from "./presentation/background/shortcut-listeners/reset-or-close-current-tab-to-default-url-shortcut-listener";
+import { OnTabCloseRemoveDefaultUrl } from "./presentation/background/tab-event-listeners/on-tab-close-delete-default-url";
+import { OnTabPinSetDefaultUrl } from "./presentation/background/tab-event-listeners/on-tab-pin-set-default-url";
+import { OnTabSetToGroupSetDefaultUrl } from "./presentation/background/tab-event-listeners/on-tab-set-to-group-set-default-url";
+import { OnTabCreatePinnedSetDefaultUrl } from "./presentation/background/tab-event-listeners/on-tab-create-pinned-set-default-url";
+import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
 
 export class DefaultUrlDependencyProvider {
   private tabsService: TabsService;
@@ -22,6 +36,11 @@ export class DefaultUrlDependencyProvider {
   private shortcutSettingsService: ShortcutSettingsService;
   private settingsRepository: SettingsRepository;
   private settingsUseCases: SettingsUseCases;
+  private contextMenuListeners: ContextMenuListener[];
+  private shortcutListeners: ShortcutListener[];
+  private onCloseTabEventListeners: TabEventListener[];
+  private onUpdateTabEventListeners: TabEventListener[];
+  private onCreateTabEventListeners: TabEventListener[];
 
   constructor() {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -30,6 +49,8 @@ export class DefaultUrlDependencyProvider {
     if (browserName === "chrome") {
       this.tabsService = new ChromeTabsService();
       this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
+      this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
+      this.settingsRepository = new ChromeStorageSettingsRepository();
     } else {
       throw new Error("Unsupported browser");
     }
@@ -54,12 +75,35 @@ export class DefaultUrlDependencyProvider {
       this.defaultUrlRepository,
     );
 
-    this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
+    this.contextMenuListeners = [
+      new SetCurrentTabDefaultUrlContextMenuListener(this.setDefaultUrlUseCases),
+      new ResetCurrentTabToDefaultUrlContextMenuListener(this.resetTabToDefaultUrlUseCases),
+      new ClearCurrentTabDefaultUrlContextMenuListener(this.clearDefaultUrlUseCases),
+    ];
 
-    this.settingsRepository = new ChromeStorageSettingsRepository();
+    this.shortcutListeners = [
+      new SetCurrentTabDefaultUrlShortcutListener(this.setDefaultUrlUseCases),
+      new ClearCurrentTabDefaultUrlShortcutListener(this.clearDefaultUrlUseCases),
+      new ResetCurrentTabToDefaultUrlShortcutListener(this.resetTabToDefaultUrlUseCases),
+      new ResetOrCloseCurrentTabToDefaultUrlShortcutListener(this.resetTabToDefaultUrlUseCases),
+    ];
+
+    this.onCloseTabEventListeners = [
+      new OnTabCloseRemoveDefaultUrl(this.clearDefaultUrlUseCases),
+    ];
+
+    this.onUpdateTabEventListeners = [
+      new OnTabPinSetDefaultUrl(this.setDefaultUrlUseCases),
+      new OnTabSetToGroupSetDefaultUrl(this.setDefaultUrlUseCases),
+    ];
+
+    this.onCreateTabEventListeners = [
+      new OnTabCreatePinnedSetDefaultUrl(this.setDefaultUrlUseCases),
+    ];
 
     this.settingsUseCases = new SettingsUseCases(
       this.settingsRepository,
+      this.contextMenuListeners,
     );
 
     return this;
@@ -99,5 +143,25 @@ export class DefaultUrlDependencyProvider {
 
   getSettingsUseCases(): SettingsUseCases {
     return this.settingsUseCases;
+  }
+
+  getContextMenuListeners(): ContextMenuListener[] {
+    return this.contextMenuListeners;
+  }
+
+  getShortcutListeners(): ShortcutListener[] {
+    return this.shortcutListeners;
+  }
+
+  getOnCloseTabEventListeners(): TabEventListener[] {
+    return this.onCloseTabEventListeners;
+  }
+
+  getOnUpdateTabEventListeners(): TabEventListener[] {
+    return this.onUpdateTabEventListeners;
+  }
+
+  getOnCreateTabEventListeners(): TabEventListener[] {
+    return this.onCreateTabEventListeners;
   }
 }

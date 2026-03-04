@@ -1,7 +1,7 @@
 import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 import type { ResetTabToDefaultUrlUseCases } from "@/features/default-url/use-cases/reset-tab-to-default-url-use-cases";
 
-export class ResetOrCloseCurrentTabToDefaultUrl implements ShortcutListener {
+export class ResetOrCloseCurrentTabToDefaultUrlShortcutListener implements ShortcutListener {
   private readonly resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
 
   constructor(resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases) {

@@ -17,7 +17,6 @@ describe('ContextMenuListenerUseCases - registerContextMenuListeners', () => {
     name,
     description: `Description for ${name}`,
     command: vi.fn().mockResolvedValue(undefined),
-    featureName: 'test',
   });
 
   it('should register listeners for a single feature', () => {

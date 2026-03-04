@@ -1,4 +1,3 @@
-import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 import type { ListenersStore } from "../domain/models/listeners-store";
 import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 
@@ -7,28 +6,6 @@ export default class ChromeContextMenuService implements BrowserContextMenuServi
   async registerContextMenuListeners(
     listenersStore: ListenersStore,
   ) {
-    chrome.runtime.onInstalled.addListener(async () => {
-      const features : string[] = [];
-
-      for (const [listenerName, listener] of listenersStore.getAllListeners() as unknown as [string, ContextMenuListener][]) {
-        const featureName = listener.featureName;
-        if (!features.includes(featureName)) {
-          chrome.contextMenus.create({
-            id: featureName,
-            title: featureName,
-            contexts: ["all"],
-          });
-          features.push(featureName);
-        }
-        chrome.contextMenus.create({
-          parentId: featureName,
-          id: listenerName,
-          title: listener.description,
-          contexts: ["all"],
-        });
-      }
-    });
-
     chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const listener = listenersStore.getListener(info.menuItemId.toString());
       if (listener && tab?.id) {

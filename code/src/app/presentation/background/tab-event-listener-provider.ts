@@ -1,6 +1,6 @@
-import { DefaultUrlTabEventListenerProvider } from "@/features/default-url/presentation/background/tab-event-listener-provider";
 import { DependencyProvider } from "@/app/dependency-provider";
 import { TabEventListenerUseCases } from "@/app/use-cases/tab-event-listener-use-cases";
+import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
 
 export class TabEventListenerProvider {
 
@@ -14,19 +14,19 @@ export class TabEventListenerProvider {
 
   registerFeaturesOnCloseTabEventListeners() {
     this.useCase.registerOnCloseTabEventListeners([
-      new DefaultUrlTabEventListenerProvider().getOnCloseTabEventListeners(),
+      new DefaultUrlDependencyProvider().getOnCloseTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnUpdateTabEventListeners() {
     this.useCase.registerOnUpdateTabEventListeners([
-      new DefaultUrlTabEventListenerProvider().getOnUpdateTabEventListeners(),
+      new DefaultUrlDependencyProvider().getOnUpdateTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnCreateTabEventListeners() {
     this.useCase.registerOnCreateTabEventListeners([
-      new DefaultUrlTabEventListenerProvider().getOnCreateTabEventListeners(),
+      new DefaultUrlDependencyProvider().getOnCreateTabEventListeners(),
     ]);
   }
 }

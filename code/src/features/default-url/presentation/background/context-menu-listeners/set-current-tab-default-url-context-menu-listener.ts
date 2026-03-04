@@ -1,19 +1,15 @@
+import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 import type { SetDefaultUrlUseCases } from "@/features/default-url/use-cases/set-default-url-use-cases";
-import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 
-export class SetCurrentTabDefaultUrl implements ShortcutListener {
+export class SetCurrentTabDefaultUrlContextMenuListener implements ContextMenuListener {
   private readonly setDefaultUrlUseCases: SetDefaultUrlUseCases;
 
   constructor(setDefaultUrlUseCases: SetDefaultUrlUseCases) {
     this.setDefaultUrlUseCases = setDefaultUrlUseCases;
   }
-  name = "shortcut-set-current-tab-default-url";
+  name = "context-menu-set-current-tab-default-url";
   description = "Set current tab default URL";
-  key = {
-    default: "Alt+Shift+S",
-    mac: "Option+Shift+S",
-  };
   command = async () => {
     await this.setDefaultUrlUseCases.setCurrentTabDefaultUrl();
-  };
+  }
 }
