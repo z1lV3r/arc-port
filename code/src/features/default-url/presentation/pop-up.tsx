@@ -18,17 +18,21 @@ import { useState, useEffect } from "react";
 import { useDefaultUrlContext } from "./pop-up-context";
 
 function PopUp() {
-  const { getDefaultUrlUseCases, setDefaultUrlUseCases, resetTabToDefaultUrlUseCases, clearDefaultUrlUseCases } = useDefaultUrlContext();
+  const { getDefaultUrlUseCases, setDefaultUrlUseCases, resetTabToDefaultUrlUseCases, clearDefaultUrlUseCases, settingsUseCases } = useDefaultUrlContext();
   const [url, setUrl] = useState("");
+  const [showPopUp, setShowPopUp] = useState(false);
 
   useEffect(() => {
-    const fetchDefaultUrl = async () => {
-      const defaultUrl: string =
-        await getDefaultUrlUseCases.getCurrentTabDefaultUrl();
+    const fetchInitialData = async () => {
+      const [defaultUrl, popUpVisible] = await Promise.all([
+        getDefaultUrlUseCases.getCurrentTabDefaultUrl(),
+        settingsUseCases.getShowPopUp(),
+      ]);
       setUrl(defaultUrl);
+      setShowPopUp(popUpVisible);
     };
 
-    fetchDefaultUrl();
+    fetchInitialData();
   }, []);
 
   const handleSetCurrentTabDefaultUrl = async () => {
@@ -45,6 +49,8 @@ function PopUp() {
     await clearDefaultUrlUseCases.clearCurrentTabDefaultUrl();
     setUrl("");
   };
+
+  if (!showPopUp) return null;
 
   return (
     <GroupCard className="w-fit">

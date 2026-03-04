@@ -27,6 +27,8 @@ import { OnTabCreatePinnedSetDefaultUrl } from "./presentation/background/tab-ev
 import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
 import { ChromeContextMenuService } from "@/shared/infrastructure/chrome-context-menu-service";
 import type { BrowserContextMenuService } from "@/shared/domain/interfaces/browser-context-menu-service";
+import { ChromeExtensionService } from "@/shared/infrastructure/chrome-extension-service";
+import type { BrowserExtensionService } from "@/shared/domain/interfaces/browser-extension-service";
 
 export class DefaultUrlDependencyProvider {
   private tabsService: TabsService;
@@ -38,6 +40,7 @@ export class DefaultUrlDependencyProvider {
   private shortcutSettingsService: BrowserShortcutSettingsService;
   private settingsRepository: SettingsRepository;
   private browserContextMenuService: BrowserContextMenuService;
+  private browserExtensionService: BrowserExtensionService;
   private settingsUseCases: SettingsUseCases;
   private contextMenuListeners: ContextMenuListener[];
   private shortcutListeners: ShortcutListener[];
@@ -55,6 +58,7 @@ export class DefaultUrlDependencyProvider {
       this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
       this.settingsRepository = new ChromeStorageSettingsRepository();
       this.browserContextMenuService = new ChromeContextMenuService();
+      this.browserExtensionService = new ChromeExtensionService();
     } else {
       throw new Error("Unsupported browser");
     }
@@ -108,6 +112,7 @@ export class DefaultUrlDependencyProvider {
     this.settingsUseCases = new SettingsUseCases(
       this.settingsRepository,
       this.browserContextMenuService,
+      this.browserExtensionService,
       this.contextMenuListeners,
     );
 
@@ -168,5 +173,9 @@ export class DefaultUrlDependencyProvider {
 
   getOnCreateTabEventListeners(): TabEventListener[] {
     return this.onCreateTabEventListeners;
+  }
+
+  getBrowserExtensionService(): BrowserExtensionService {
+    return this.browserExtensionService;
   }
 }

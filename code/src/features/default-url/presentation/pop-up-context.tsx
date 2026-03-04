@@ -4,12 +4,14 @@ import type { ResetTabToDefaultUrlUseCases } from "@/features/default-url/use-ca
 import type { GetDefaultUrlUseCases } from "@/features/default-url/use-cases/get-default-url-use-cases";
 import type { ClearDefaultUrlUseCases } from "@/features/default-url/use-cases/clear-default-url-use-cases";
 import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
+import type { SettingsUseCases } from "@/features/default-url/use-cases/settings-use-cases";
 
 interface DefaultUrlContextType {
   setDefaultUrlUseCases: SetDefaultUrlUseCases;
   resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
   getDefaultUrlUseCases: GetDefaultUrlUseCases;
   clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
+  settingsUseCases: SettingsUseCases;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
@@ -35,6 +37,11 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const settingsUseCases = useMemo(
+    () => dependencies.getSettingsUseCases(),
+    [],
+  );
+
   return (
     <DefaultUrlContext.Provider
       value={{
@@ -42,6 +49,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         resetTabToDefaultUrlUseCases,
         getDefaultUrlUseCases,
         clearDefaultUrlUseCases,
+        settingsUseCases,
       }}
     >
       {children}

@@ -1,4 +1,5 @@
 import type { BrowserContextMenuService } from "@/shared/domain/interfaces/browser-context-menu-service";
+import type { BrowserExtensionService } from "@/shared/domain/interfaces/browser-extension-service";
 import type { SettingsRepository } from "@/shared/domain/interfaces/settings-repository";
 import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 
@@ -6,6 +7,7 @@ export class SettingsUseCases {
   private readonly settingsRepository: SettingsRepository;
   private readonly contextMenuListeners: ContextMenuListener[];
   private readonly browserContextMenuService: BrowserContextMenuService;
+  private readonly browserExtensionService: BrowserExtensionService;
 
   private readonly settingsPrefix: string = "settings-default-url-";
   private readonly showPopUpKey: string = this.settingsPrefix + "show-pop-up";
@@ -16,16 +18,19 @@ export class SettingsUseCases {
   constructor(
     settingsRepository: SettingsRepository,
     browserContextMenuService: BrowserContextMenuService,
+    browserExtensionService: BrowserExtensionService,
     contextMenuListeners: ContextMenuListener[] = [],
   ) {
     this.settingsRepository = settingsRepository;
     this.browserContextMenuService = browserContextMenuService;
+    this.browserExtensionService = browserExtensionService;
     this.contextMenuListeners = contextMenuListeners;
 
-    this.settingsRepository.get(this.showContextMenuKey).then((showContextMenu) => {
-      if (showContextMenu === undefined) {
-        this.resetShowContextMenu();
-      }
+    //if extension Installed/reinstalled re evaluate context menus creation
+    this.getShowContextMenu().then((showContextMenu) => {
+      this.browserExtensionService.onInstalled(async () => {
+        this.setShowContextMenu(showContextMenu);
+      });
     });
   }
 
