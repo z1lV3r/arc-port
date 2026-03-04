@@ -1,11 +1,11 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcut-settings-service";
+import type { BrowserShortcutSettingsService } from "@/shared/domain/interfaces/browser-shortcut-settings-service";
 import { DefaultUrlDependencyProvider } from "../dependency-provider";
 import type { SettingsUseCases } from "../use-cases/settings-use-cases";
 import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
 
 interface SettingsContextType {
-  shortcutSettingsService: ShortcutSettingsService;
+  shortcutSettingsService: BrowserShortcutSettingsService;
   shortcutListeners: ShortcutListener[];
   settingsUseCases: SettingsUseCases;
 }

@@ -7,7 +7,7 @@ import { ClearDefaultUrlUseCases } from "./use-cases/clear-default-url-use-cases
 import type { TabsService } from "./domain/interfaces/tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 import { ChromeShortcutSettingsService } from "@/shared/infrastructure/chrome-shortcut-settings-service";
-import type { ShortcutSettingsService } from "@/shared/domain/interfaces/shortcut-settings-service";
+import type { BrowserShortcutSettingsService } from "@/shared/domain/interfaces/browser-shortcut-settings-service";
 import type { SettingsRepository } from "@/shared/domain/interfaces/settings-repository";
 import { ChromeStorageSettingsRepository } from "@/shared/infrastructure/chrome-storage-settings-repository";
 import { SettingsUseCases } from "./use-cases/settings-use-cases";
@@ -25,6 +25,8 @@ import { OnTabPinSetDefaultUrl } from "./presentation/background/tab-event-liste
 import { OnTabSetToGroupSetDefaultUrl } from "./presentation/background/tab-event-listeners/on-tab-set-to-group-set-default-url";
 import { OnTabCreatePinnedSetDefaultUrl } from "./presentation/background/tab-event-listeners/on-tab-create-pinned-set-default-url";
 import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
+import { ChromeContextMenuService } from "@/shared/infrastructure/chrome-context-menu-service";
+import type { BrowserContextMenuService } from "@/shared/domain/interfaces/browser-context-menu-service";
 
 export class DefaultUrlDependencyProvider {
   private tabsService: TabsService;
@@ -33,8 +35,9 @@ export class DefaultUrlDependencyProvider {
   private resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
   private getDefaultUrlUseCases: GetDefaultUrlUseCases;
   private clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
-  private shortcutSettingsService: ShortcutSettingsService;
+  private shortcutSettingsService: BrowserShortcutSettingsService;
   private settingsRepository: SettingsRepository;
+  private browserContextMenuService: BrowserContextMenuService;
   private settingsUseCases: SettingsUseCases;
   private contextMenuListeners: ContextMenuListener[];
   private shortcutListeners: ShortcutListener[];
@@ -51,6 +54,7 @@ export class DefaultUrlDependencyProvider {
       this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
       this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
       this.settingsRepository = new ChromeStorageSettingsRepository();
+      this.browserContextMenuService = new ChromeContextMenuService();
     } else {
       throw new Error("Unsupported browser");
     }
@@ -103,6 +107,7 @@ export class DefaultUrlDependencyProvider {
 
     this.settingsUseCases = new SettingsUseCases(
       this.settingsRepository,
+      this.browserContextMenuService,
       this.contextMenuListeners,
     );
 
@@ -133,7 +138,7 @@ export class DefaultUrlDependencyProvider {
     return this.clearDefaultUrlUseCases;
   }
 
-  getShortcutSettingsService(): ShortcutSettingsService {
+  getShortcutSettingsService(): BrowserShortcutSettingsService {
     return this.shortcutSettingsService;
   }
 
