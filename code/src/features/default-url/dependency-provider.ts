@@ -27,155 +27,251 @@ import { OnTabCreatePinnedSetDefaultUrl } from "./presentation/background/tab-ev
 import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
 import { ChromeContextMenuService } from "@/shared/infrastructure/chrome-context-menu-service";
 import type { BrowserContextMenuService } from "@/shared/domain/interfaces/browser-context-menu-service";
-import { ChromeExtensionService } from "@/shared/infrastructure/chrome-extension-service";
-import type { BrowserExtensionService } from "@/shared/domain/interfaces/browser-extension-service";
+import type { ExtensionListener } from "@/shared/domain/models/extension-listener";
+import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/background/extension-listeners/on-extension-installed-load-default-settings";
 
 export class DefaultUrlDependencyProvider {
-  private tabsService: TabsService;
-  private defaultUrlRepository: DefaultUrlRepository;
-  private setDefaultUrlUseCases: SetDefaultUrlUseCases;
-  private resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
-  private getDefaultUrlUseCases: GetDefaultUrlUseCases;
-  private clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
-  private shortcutSettingsService: BrowserShortcutSettingsService;
-  private settingsRepository: SettingsRepository;
-  private browserContextMenuService: BrowserContextMenuService;
-  private browserExtensionService: BrowserExtensionService;
-  private settingsUseCases: SettingsUseCases;
-  private contextMenuListeners: ContextMenuListener[];
-  private shortcutListeners: ShortcutListener[];
-  private onCloseTabEventListeners: TabEventListener[];
-  private onUpdateTabEventListeners: TabEventListener[];
-  private onCreateTabEventListeners: TabEventListener[];
+  private static tabsService: TabsService;
+  private static defaultUrlRepository: DefaultUrlRepository;
+  private static setDefaultUrlUseCases: SetDefaultUrlUseCases;
+  private static resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
+  private static getDefaultUrlUseCases: GetDefaultUrlUseCases;
+  private static clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
+  private static shortcutSettingsService: BrowserShortcutSettingsService;
+  private static settingsRepository: SettingsRepository;
+  private static browserContextMenuService: BrowserContextMenuService;
+  private static settingsUseCases: SettingsUseCases;
+  private static contextMenuListeners: ContextMenuListener[];
+  private static shortcutListeners: ShortcutListener[];
+  private static onCloseTabEventListeners: TabEventListener[];
+  private static onUpdateTabEventListeners: TabEventListener[];
+  private static onCreateTabEventListeners: TabEventListener[];
+  private static onExtensionInstalledListeners: ExtensionListener[];
+  private static browserName: string;
 
-  constructor() {
+  private static getBrowserName(): string {
+    if (this.browserName) {
+      return this.browserName;
+    }
+
     const userAgent = navigator.userAgent.toLowerCase();
-    const browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
+    this.browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
+    return this.browserName;
+  }
 
-    if (browserName === "chrome") {
+  static getTabsService(): TabsService {
+    if(this.tabsService) {
+      return this.tabsService;
+    }
+
+    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
       this.tabsService = new ChromeTabsService();
-      this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
-      this.shortcutSettingsService = new ChromeShortcutSettingsService(); 
-      this.settingsRepository = new ChromeStorageSettingsRepository();
-      this.browserContextMenuService = new ChromeContextMenuService();
-      this.browserExtensionService = new ChromeExtensionService();
     } else {
       throw new Error("Unsupported browser");
     }
 
-    this.setDefaultUrlUseCases = new SetDefaultUrlUseCases(
-      this.tabsService,
-      this.defaultUrlRepository,
-    );
-
-    this.resetTabToDefaultUrlUseCases = new ResetTabToDefaultUrlUseCases(
-      this.tabsService,
-      this.defaultUrlRepository,
-    );
-
-    this.getDefaultUrlUseCases = new GetDefaultUrlUseCases(
-      this.tabsService,
-      this.defaultUrlRepository,
-    );
-
-    this.clearDefaultUrlUseCases = new ClearDefaultUrlUseCases(
-      this.tabsService,
-      this.defaultUrlRepository,
-    );
-
-    this.contextMenuListeners = [
-      new SetCurrentTabDefaultUrlContextMenuListener(this.setDefaultUrlUseCases),
-      new ResetCurrentTabToDefaultUrlContextMenuListener(this.resetTabToDefaultUrlUseCases),
-      new ClearCurrentTabDefaultUrlContextMenuListener(this.clearDefaultUrlUseCases),
-    ];
-
-    this.shortcutListeners = [
-      new SetCurrentTabDefaultUrlShortcutListener(this.setDefaultUrlUseCases),
-      new ClearCurrentTabDefaultUrlShortcutListener(this.clearDefaultUrlUseCases),
-      new ResetCurrentTabToDefaultUrlShortcutListener(this.resetTabToDefaultUrlUseCases),
-      new ResetOrCloseCurrentTabToDefaultUrlShortcutListener(this.resetTabToDefaultUrlUseCases),
-    ];
-
-    this.onCloseTabEventListeners = [
-      new OnTabCloseRemoveDefaultUrl(this.clearDefaultUrlUseCases),
-    ];
-
-    this.onUpdateTabEventListeners = [
-      new OnTabPinSetDefaultUrl(this.setDefaultUrlUseCases),
-      new OnTabSetToGroupSetDefaultUrl(this.setDefaultUrlUseCases),
-    ];
-
-    this.onCreateTabEventListeners = [
-      new OnTabCreatePinnedSetDefaultUrl(this.setDefaultUrlUseCases),
-    ];
-
-    this.settingsUseCases = new SettingsUseCases(
-      this.settingsRepository,
-      this.browserContextMenuService,
-      this.browserExtensionService,
-      this.contextMenuListeners,
-    );
-
-    return this;
-  }
-
-  getTabsService(): TabsService {
     return this.tabsService;
   }
 
-  getDefaultUrlRepository(): DefaultUrlRepository {
+  static getDefaultUrlRepository(): DefaultUrlRepository {
+    if(this.defaultUrlRepository) {
+      return this.defaultUrlRepository;
+    }
+
+    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
+      this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
+    } else {
+      throw new Error("Unsupported browser");
+    }
+
     return this.defaultUrlRepository;
   }
 
-  getSetDefaultUrlUseCases(): SetDefaultUrlUseCases {
-    return this.setDefaultUrlUseCases;
-  }
+  static getShortcutSettingsService(): BrowserShortcutSettingsService {
+    if(this.shortcutSettingsService) {
+      return this.shortcutSettingsService;
+    }
 
-  getResetTabToDefaultUrlUseCases(): ResetTabToDefaultUrlUseCases {
-    return this.resetTabToDefaultUrlUseCases;
-  }
+    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
+      this.shortcutSettingsService = new ChromeShortcutSettingsService();
+    } else {
+      throw new Error("Unsupported browser");
+    }
 
-  getGetDefaultUrlUseCases(): GetDefaultUrlUseCases {
-    return this.getDefaultUrlUseCases;
-  }
-
-  getClearDefaultUrlUseCases(): ClearDefaultUrlUseCases {
-    return this.clearDefaultUrlUseCases;
-  }
-
-  getShortcutSettingsService(): BrowserShortcutSettingsService {
     return this.shortcutSettingsService;
   }
 
-  getSettingsRepository(): SettingsRepository {
+  static getSettingsRepository(): SettingsRepository {
+    if(this.settingsRepository) {
+      return this.settingsRepository;
+    }
+
+    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
+      this.settingsRepository = new ChromeStorageSettingsRepository();
+    } else {
+      throw new Error("Unsupported browser");
+    }
+
     return this.settingsRepository;
   }
 
-  getSettingsUseCases(): SettingsUseCases {
+  static getBrowserContextMenuService(): BrowserContextMenuService {
+    if(this.browserContextMenuService) {
+      return this.browserContextMenuService;
+    }
+
+    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
+      this.browserContextMenuService = new ChromeContextMenuService();
+    } else {
+      throw new Error("Unsupported browser");
+    }
+
+    return this.browserContextMenuService;
+  }
+
+  static getSetDefaultUrlUseCases(): SetDefaultUrlUseCases {
+    if(this.setDefaultUrlUseCases) {
+      return this.setDefaultUrlUseCases;
+    }
+
+    this.setDefaultUrlUseCases = new SetDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.setDefaultUrlUseCases;
+  }
+
+  static getResetTabToDefaultUrlUseCases(): ResetTabToDefaultUrlUseCases {
+    if(this.resetTabToDefaultUrlUseCases) {
+      return this.resetTabToDefaultUrlUseCases;
+    }
+
+    this.resetTabToDefaultUrlUseCases = new ResetTabToDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.resetTabToDefaultUrlUseCases;
+  }
+
+  static getGetDefaultUrlUseCases(): GetDefaultUrlUseCases {
+    if(this.getDefaultUrlUseCases) {
+      return this.getDefaultUrlUseCases;
+    }
+
+    this.getDefaultUrlUseCases = new GetDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.getDefaultUrlUseCases;
+  }
+
+  static getClearDefaultUrlUseCases(): ClearDefaultUrlUseCases {
+    if(this.clearDefaultUrlUseCases) {
+      return this.clearDefaultUrlUseCases;
+    }
+
+    this.clearDefaultUrlUseCases = new ClearDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.clearDefaultUrlUseCases;
+  }
+
+  static getSettingsUseCases(): SettingsUseCases {
+    if(this.settingsUseCases) {
+      return this.settingsUseCases;
+    }
+
+    this.settingsUseCases = new SettingsUseCases(
+      DefaultUrlDependencyProvider.getSettingsRepository(),
+      DefaultUrlDependencyProvider.getBrowserContextMenuService(),
+      DefaultUrlDependencyProvider.getContextMenuListeners(),
+    );
+
     return this.settingsUseCases;
   }
 
-  getContextMenuListeners(): ContextMenuListener[] {
+  static getContextMenuListeners(): ContextMenuListener[] {
+    if(this.contextMenuListeners) {
+      return this.contextMenuListeners;
+    }
+
+    this.contextMenuListeners = [
+      new SetCurrentTabDefaultUrlContextMenuListener(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+      new ResetCurrentTabToDefaultUrlContextMenuListener(DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases()),
+      new ClearCurrentTabDefaultUrlContextMenuListener(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
+    ];
+
+    DefaultUrlDependencyProvider.getSettingsUseCases();
+
     return this.contextMenuListeners;
   }
 
-  getShortcutListeners(): ShortcutListener[] {
+  static getShortcutListeners(): ShortcutListener[] {
+    if(this.shortcutListeners) {
+      return this.shortcutListeners;
+    }
+
+    this.shortcutListeners = [
+      new SetCurrentTabDefaultUrlShortcutListener(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+      new ClearCurrentTabDefaultUrlShortcutListener(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
+      new ResetCurrentTabToDefaultUrlShortcutListener(DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases()),
+      new ResetOrCloseCurrentTabToDefaultUrlShortcutListener(DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases()),
+    ];
+
     return this.shortcutListeners;
   }
 
-  getOnCloseTabEventListeners(): TabEventListener[] {
+  static getOnCloseTabEventListeners(): TabEventListener[] {
+    if(this.onCloseTabEventListeners) {
+      return this.onCloseTabEventListeners;
+    }
+
+    this.onCloseTabEventListeners = [
+      new OnTabCloseRemoveDefaultUrl(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
+    ];
+
     return this.onCloseTabEventListeners;
   }
 
-  getOnUpdateTabEventListeners(): TabEventListener[] {
+  static getOnUpdateTabEventListeners(): TabEventListener[] {
+    if(this.onUpdateTabEventListeners) {
+      return this.onUpdateTabEventListeners;
+    }
+
+    this.onUpdateTabEventListeners = [
+      new OnTabPinSetDefaultUrl(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+      new OnTabSetToGroupSetDefaultUrl(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+    ];
+
     return this.onUpdateTabEventListeners;
   }
 
-  getOnCreateTabEventListeners(): TabEventListener[] {
+  static getOnCreateTabEventListeners(): TabEventListener[] {
+    if(this.onCreateTabEventListeners) {
+      return this.onCreateTabEventListeners;
+    }
+
+    this.onCreateTabEventListeners = [
+      new OnTabCreatePinnedSetDefaultUrl(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+    ];
+
     return this.onCreateTabEventListeners;
   }
 
-  getBrowserExtensionService(): BrowserExtensionService {
-    return this.browserExtensionService;
+  static getOnExtensionInstalledListeners(): ExtensionListener[] {
+    if(this.onExtensionInstalledListeners) {
+      return this.onExtensionInstalledListeners;
+    }
+
+    this.onExtensionInstalledListeners = [
+      new OnExtensionInstalledLoadDefaultSettings(DefaultUrlDependencyProvider.getSettingsUseCases()),
+    ];
+
+    return this.onExtensionInstalledListeners;
   }
 }

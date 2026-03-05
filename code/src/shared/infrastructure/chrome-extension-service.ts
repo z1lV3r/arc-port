@@ -1,18 +1,13 @@
+import type { ListenersStore } from "@/app/domain/models/listeners-store";
 import type { BrowserExtensionService } from "../domain/interfaces/browser-extension-service";
 
 export class ChromeExtensionService implements BrowserExtensionService {
-  private callbacks: (() => void)[];
 
-  constructor() {
-    this.callbacks = [];
+  registerOnExtensionInstalledListeners(listenersStore: ListenersStore): void {
     chrome.runtime.onInstalled.addListener(() => {
-      for (const callback of this.callbacks) {
-        callback();
+      for (const [_, listener] of listenersStore.getAllListeners()) {
+        listener.command();
       }
     });
-  }
-
-  onInstalled(callback: () => void): void {
-    this.callbacks.push(callback);
   }
 }

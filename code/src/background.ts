@@ -1,6 +1,10 @@
 import { TabEventListenerProvider } from "./app/presentation/background/tab-event-listener-provider";
 import { ContextMenuListenerProvider } from "./app/presentation/background/context-menu-listener-provider";
 import { ShortcutListenerProvider } from "./app/presentation/background/shortcut-listener-provider";
+import { ExtensionListenerProvider } from "./app/presentation/background/extension-listener-provider";
+
+const extensionListenerProvider = new ExtensionListenerProvider();
+extensionListenerProvider.registerFeaturesOnExtensionInstalledListeners();
 
 const contextMenuListenerProvider = new ContextMenuListenerProvider();
 contextMenuListenerProvider.registerFeaturesContextMenuListeners();

@@ -13,25 +13,23 @@ interface SettingsContextType {
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
-  const dependencies = new DefaultUrlDependencyProvider();
-
   const tabsService = useMemo(
-    () => dependencies.getTabsService(),
+    () => DefaultUrlDependencyProvider.getTabsService(),
     [],
   );
 
   const shortcutSettingsService = useMemo(
-    () => dependencies.getShortcutSettingsService(),
+    () => DefaultUrlDependencyProvider.getShortcutSettingsService(),
     [],
   );
 
   const shortcutListeners = useMemo(
-    () => dependencies.getShortcutListeners(),
+    () => DefaultUrlDependencyProvider.getShortcutListeners(),
     [],
   );
 
   const settingsUseCases = useMemo(
-    () => dependencies.getSettingsUseCases(),
+    () => DefaultUrlDependencyProvider.getSettingsUseCases(),
     [],
   );
 

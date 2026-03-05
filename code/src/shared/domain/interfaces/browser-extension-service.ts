@@ -1,3 +1,5 @@
+import type { ListenersStore } from "@/app/domain/models/listeners-store";
+
 export interface BrowserExtensionService {
-  onInstalled(callback: () => void): void;
+  registerOnExtensionInstalledListeners(listenersStore: ListenersStore): void;
 }

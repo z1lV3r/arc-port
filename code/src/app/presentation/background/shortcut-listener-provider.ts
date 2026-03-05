@@ -10,7 +10,7 @@ export class ShortcutListenerProvider {
 
   registerFeaturesShortcutListeners() {
     this.shortcutListenerUseCase.registerShortcutListeners([
-      new DefaultUrlDependencyProvider().getShortcutListeners(),
+      DefaultUrlDependencyProvider.getShortcutListeners(),
     ]);
   }
 }

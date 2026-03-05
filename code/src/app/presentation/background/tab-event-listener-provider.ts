@@ -14,19 +14,19 @@ export class TabEventListenerProvider {
 
   registerFeaturesOnCloseTabEventListeners() {
     this.useCase.registerOnCloseTabEventListeners([
-      new DefaultUrlDependencyProvider().getOnCloseTabEventListeners(),
+      DefaultUrlDependencyProvider.getOnCloseTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnUpdateTabEventListeners() {
     this.useCase.registerOnUpdateTabEventListeners([
-      new DefaultUrlDependencyProvider().getOnUpdateTabEventListeners(),
+      DefaultUrlDependencyProvider.getOnUpdateTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnCreateTabEventListeners() {
     this.useCase.registerOnCreateTabEventListeners([
-      new DefaultUrlDependencyProvider().getOnCreateTabEventListeners(),
+      DefaultUrlDependencyProvider.getOnCreateTabEventListeners(),
     ]);
   }
 }

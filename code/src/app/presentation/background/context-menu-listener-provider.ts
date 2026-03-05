@@ -12,7 +12,7 @@ export class ContextMenuListenerProvider {
 
   registerFeaturesContextMenuListeners() {
     this.contextMenuListenerUseCase.registerContextMenuListeners([
-      new DefaultUrlDependencyProvider().getContextMenuListeners(),
+      DefaultUrlDependencyProvider.getContextMenuListeners(),
     ]);
   }
 }

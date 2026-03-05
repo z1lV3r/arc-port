@@ -15,30 +15,28 @@ interface DefaultUrlContextType {
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
-  const dependencies = new DefaultUrlDependencyProvider();
-
   const setDefaultUrlUseCases = useMemo(
-    () => dependencies.getSetDefaultUrlUseCases(),
+    () => DefaultUrlDependencyProvider.getSetDefaultUrlUseCases(),
     [],
   );
 
   const resetTabToDefaultUrlUseCases = useMemo(
-    () => dependencies.getResetTabToDefaultUrlUseCases(),
+    () => DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases(),
     [],
   );
 
   const getDefaultUrlUseCases = useMemo(
-    () => dependencies.getGetDefaultUrlUseCases(),
+    () => DefaultUrlDependencyProvider.getGetDefaultUrlUseCases(),
     [],
   );
 
   const clearDefaultUrlUseCases = useMemo(
-    () => dependencies.getClearDefaultUrlUseCases(),
+    () => DefaultUrlDependencyProvider.getClearDefaultUrlUseCases(),
     [],
   );
 
   const settingsUseCases = useMemo(
-    () => dependencies.getSettingsUseCases(),
+    () => DefaultUrlDependencyProvider.getSettingsUseCases(),
     [],
   );
 
