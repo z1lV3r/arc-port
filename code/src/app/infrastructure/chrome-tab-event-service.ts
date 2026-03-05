@@ -20,10 +20,10 @@ export default class ChromeTabEventService implements BrowserTabEventService {
     const onPinEventListeners: TabEventListener[] = [];
     const onSetToGroupEventListeners: TabEventListener[] = [];
     for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
-      if (name.startsWith("on-pin")) {
+      if (name.startsWith("on-tab-pin")) {
         onPinEventListeners.push(tabEventListener);
       }
-      if (name.startsWith("on-set-to-group")) {
+      if (name.startsWith("on-tab-set-to-group")) {
         onSetToGroupEventListeners.push(tabEventListener);
       }
     }
@@ -46,7 +46,7 @@ export default class ChromeTabEventService implements BrowserTabEventService {
   ) {
     const onCreatePinnedTabEventListeners: TabEventListener[] = [];
     for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
-      if (name.startsWith("on-create-pinned")) {
+      if (name.startsWith("on-tab-create-pinned")) {
         onCreatePinnedTabEventListeners.push(tabEventListener);
       }
     }

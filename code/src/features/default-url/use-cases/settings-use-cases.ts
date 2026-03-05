@@ -27,10 +27,9 @@ export class SettingsUseCases {
     this.contextMenuListeners = contextMenuListeners;
 
     //if extension Installed/reinstalled re evaluate context menus creation
-    this.getShowContextMenu().then((showContextMenu) => {
-      this.browserExtensionService.onInstalled(async () => {
-        this.setShowContextMenu(showContextMenu);
-      });
+    this.browserExtensionService.onInstalled(async () => {
+      const showContextMenu = await this.getShowContextMenu();
+      await this.setShowContextMenu(showContextMenu);
     });
   }
 
