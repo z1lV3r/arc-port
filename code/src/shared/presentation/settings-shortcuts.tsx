@@ -5,6 +5,7 @@ import {
   ItemContent,
   ItemTitle,
   ItemActions,
+  ItemDescription,
 } from "./item";
 import type { Shortcut } from "../domain/models/shortcut-setting";
 import type { TabsService } from "../domain/interfaces/tabs-service";
@@ -16,6 +17,7 @@ export function SettingsShortcuts({tabsService, shortcuts }: { tabsService: Tabs
         <Item key={idx}>
           <ItemContent>
             <ItemTitle>{shortcut.name}</ItemTitle>
+            <ItemDescription>{shortcut.defaultKey}</ItemDescription>
           </ItemContent>
           <ItemActions>
             <Input

@@ -60,8 +60,7 @@ export function Settings() {
       setShowContextMenu(await settingsUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
-      const shortcuts = shortcutListeners.map(shortcut => shortcut.name);
-      const currentShortcuts = await shortcutSettingsService.getShortcuts(new Set(shortcuts));
+      const currentShortcuts = await shortcutSettingsService.getShortcuts(shortcutListeners);
       setShortcuts(currentShortcuts);
     };
 
