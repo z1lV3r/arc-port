@@ -1,9 +1,9 @@
-name: Release alpha code
+name: Release beta code
 
 on:
   push:
     branches:
-      - alpha
+      - beta
 
 permissions:
   contents: write
@@ -46,5 +46,6 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}-beta
           name: Release v${{ steps.version.outputs.version }} (Beta)
           files: code/arc-port.zip
+          generate_release_notes: true
           draft: false
           prerelease: true
