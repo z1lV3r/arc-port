@@ -7,7 +7,7 @@ export class TabEventListenerProvider {
   private useCase: TabEventListenerUseCases;
 
   constructor(
-    useCase: TabEventListenerUseCases = new DependencyProvider().getTabEventListenerUseCase(),
+    useCase: TabEventListenerUseCases = DependencyProvider.getTabEventListenerUseCase(),
   ) {
     this.useCase = useCase;
   }

@@ -4,7 +4,7 @@ import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-
 
 export class ShortcutListenerProvider {
   private shortcutListenerUseCase: ShortcutListenerUseCases;
-  constructor(shortcutListenerUseCase: ShortcutListenerUseCases = new DependencyProvider().getShortcutListenerUseCase()) {
+  constructor(shortcutListenerUseCase: ShortcutListenerUseCases = DependencyProvider.getShortcutListenerUseCase()) {
     this.shortcutListenerUseCase = shortcutListenerUseCase;
   }
 

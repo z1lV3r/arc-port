@@ -7,7 +7,7 @@ export class ExtensionListenerProvider {
   private extensionListenerUseCases: ExtensionListenerUseCases;
 
   constructor(
-    extensionListenerUseCases: ExtensionListenerUseCases = new DependencyProvider().getExtensionListenerUseCase(),
+    extensionListenerUseCases: ExtensionListenerUseCases = DependencyProvider.getExtensionListenerUseCase(),
   ) {
     this.extensionListenerUseCases = extensionListenerUseCases;
   }

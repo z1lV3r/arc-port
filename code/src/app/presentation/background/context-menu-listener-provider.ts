@@ -5,7 +5,7 @@ import { DependencyProvider } from "@/app/dependency-provider";
 export class ContextMenuListenerProvider {
   contextMenuListenerUseCase: ContextMenuListenerUseCases;
   constructor(
-    contextMenuListenerUseCase: ContextMenuListenerUseCases = new DependencyProvider().getContextMenuListenerUseCase(),
+    contextMenuListenerUseCase: ContextMenuListenerUseCases = DependencyProvider.getContextMenuListenerUseCase(),
   ) {
     this.contextMenuListenerUseCase = contextMenuListenerUseCase;
   }

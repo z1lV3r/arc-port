@@ -12,54 +12,108 @@ import type { BrowserExtensionService } from "@/shared/domain/interfaces/browser
 import { ChromeExtensionService } from "@/shared/infrastructure/chrome-extension-service";
 
 export class DependencyProvider {
-  private browserTabEventService: BrowserTabEventService;
-  private browserContextMenuService: BrowserContextMenuService;
-  private browserShortcutService: BrowserShortcutService;
-  private browserExtensionService: BrowserExtensionService;
-  private contextMenuListenerUseCase: ContextMenuListenerUseCases;
-  private shortcutListenerUseCase: ShortcutListenerUseCases;
-  private tabEventListenerUseCase: TabEventListenerUseCases;
-  private extensionListenerUseCase: ExtensionListenerUseCases;
+  private static browserName: string;
+  private static browserTabEventService: BrowserTabEventService;
+  private static browserContextMenuService: BrowserContextMenuService;
+  private static browserShortcutService: BrowserShortcutService;
+  private static browserExtensionService: BrowserExtensionService;
+  private static contextMenuListenerUseCase: ContextMenuListenerUseCases;
+  private static shortcutListenerUseCase: ShortcutListenerUseCases;
+  private static tabEventListenerUseCase: TabEventListenerUseCases;
+  private static extensionListenerUseCase: ExtensionListenerUseCases;
 
-  constructor() {
-    this.browserTabEventService = new ChromeTabEventService();
-    this.browserContextMenuService = new ChromeContextMenuService();
-    this.browserShortcutService = new ChromeShortcutService();
-    this.browserExtensionService = new ChromeExtensionService();
+  private constructor(){
+  }
 
-    for (const property of Object.keys(this)) {
-      if (!(this as any)[property]) {
-        throw new Error(`Property ${property} is not initialized`);
-      }
+  private static getBrowserName(): string {
+    if (this.browserName) {
+      return this.browserName;
     }
 
-    this.contextMenuListenerUseCase = new ContextMenuListenerUseCases(this.getBrowserContextMenuService());
-    this.shortcutListenerUseCase = new ShortcutListenerUseCases(this.getBrowserShortcutService());
-    this.tabEventListenerUseCase = new TabEventListenerUseCases(this.getBrowserTabEventService());
-    this.extensionListenerUseCase = new ExtensionListenerUseCases(this.getBrowserExtensionService());
+    const userAgent = navigator.userAgent.toLowerCase();
+    this.browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
+    return this.browserName;
   }
-  getBrowserTabEventService(): BrowserTabEventService {
+
+  static getBrowserTabEventService(): BrowserTabEventService {
+    if(this.browserTabEventService) {
+          return this.browserTabEventService;
+        }
+    
+        if (DependencyProvider.getBrowserName() === "chrome") {
+          this.browserTabEventService = new ChromeTabEventService();
+        } else {
+          throw new Error("Unsupported browser");
+        }
     return this.browserTabEventService;
   }
-  getBrowserExtensionService(): BrowserExtensionService {
+
+  static getBrowserExtensionService(): BrowserExtensionService {
+    if(this.browserExtensionService) {
+          return this.browserExtensionService;
+        }
+    
+        if (DependencyProvider.getBrowserName() === "chrome") {
+          this.browserExtensionService = new ChromeExtensionService();
+        } else {
+          throw new Error("Unsupported browser");
+        }
     return this.browserExtensionService;
   }
-  getBrowserContextMenuService(): BrowserContextMenuService {
+
+  static getBrowserContextMenuService(): BrowserContextMenuService {
+    if(this.browserContextMenuService) {
+          return this.browserContextMenuService;
+        }
+    
+        if (DependencyProvider.getBrowserName() === "chrome") {
+          this.browserContextMenuService = new ChromeContextMenuService();
+        } else {
+          throw new Error("Unsupported browser");
+        }
     return this.browserContextMenuService;
   }
-  getBrowserShortcutService(): BrowserShortcutService {
+
+  static getBrowserShortcutService(): BrowserShortcutService {
+    if(this.browserShortcutService) {
+          return this.browserShortcutService;
+        }
+    
+        if (DependencyProvider.getBrowserName() === "chrome") {
+          this.browserShortcutService = new ChromeShortcutService();
+        } else {
+          throw new Error("Unsupported browser");
+        }
     return this.browserShortcutService;
   }
-  getContextMenuListenerUseCase(): ContextMenuListenerUseCases {
+
+  static getContextMenuListenerUseCase(): ContextMenuListenerUseCases {
+    if(this.contextMenuListenerUseCase) {
+      return this.contextMenuListenerUseCase;
+    }
+    this.contextMenuListenerUseCase = new ContextMenuListenerUseCases(DependencyProvider.getBrowserContextMenuService());
     return this.contextMenuListenerUseCase;
   }
-  getShortcutListenerUseCase(): ShortcutListenerUseCases {
+
+  static getShortcutListenerUseCase(): ShortcutListenerUseCases {
+    if(this.shortcutListenerUseCase) {
+      return this.shortcutListenerUseCase;
+    }
+    this.shortcutListenerUseCase = new ShortcutListenerUseCases(DependencyProvider.getBrowserShortcutService());
     return this.shortcutListenerUseCase;
   }
-  getTabEventListenerUseCase(): TabEventListenerUseCases {
+  static getTabEventListenerUseCase(): TabEventListenerUseCases {
+    if(this.tabEventListenerUseCase) {
+      return this.tabEventListenerUseCase;
+    }
+    this.tabEventListenerUseCase = new TabEventListenerUseCases(DependencyProvider.getBrowserTabEventService());
     return this.tabEventListenerUseCase;
   }
-  getExtensionListenerUseCase(): ExtensionListenerUseCases {
+  static getExtensionListenerUseCase(): ExtensionListenerUseCases {
+    if(this.extensionListenerUseCase) {
+      return this.extensionListenerUseCase;
+    }
+    this.extensionListenerUseCase = new ExtensionListenerUseCases(DependencyProvider.getBrowserExtensionService());
     return this.extensionListenerUseCase;
   }
 }

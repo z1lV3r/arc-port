@@ -49,6 +49,9 @@ export class DefaultUrlDependencyProvider {
   private static onExtensionInstalledListeners: ExtensionListener[];
   private static browserName: string;
 
+  private constructor(){
+  }
+
   private static getBrowserName(): string {
     if (this.browserName) {
       return this.browserName;
