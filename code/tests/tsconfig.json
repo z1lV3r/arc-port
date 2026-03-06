@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["vitest/globals", "chrome", "node"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "noEmit": true
+  },
+  "include": [".", "../src"]
+}

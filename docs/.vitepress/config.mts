@@ -6,7 +6,7 @@ export default defineConfig({
   // https://vitepress.dev/reference/site-config#site-metadata
   title: "Arc Port",
   description: "Chrome extension to port Arc browser features into chrome",
-  head: [['link', { rel: 'icon', href: '/arc-port/global/assets/icon/arc-port-16.png' }]],
+  head: [['link', { rel: 'icon', href: '/arc-port/app/assets/icon/arc-port-16.png' }]],
 
   // https://vitepress.dev/reference/site-config#build
   srcDir: "src",
@@ -17,7 +17,7 @@ export default defineConfig({
 
   // https://vitepress.dev/reference/default-theme-config
   themeConfig: {
-    logo: '/global/assets/icon/arc-port-128.png',
+    logo: '/app/assets/icon/arc-port-128.png',
 
     // https://vitepress.dev/reference/default-theme-nav
     nav: [
@@ -45,6 +45,6 @@ export default defineConfig({
 
   // https://vitepress.dev/guide/routing#route-rewrites
   rewrites: {
-    'global/:file.md': ':file.md'
+    'app/:file.md': ':file.md'
   }
 })
