@@ -34,7 +34,7 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          VERSION=$(jq -r .version public/manifest.json)
+          VERSION=$(jq -r .version dist/manifest.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Zip Extension
