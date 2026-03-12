@@ -10,6 +10,9 @@ import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cas
 import { ExtensionListenerUseCases } from "./use-cases/extension-listener-use-cases";
 import type { BrowserExtensionService } from "@/shared/domain/interfaces/browser-extension-service";
 import { ChromeExtensionService } from "@/shared/infrastructure/chrome-extension-service";
+import { MessageEventListenerUseCases } from "./use-cases/message-event-listeners-use-cases";
+import type { BrowserMessageEventService } from "./domain/interfaces/browser-message-event-service";
+import { ChromeMessageEventService } from "./infrastructure/chrome-message-event-service";
 
 export class DependencyProvider {
   private static browserName: string;
@@ -21,6 +24,8 @@ export class DependencyProvider {
   private static shortcutListenerUseCase: ShortcutListenerUseCases;
   private static tabEventListenerUseCase: TabEventListenerUseCases;
   private static extensionListenerUseCase: ExtensionListenerUseCases;
+  private static useCaseEventListenersUseCases: MessageEventListenerUseCases;
+  private static browserMessageEventService: BrowserMessageEventService;
 
   private constructor(){
   }
@@ -115,5 +120,21 @@ export class DependencyProvider {
     }
     this.extensionListenerUseCase = new ExtensionListenerUseCases(DependencyProvider.getBrowserExtensionService());
     return this.extensionListenerUseCase;
+  }
+
+  static getUseCaseEventListenersUseCases(): MessageEventListenerUseCases {
+    if(this.useCaseEventListenersUseCases) {
+      return this.useCaseEventListenersUseCases;
+    }
+    this.useCaseEventListenersUseCases = new MessageEventListenerUseCases();
+    return this.useCaseEventListenersUseCases;
+  }
+
+  static getBrowserMessageEventService(): BrowserMessageEventService {
+    if(this.browserMessageEventService) {
+      return this.browserMessageEventService;
+    }
+    this.browserMessageEventService = new ChromeMessageEventService();
+    return this.browserMessageEventService;
   }
 }

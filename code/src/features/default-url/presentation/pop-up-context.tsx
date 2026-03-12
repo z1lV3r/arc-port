@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { SetDefaultUrlUseCases } from "@/features/default-url/use-cases/set-default-url-use-cases";
 import type { ResetTabToDefaultUrlUseCases } from "@/features/default-url/use-cases/reset-tab-to-default-url-use-cases";
 import type { GetDefaultUrlUseCases } from "@/features/default-url/use-cases/get-default-url-use-cases";
-import type { ClearDefaultUrlUseCases } from "@/features/default-url/use-cases/clear-default-url-use-cases";
+import type { ClearDefaultUrlMessageEventSender } from "@/features/default-url/presentation/background/message-events/clear-default-url-message-event-sender";
 import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
 import type { SettingsUseCases } from "@/features/default-url/use-cases/settings-use-cases";
 
@@ -10,7 +10,7 @@ interface DefaultUrlContextType {
   setDefaultUrlUseCases: SetDefaultUrlUseCases;
   resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
   getDefaultUrlUseCases: GetDefaultUrlUseCases;
-  clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
+  clearDefaultUrlMessageEventSender: ClearDefaultUrlMessageEventSender;
   settingsUseCases: SettingsUseCases;
 }
 
@@ -30,8 +30,8 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const clearDefaultUrlUseCases = useMemo(
-    () => DefaultUrlDependencyProvider.getClearDefaultUrlUseCases(),
+  const clearDefaultUrlMessageEventSender = useMemo(
+    () => DefaultUrlDependencyProvider.getClearDefaultUrlMessageEventSender(),
     [],
   );
 
@@ -46,7 +46,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         setDefaultUrlUseCases,
         resetTabToDefaultUrlUseCases,
         getDefaultUrlUseCases,
-        clearDefaultUrlUseCases,
+        clearDefaultUrlMessageEventSender,
         settingsUseCases,
       }}
     >

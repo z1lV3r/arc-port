@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import { useDefaultUrlContext } from "./pop-up-context";
 
 function PopUp() {
-  const { getDefaultUrlUseCases, setDefaultUrlUseCases, resetTabToDefaultUrlUseCases, clearDefaultUrlUseCases, settingsUseCases } = useDefaultUrlContext();
+  const { getDefaultUrlUseCases, setDefaultUrlUseCases, resetTabToDefaultUrlUseCases, clearDefaultUrlMessageEventSender, settingsUseCases } = useDefaultUrlContext();
   const [url, setUrl] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
 
@@ -46,7 +46,7 @@ function PopUp() {
   };
 
   const handleClearDefaultUrl = async () => {
-    await clearDefaultUrlUseCases.clearCurrentTabDefaultUrl();
+    await clearDefaultUrlMessageEventSender.sendClearCurrentTabDefaultUrlEventMessage();
     setUrl("");
   };
 
