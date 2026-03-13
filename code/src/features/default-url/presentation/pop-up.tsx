@@ -18,14 +18,14 @@ import { useState, useEffect } from "react";
 import { useDefaultUrlContext } from "./pop-up-context";
 
 function PopUp() {
-  const { getDefaultUrlUseCases, setDefaultUrlUseCases, resetTabToDefaultUrlUseCases, clearDefaultUrlMessageEventSender, settingsUseCases } = useDefaultUrlContext();
+  const { getDefaultUrlMessageEventSender, setDefaultUrlMessageEventSender, resetTabToDefaultUrlMessageEventSender, clearDefaultUrlMessageEventSender, settingsUseCases } = useDefaultUrlContext();
   const [url, setUrl] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       const [defaultUrl, popUpVisible] = await Promise.all([
-        getDefaultUrlUseCases.getCurrentTabDefaultUrl(),
+        getDefaultUrlMessageEventSender.sendGetCurrentTabDefaultUrlEventMessage(),
         settingsUseCases.getShowPopUp(),
       ]);
       setUrl(defaultUrl);
@@ -37,12 +37,12 @@ function PopUp() {
 
   const handleSetCurrentTabDefaultUrl = async () => {
     const defaultUrl: string =
-      await setDefaultUrlUseCases.setCurrentTabDefaultUrl();
+      await setDefaultUrlMessageEventSender.sendSetCurrentTabDefaultUrlEventMessage();
     setUrl(defaultUrl);
   };
 
   const handleResetTabToDefaultUrl = async () => {
-    await resetTabToDefaultUrlUseCases.resetCurrentTabToDefaultUrl();
+    await resetTabToDefaultUrlMessageEventSender.sendResetCurrentTabToDefaultUrlEventMessage();
   };
 
   const handleClearDefaultUrl = async () => {

@@ -8,9 +8,9 @@ import {
   ItemDescription,
 } from "./item";
 import type { Shortcut } from "../domain/models/shortcut-setting";
-import type { TabsService } from "../domain/interfaces/tabs-service";
+import type { BrowserTabsService } from "../domain/interfaces/browser-tabs-service";
 
-export function SettingsShortcuts({tabsService, shortcuts }: { tabsService: TabsService, shortcuts: Shortcut[] }) {
+export function SettingsShortcuts({tabsService, shortcuts }: { tabsService: BrowserTabsService, shortcuts: Shortcut[] }) {
   return (
     <>
       {shortcuts.map((shortcut, idx) => (

@@ -5,7 +5,7 @@ import { ResetTabToDefaultUrlUseCases } from "./use-cases/reset-tab-to-default-u
 import { GetDefaultUrlUseCases } from "./use-cases/get-default-url-use-cases";
 import { ClearDefaultUrlUseCases } from "./use-cases/clear-default-url-use-cases";
 import { ClearDefaultUrlMessageEventSender } from "./presentation/background/message-events/clear-default-url-message-event-sender";
-import type { TabsService } from "@/shared/domain/interfaces/tabs-service";
+import type { BrowserTabsService as BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
 import type { DefaultUrlRepository } from "./domain/interfaces/default-url-repository";
 import { ChromeShortcutSettingsService } from "@/shared/infrastructure/chrome-shortcut-settings-service";
 import type { BrowserShortcutSettingsService } from "@/shared/domain/interfaces/browser-shortcut-settings-service";
@@ -35,200 +35,71 @@ import type { BrowserMessageService } from "@/shared/domain/interfaces/browser-m
 import { ClearCurrentTabDefaultUrlMessageEventListener } from "./presentation/background/message-events/clear-default-url-use-cases-listeners/clear-current-tab-default-url-message-event-listener";
 import { ClearTabDefaultUrlMessageEventListener } from "./presentation/background/message-events/clear-default-url-use-cases-listeners/clear-tab-default-url-message-event-listener";
 import type { MessageEventListener } from "@/shared/domain/models/message-event-listener";
+import { SetCurrentTabDefaultUrlMessageEventListener } from "./presentation/background/message-events/set-default-url-use-cases-listeners/set-current-tab-default-url-message-event-listener";
+import { SetDefaultUrlMessageEventSender } from "./presentation/background/message-events/set-default-url-message-event-sender";
+import { ResetCurrentTabToDefaultUrlMessageEventListener } from "./presentation/background/message-events/reset-tab-to-default-url-use-cases-listeners/reset-current-tab-to-default-url-message-event-listener";
+import { ResetTabToDefaultUrlMessageEventSender } from "./presentation/background/message-events/reset-tab-to-default-url-message-event-sender";
+import { GetCurrentTabDefaultUrlMessageEventListener } from "./presentation/background/message-events/get-default-url-use-cases-listeners/get-current-tab-default-url-message-event-listener";
+import { GetDefaultUrlMessageEventSender } from "./presentation/background/message-events/get-default-url-message-event-sender";
 
 export class DefaultUrlDependencyProvider {
-  private static tabsService: TabsService;
-  private static defaultUrlRepository: DefaultUrlRepository;
-  private static setDefaultUrlUseCases: SetDefaultUrlUseCases;
-  private static resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
-  private static getDefaultUrlUseCases: GetDefaultUrlUseCases;
-  private static clearDefaultUrlMessageEventSender: ClearDefaultUrlMessageEventSender;
-  private static shortcutSettingsService: BrowserShortcutSettingsService;
-  private static settingsRepository: SettingsRepository;
-  private static browserContextMenuService: BrowserContextMenuService;
-  private static settingsUseCases: SettingsUseCases;
-  private static browserMessageService: BrowserMessageService;
-  private static clearDefaultUrlUseCaseListeners: [ClearCurrentTabDefaultUrlMessageEventListener, ClearTabDefaultUrlMessageEventListener];
-  private static clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
-  private static messageEventListeners: MessageEventListener[];
-  private static contextMenuListeners: ContextMenuListener[];
-  private static shortcutListeners: ShortcutListener[];
-  private static onCloseTabEventListeners: TabEventListener[];
-  private static onUpdateTabEventListeners: TabEventListener[];
-  private static onCreateTabEventListeners: TabEventListener[];
-  private static onExtensionInstalledListeners: ExtensionListener[];
-  private static browserName: string;
-  
 
   private constructor(){
   }
 
-  private static getBrowserName(): string {
-    if (this.browserName) {
-      return this.browserName;
-    }
-
-    const userAgent = navigator.userAgent.toLowerCase();
-    this.browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
-    return this.browserName;
-  }
-
-  static getTabsService(): TabsService {
-    if(this.tabsService) {
-      return this.tabsService;
-    }
-
-    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
-      this.tabsService = new ChromeTabsService();
-    } else {
-      throw new Error("Unsupported browser");
-    }
-
-    return this.tabsService;
-  }
-
+  //Infrastructure - Data
+  private static defaultUrlRepository: DefaultUrlRepository;
   static getDefaultUrlRepository(): DefaultUrlRepository {
     if(this.defaultUrlRepository) {
       return this.defaultUrlRepository;
     }
 
-    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
-      this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
-    } else {
-      throw new Error("Unsupported browser");
-    }
-
+    this.defaultUrlRepository = new ChromeStorageDefaultUrlRepository();
     return this.defaultUrlRepository;
   }
 
-  static getShortcutSettingsService(): BrowserShortcutSettingsService {
-    if(this.shortcutSettingsService) {
-      return this.shortcutSettingsService;
-    }
-
-    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
-      this.shortcutSettingsService = new ChromeShortcutSettingsService();
-    } else {
-      throw new Error("Unsupported browser");
-    }
-
-    return this.shortcutSettingsService;
-  }
-
+  private static settingsRepository: SettingsRepository;
   static getSettingsRepository(): SettingsRepository {
     if(this.settingsRepository) {
       return this.settingsRepository;
     }
 
-    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
-      this.settingsRepository = new ChromeStorageSettingsRepository();
-    } else {
-      throw new Error("Unsupported browser");
-    }
-
+    this.settingsRepository = new ChromeStorageSettingsRepository();
     return this.settingsRepository;
   }
 
+  //Infrastructure - Browser
+  private static browserTabsService: BrowserTabsService;
+  static getBrowserTabsService(): BrowserTabsService {
+    if(this.browserTabsService) {
+      return this.browserTabsService;
+    }
+
+    this.browserTabsService = new ChromeTabsService();
+    return this.browserTabsService;
+  }
+
+  private static browserShortcutSettingsService: BrowserShortcutSettingsService;
+  static getBrowserShortcutSettingsService(): BrowserShortcutSettingsService {
+    if(this.browserShortcutSettingsService) {
+      return this.browserShortcutSettingsService;
+    }
+
+    this.browserShortcutSettingsService = new ChromeShortcutSettingsService();
+    return this.browserShortcutSettingsService;
+  }
+
+  private static browserContextMenuService: BrowserContextMenuService;
   static getBrowserContextMenuService(): BrowserContextMenuService {
     if(this.browserContextMenuService) {
       return this.browserContextMenuService;
     }
 
-    if (DefaultUrlDependencyProvider.getBrowserName() === "chrome") {
-      this.browserContextMenuService = new ChromeContextMenuService();
-    } else {
-      throw new Error("Unsupported browser");
-    }
-
+    this.browserContextMenuService = new ChromeContextMenuService();
     return this.browserContextMenuService;
   }
 
-  static getSetDefaultUrlUseCases(): SetDefaultUrlUseCases {
-    if(this.setDefaultUrlUseCases) {
-      return this.setDefaultUrlUseCases;
-    }
-
-    this.setDefaultUrlUseCases = new SetDefaultUrlUseCases(
-      DefaultUrlDependencyProvider.getTabsService(),
-      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
-    );
-
-    return this.setDefaultUrlUseCases;
-  }
-
-  static getResetTabToDefaultUrlUseCases(): ResetTabToDefaultUrlUseCases {
-    if(this.resetTabToDefaultUrlUseCases) {
-      return this.resetTabToDefaultUrlUseCases;
-    }
-
-    this.resetTabToDefaultUrlUseCases = new ResetTabToDefaultUrlUseCases(
-      DefaultUrlDependencyProvider.getTabsService(),
-      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
-    );
-
-    return this.resetTabToDefaultUrlUseCases;
-  }
-
-  static getGetDefaultUrlUseCases(): GetDefaultUrlUseCases {
-    if(this.getDefaultUrlUseCases) {
-      return this.getDefaultUrlUseCases;
-    }
-
-    this.getDefaultUrlUseCases = new GetDefaultUrlUseCases(
-      DefaultUrlDependencyProvider.getTabsService(),
-      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
-    );
-
-    return this.getDefaultUrlUseCases;
-  }
-
-static getMessageEventListeners(): MessageEventListener[] {
-    if(this.messageEventListeners) {
-      return this.messageEventListeners;
-    }
-
-    this.messageEventListeners = [
-      ...DefaultUrlDependencyProvider.getClearDefaultUrlUseCaseMessageEventListeners(),
-    ];
-
-    return this.messageEventListeners;
-  }
-
-  static getClearDefaultUrlMessageEventSender(): ClearDefaultUrlMessageEventSender {
-    if(this.clearDefaultUrlMessageEventSender) {
-      return this.clearDefaultUrlMessageEventSender;
-    }
-
-    this.clearDefaultUrlMessageEventSender = new ClearDefaultUrlMessageEventSender(
-      DefaultUrlDependencyProvider.getBrowserMessageService(),
-      DefaultUrlDependencyProvider.getClearDefaultUrlUseCaseMessageEventListeners(),
-    );
-
-    return this.clearDefaultUrlMessageEventSender;
-  }
-
-  static getClearDefaultUrlUseCaseMessageEventListeners(): [ClearCurrentTabDefaultUrlMessageEventListener, ClearTabDefaultUrlMessageEventListener] {
-    if(this.clearDefaultUrlUseCaseListeners) {
-      return this.clearDefaultUrlUseCaseListeners;
-    }
-
-    this.clearDefaultUrlUseCaseListeners = [
-      new ClearCurrentTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
-      new ClearTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
-    ];
-
-    return this.clearDefaultUrlUseCaseListeners;
-  }
-
-  static getClearDefaultUrlUseCases(): ClearDefaultUrlUseCases {
-    if(this.clearDefaultUrlUseCases) {
-      return this.clearDefaultUrlUseCases;
-    }
-
-    this.clearDefaultUrlUseCases = new ClearDefaultUrlUseCases(DefaultUrlDependencyProvider.getTabsService(), DefaultUrlDependencyProvider.getDefaultUrlRepository());
-    return this.clearDefaultUrlUseCases;
-  }
-
+  private static browserMessageService: BrowserMessageService;
   static getBrowserMessageService(): BrowserMessageService {
     if(this.browserMessageService) {
       return this.browserMessageService;
@@ -238,6 +109,60 @@ static getMessageEventListeners(): MessageEventListener[] {
     return this.browserMessageService;
   }
 
+  //Use cases
+  private static setDefaultUrlUseCases: SetDefaultUrlUseCases;
+  static getSetDefaultUrlUseCases(): SetDefaultUrlUseCases {
+    if(this.setDefaultUrlUseCases) {
+      return this.setDefaultUrlUseCases;
+    }
+
+    this.setDefaultUrlUseCases = new SetDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getBrowserTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.setDefaultUrlUseCases;
+  }
+
+  private static resetTabToDefaultUrlUseCases: ResetTabToDefaultUrlUseCases;
+  static getResetTabToDefaultUrlUseCases(): ResetTabToDefaultUrlUseCases {
+    if(this.resetTabToDefaultUrlUseCases) {
+      return this.resetTabToDefaultUrlUseCases;
+    }
+
+    this.resetTabToDefaultUrlUseCases = new ResetTabToDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getBrowserTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.resetTabToDefaultUrlUseCases;
+  }
+
+  private static getDefaultUrlUseCases: GetDefaultUrlUseCases;
+  static getGetDefaultUrlUseCases(): GetDefaultUrlUseCases {
+    if(this.getDefaultUrlUseCases) {
+      return this.getDefaultUrlUseCases;
+    }
+
+    this.getDefaultUrlUseCases = new GetDefaultUrlUseCases(
+      DefaultUrlDependencyProvider.getBrowserTabsService(),
+      DefaultUrlDependencyProvider.getDefaultUrlRepository(),
+    );
+
+    return this.getDefaultUrlUseCases;
+  }
+
+  private static clearDefaultUrlUseCases: ClearDefaultUrlUseCases;
+  static getClearDefaultUrlUseCases(): ClearDefaultUrlUseCases {
+    if(this.clearDefaultUrlUseCases) {
+      return this.clearDefaultUrlUseCases;
+    }
+
+    this.clearDefaultUrlUseCases = new ClearDefaultUrlUseCases(DefaultUrlDependencyProvider.getBrowserTabsService(), DefaultUrlDependencyProvider.getDefaultUrlRepository());
+    return this.clearDefaultUrlUseCases;
+  }
+
+  private static settingsUseCases: SettingsUseCases;
   static getSettingsUseCases(): SettingsUseCases {
     if(this.settingsUseCases) {
       return this.settingsUseCases;
@@ -252,6 +177,8 @@ static getMessageEventListeners(): MessageEventListener[] {
     return this.settingsUseCases;
   }
 
+  //Presentation - Context menu listeners
+  private static contextMenuListeners: ContextMenuListener[];
   static getContextMenuListeners(): ContextMenuListener[] {
     if(this.contextMenuListeners) {
       return this.contextMenuListeners;
@@ -268,6 +195,22 @@ static getMessageEventListeners(): MessageEventListener[] {
     return this.contextMenuListeners;
   }
 
+  //Presentation - Extension event listeners
+  private static onExtensionInstalledListeners: ExtensionListener[];
+  static getOnExtensionInstalledListeners(): ExtensionListener[] {
+    if(this.onExtensionInstalledListeners) {
+      return this.onExtensionInstalledListeners;
+    }
+
+    this.onExtensionInstalledListeners = [
+      new OnExtensionInstalledLoadDefaultSettings(DefaultUrlDependencyProvider.getSettingsUseCases()),
+    ];
+
+    return this.onExtensionInstalledListeners;
+  }
+
+  //Presentation - Shortcut listeners
+  private static shortcutListeners: ShortcutListener[];
   static getShortcutListeners(): ShortcutListener[] {
     if(this.shortcutListeners) {
       return this.shortcutListeners;
@@ -283,6 +226,8 @@ static getMessageEventListeners(): MessageEventListener[] {
     return this.shortcutListeners;
   }
 
+  //Presentation - Tab event listeners
+  private static onCloseTabEventListeners: TabEventListener[];
   static getOnCloseTabEventListeners(): TabEventListener[] {
     if(this.onCloseTabEventListeners) {
       return this.onCloseTabEventListeners;
@@ -295,6 +240,20 @@ static getMessageEventListeners(): MessageEventListener[] {
     return this.onCloseTabEventListeners;
   }
 
+  private static onCreateTabEventListeners: TabEventListener[];
+  static getOnCreateTabEventListeners(): TabEventListener[] {
+    if(this.onCreateTabEventListeners) {
+      return this.onCreateTabEventListeners;
+    }
+
+    this.onCreateTabEventListeners = [
+      new OnTabCreatePinnedSetDefaultUrl(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+    ];
+
+    return this.onCreateTabEventListeners;
+  }
+
+  private static onUpdateTabEventListeners: TabEventListener[];
   static getOnUpdateTabEventListeners(): TabEventListener[] {
     if(this.onUpdateTabEventListeners) {
       return this.onUpdateTabEventListeners;
@@ -308,27 +267,131 @@ static getMessageEventListeners(): MessageEventListener[] {
     return this.onUpdateTabEventListeners;
   }
 
-  static getOnCreateTabEventListeners(): TabEventListener[] {
-    if(this.onCreateTabEventListeners) {
-      return this.onCreateTabEventListeners;
+  //Presentation - Message events - Listeners
+  private static messageEventListeners: MessageEventListener[];
+  static getMessageEventListeners(): MessageEventListener[] {
+    if(this.messageEventListeners) {
+      return this.messageEventListeners;
     }
 
-    this.onCreateTabEventListeners = [
-      new OnTabCreatePinnedSetDefaultUrl(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+    this.messageEventListeners = [
+      ...DefaultUrlDependencyProvider.getClearDefaultUrlUseCaseMessageEventListeners(),
+      ...DefaultUrlDependencyProvider.getSetDefaultUrlUseCaseMessageEventListeners(),
+      ...DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCaseMessageEventListeners(),
+      ...DefaultUrlDependencyProvider.getGetDefaultUrlUseCaseMessageEventListeners(),
     ];
 
-    return this.onCreateTabEventListeners;
+    return this.messageEventListeners;
   }
 
-  static getOnExtensionInstalledListeners(): ExtensionListener[] {
-    if(this.onExtensionInstalledListeners) {
-      return this.onExtensionInstalledListeners;
+  private static clearDefaultUrlUseCaseListeners: [ClearCurrentTabDefaultUrlMessageEventListener, ClearTabDefaultUrlMessageEventListener];
+  static getClearDefaultUrlUseCaseMessageEventListeners(): [ClearCurrentTabDefaultUrlMessageEventListener, ClearTabDefaultUrlMessageEventListener] {
+    if(this.clearDefaultUrlUseCaseListeners) {
+      return this.clearDefaultUrlUseCaseListeners;
     }
 
-    this.onExtensionInstalledListeners = [
-      new OnExtensionInstalledLoadDefaultSettings(DefaultUrlDependencyProvider.getSettingsUseCases()),
+    this.clearDefaultUrlUseCaseListeners = [
+      new ClearCurrentTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
+      new ClearTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getClearDefaultUrlUseCases()),
     ];
 
-    return this.onExtensionInstalledListeners;
+    return this.clearDefaultUrlUseCaseListeners;
   }
+
+  private static getDefaultUrlUseCaseListeners: [GetCurrentTabDefaultUrlMessageEventListener];
+  static getGetDefaultUrlUseCaseMessageEventListeners(): [GetCurrentTabDefaultUrlMessageEventListener] {
+    if(this.getDefaultUrlUseCaseListeners) {
+      return this.getDefaultUrlUseCaseListeners;
+    }
+
+    this.getDefaultUrlUseCaseListeners = [
+      new GetCurrentTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getGetDefaultUrlUseCases()),
+    ];
+
+    return this.getDefaultUrlUseCaseListeners;
+  }
+
+  private static resetTabToDefaultUrlUseCaseListeners: [ResetCurrentTabToDefaultUrlMessageEventListener];
+  static getResetTabToDefaultUrlUseCaseMessageEventListeners(): [ResetCurrentTabToDefaultUrlMessageEventListener] {
+    if(this.resetTabToDefaultUrlUseCaseListeners) {
+      return this.resetTabToDefaultUrlUseCaseListeners;
+    }
+
+    this.resetTabToDefaultUrlUseCaseListeners = [
+      new ResetCurrentTabToDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases()),
+    ];
+
+    return this.resetTabToDefaultUrlUseCaseListeners;
+  }
+
+  private static setDefaultUrlUseCaseListeners: [SetCurrentTabDefaultUrlMessageEventListener];
+  static getSetDefaultUrlUseCaseMessageEventListeners(): [SetCurrentTabDefaultUrlMessageEventListener] {
+    if(this.setDefaultUrlUseCaseListeners) {
+      return this.setDefaultUrlUseCaseListeners;
+    }
+
+    this.setDefaultUrlUseCaseListeners = [
+      new SetCurrentTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+    ];
+
+    return this.setDefaultUrlUseCaseListeners;
+  }
+
+  //Presentation - Message events - Senders
+  private static clearDefaultUrlMessageEventSender: ClearDefaultUrlMessageEventSender;
+  static getClearDefaultUrlMessageEventSender(): ClearDefaultUrlMessageEventSender {
+    if(this.clearDefaultUrlMessageEventSender) {
+      return this.clearDefaultUrlMessageEventSender;
+    }
+
+    this.clearDefaultUrlMessageEventSender = new ClearDefaultUrlMessageEventSender(
+      DefaultUrlDependencyProvider.getBrowserMessageService(),
+      DefaultUrlDependencyProvider.getClearDefaultUrlUseCaseMessageEventListeners(),
+    );
+
+    return this.clearDefaultUrlMessageEventSender;
+  }
+
+  private static getDefaultUrlMessageEventSender: GetDefaultUrlMessageEventSender;
+  static getGetDefaultUrlMessageEventSender(): GetDefaultUrlMessageEventSender {
+    if(this.getDefaultUrlMessageEventSender) {
+      return this.getDefaultUrlMessageEventSender;
+    }
+
+    this.getDefaultUrlMessageEventSender = new GetDefaultUrlMessageEventSender(
+      DefaultUrlDependencyProvider.getBrowserMessageService(),
+      DefaultUrlDependencyProvider.getGetDefaultUrlUseCaseMessageEventListeners(),
+    );
+
+    return this.getDefaultUrlMessageEventSender;
+  }
+
+  private static resetTabToDefaultUrlMessageEventSender: ResetTabToDefaultUrlMessageEventSender;
+  static getResetTabToDefaultUrlMessageEventSender(): ResetTabToDefaultUrlMessageEventSender {
+    if(this.resetTabToDefaultUrlMessageEventSender) {
+      return this.resetTabToDefaultUrlMessageEventSender;
+    }
+
+    this.resetTabToDefaultUrlMessageEventSender = new ResetTabToDefaultUrlMessageEventSender(
+      DefaultUrlDependencyProvider.getBrowserMessageService(),
+      DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCaseMessageEventListeners(),
+    );
+
+    return this.resetTabToDefaultUrlMessageEventSender;
+  }
+
+  private static setDefaultUrlMessageEventSender: SetDefaultUrlMessageEventSender;
+  static getSetDefaultUrlMessageEventSender(): SetDefaultUrlMessageEventSender {
+    if(this.setDefaultUrlMessageEventSender) {
+      return this.setDefaultUrlMessageEventSender;
+    }
+
+    this.setDefaultUrlMessageEventSender = new SetDefaultUrlMessageEventSender(
+      DefaultUrlDependencyProvider.getBrowserMessageService(),
+      DefaultUrlDependencyProvider.getSetDefaultUrlUseCaseMessageEventListeners(),
+    );
+
+    return this.setDefaultUrlMessageEventSender;
+  }
+
 }
