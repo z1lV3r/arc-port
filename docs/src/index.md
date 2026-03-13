@@ -12,13 +12,13 @@ hero:
   actions:
     - theme: brand
       text: Download
-      link: /
+      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.0-beta
     - theme: alt
       text: Beta
-      link: /
+      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.0-beta
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-    link: /features/markdown-examples
+  - title: "Default URL ↩️"
+    details: Set a default URL to reset it when you want
+    link: /features/default-url
 ---

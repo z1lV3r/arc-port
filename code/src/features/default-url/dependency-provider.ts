@@ -41,6 +41,8 @@ import { ResetCurrentTabToDefaultUrlMessageEventListener } from "./presentation/
 import { ResetTabToDefaultUrlMessageEventSender } from "./presentation/background/message-events/reset-tab-to-default-url-message-event-sender";
 import { GetCurrentTabDefaultUrlMessageEventListener } from "./presentation/background/message-events/get-default-url-use-cases-listeners/get-current-tab-default-url-message-event-listener";
 import { GetDefaultUrlMessageEventSender } from "./presentation/background/message-events/get-default-url-message-event-sender";
+import { ResetOrCloseCurrentTabToDefaultUrlMessageEventListener } from "./presentation/background/message-events/reset-tab-to-default-url-use-cases-listeners/reset-or-close-current-tab-to-default-url-message-event-listener";
+import { SetTabDefaultUrlIfUnsetMessageEventListener } from "./presentation/background/message-events/set-default-url-use-cases-listeners/set-tab-default-url-if-unset-message-event-listener";
 
 export class DefaultUrlDependencyProvider {
 
@@ -311,27 +313,29 @@ export class DefaultUrlDependencyProvider {
     return this.getDefaultUrlUseCaseListeners;
   }
 
-  private static resetTabToDefaultUrlUseCaseListeners: [ResetCurrentTabToDefaultUrlMessageEventListener];
-  static getResetTabToDefaultUrlUseCaseMessageEventListeners(): [ResetCurrentTabToDefaultUrlMessageEventListener] {
+  private static resetTabToDefaultUrlUseCaseListeners: [ResetCurrentTabToDefaultUrlMessageEventListener, ResetOrCloseCurrentTabToDefaultUrlMessageEventListener];
+  static getResetTabToDefaultUrlUseCaseMessageEventListeners(): [ResetCurrentTabToDefaultUrlMessageEventListener, ResetOrCloseCurrentTabToDefaultUrlMessageEventListener] {
     if(this.resetTabToDefaultUrlUseCaseListeners) {
       return this.resetTabToDefaultUrlUseCaseListeners;
     }
 
     this.resetTabToDefaultUrlUseCaseListeners = [
       new ResetCurrentTabToDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases()),
+      new ResetOrCloseCurrentTabToDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getResetTabToDefaultUrlUseCases()),
     ];
 
     return this.resetTabToDefaultUrlUseCaseListeners;
   }
 
-  private static setDefaultUrlUseCaseListeners: [SetCurrentTabDefaultUrlMessageEventListener];
-  static getSetDefaultUrlUseCaseMessageEventListeners(): [SetCurrentTabDefaultUrlMessageEventListener] {
+  private static setDefaultUrlUseCaseListeners: [SetCurrentTabDefaultUrlMessageEventListener, SetTabDefaultUrlIfUnsetMessageEventListener];
+  static getSetDefaultUrlUseCaseMessageEventListeners(): [SetCurrentTabDefaultUrlMessageEventListener, SetTabDefaultUrlIfUnsetMessageEventListener] {
     if(this.setDefaultUrlUseCaseListeners) {
       return this.setDefaultUrlUseCaseListeners;
     }
 
     this.setDefaultUrlUseCaseListeners = [
       new SetCurrentTabDefaultUrlMessageEventListener(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
+      new SetTabDefaultUrlIfUnsetMessageEventListener(DefaultUrlDependencyProvider.getSetDefaultUrlUseCases()),
     ];
 
     return this.setDefaultUrlUseCaseListeners;
