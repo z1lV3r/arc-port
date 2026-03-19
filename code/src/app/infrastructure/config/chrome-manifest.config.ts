@@ -15,7 +15,7 @@ export default {
     page: "src/options.html",
     open_in_tab: true,
   },
-  permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus"],
+  permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus", "tabGroups"],
   host_permissions: ["<all_urls>"],
   background: {
     service_worker: "background.js",

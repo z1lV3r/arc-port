@@ -17,6 +17,7 @@ export class ChromeTabsService implements BrowserTabsService {
       tabs[0].id?.toString() || "",
       tabs[0].url || "",
       tabs[0].index,
+      tabs[0].groupId,
     );
   }
 
@@ -29,13 +30,23 @@ export class ChromeTabsService implements BrowserTabsService {
       return new Tab("", "", 0);
     }
     const url = tab.url || tab.pendingUrl || "";
-    return new Tab(tab.id?.toString() || "", url, tab.index);
+    return new Tab(tab.id?.toString() || "", url, tab.index, tab.groupId);
   }
 
-  async createTab(url: string, index?: number): Promise<Tab> {
+  async createTab(url: string, index?: number, groupId?: number): Promise<Tab> {
     const options = index !== undefined ? { url, index } : { url };
     const tab = await chrome.tabs.create(options);
-    return new Tab(tab.id?.toString() || "", tab.url || "", tab.index);
+    
+    if (groupId !== undefined && tab.id !== undefined && groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+      await chrome.tabs.group({ tabIds: tab.id, groupId });
+    }
+    
+    return new Tab(
+      tab.id?.toString() || "", 
+      tab.url || "", 
+      tab.index, 
+      groupId ?? tab.groupId
+    );
   }
 
   async closeTab(id: string): Promise<void> {

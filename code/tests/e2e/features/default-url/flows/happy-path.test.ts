@@ -1,0 +1,8 @@
+/*
+Open new tab
+Set default url
+Reset tab to default url
+Go to a different url
+Reset or close tab to default url
+Clear default url
+*/
