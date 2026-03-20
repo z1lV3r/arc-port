@@ -24,7 +24,7 @@ test.describe('Tab Event - Group Tab Sets Default URL', () => {
   test.beforeEach(async ({ context: ctx }) => {
     context = ctx;
     // Create a new page for each test
-    page = await context.newPage();
+    page = context.pages()[0];
     await page.goto('https://example.com');
     // Wait for page to fully load
     await page.waitForLoadState('networkidle');

@@ -23,7 +23,7 @@ test.describe('Tab Event - Create Pinned Tab Sets Default URL', () => {
   test.beforeEach(async ({ context: ctx }) => {
     context = ctx;
     // Create a new page for each test to have a clean state context
-    page = await context.newPage();
+    page = context.pages()[0];
     await page.goto('https://example.com');
     // Wait for page to fully load
     await page.waitForLoadState('networkidle');
