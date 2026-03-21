@@ -1,5 +1,4 @@
-/// <reference types="vitest" />
-import { defineConfig } from "vitest/config";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -19,7 +18,7 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         index: path.resolve(__dirname, "src/index.html"),
         options: path.resolve(__dirname, "src/options.html"),
@@ -30,8 +29,5 @@ export default defineConfig({
       },
     },
     target: "esnext",
-  },
-  test: {
-    exclude: ['**/tests/e2e/**', 'node_modules', 'dist', '.git', '.cache'],
   },
 });
