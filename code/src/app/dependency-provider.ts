@@ -10,83 +10,63 @@ import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cas
 import { ExtensionListenerUseCases } from "./use-cases/extension-listener-use-cases";
 import type { BrowserExtensionService } from "@/shared/domain/interfaces/browser-extension-service";
 import { ChromeExtensionService } from "@/shared/infrastructure/chrome-extension-service";
+import { MessageEventListenerUseCases } from "./use-cases/message-event-listeners-use-cases";
+import type { BrowserMessageEventService } from "./domain/interfaces/browser-message-event-service";
+import { ChromeMessageEventService } from "./infrastructure/chrome-message-event-service";
 
 export class DependencyProvider {
-  private static browserName: string;
-  private static browserTabEventService: BrowserTabEventService;
-  private static browserContextMenuService: BrowserContextMenuService;
-  private static browserShortcutService: BrowserShortcutService;
-  private static browserExtensionService: BrowserExtensionService;
-  private static contextMenuListenerUseCase: ContextMenuListenerUseCases;
-  private static shortcutListenerUseCase: ShortcutListenerUseCases;
-  private static tabEventListenerUseCase: TabEventListenerUseCases;
-  private static extensionListenerUseCase: ExtensionListenerUseCases;
 
   private constructor(){
   }
 
-  private static getBrowserName(): string {
-    if (this.browserName) {
-      return this.browserName;
-    }
-
-    const userAgent = navigator.userAgent.toLowerCase();
-    this.browserName = userAgent.includes("firefox") ? "firefox" : "chrome";
-    return this.browserName;
-  }
-
+  //Infrastructure - Browser
+  private static browserTabEventService: BrowserTabEventService;
   static getBrowserTabEventService(): BrowserTabEventService {
     if(this.browserTabEventService) {
-          return this.browserTabEventService;
-        }
-    
-        if (DependencyProvider.getBrowserName() === "chrome") {
-          this.browserTabEventService = new ChromeTabEventService();
-        } else {
-          throw new Error("Unsupported browser");
-        }
+      return this.browserTabEventService;
+    }
+    this.browserTabEventService = new ChromeTabEventService();
     return this.browserTabEventService;
   }
 
+  private static browserExtensionService: BrowserExtensionService;
   static getBrowserExtensionService(): BrowserExtensionService {
     if(this.browserExtensionService) {
-          return this.browserExtensionService;
-        }
-    
-        if (DependencyProvider.getBrowserName() === "chrome") {
-          this.browserExtensionService = new ChromeExtensionService();
-        } else {
-          throw new Error("Unsupported browser");
-        }
+      return this.browserExtensionService;
+    }
+    this.browserExtensionService = new ChromeExtensionService();
     return this.browserExtensionService;
   }
 
+  private static browserContextMenuService: BrowserContextMenuService;
   static getBrowserContextMenuService(): BrowserContextMenuService {
     if(this.browserContextMenuService) {
-          return this.browserContextMenuService;
-        }
-    
-        if (DependencyProvider.getBrowserName() === "chrome") {
-          this.browserContextMenuService = new ChromeContextMenuService();
-        } else {
-          throw new Error("Unsupported browser");
-        }
+      return this.browserContextMenuService;
+    }
+    this.browserContextMenuService = new ChromeContextMenuService();
     return this.browserContextMenuService;
   }
 
+  private static browserShortcutService: BrowserShortcutService;
   static getBrowserShortcutService(): BrowserShortcutService {
     if(this.browserShortcutService) {
-          return this.browserShortcutService;
-        }
-    
-        if (DependencyProvider.getBrowserName() === "chrome") {
-          this.browserShortcutService = new ChromeShortcutService();
-        } else {
-          throw new Error("Unsupported browser");
-        }
+      return this.browserShortcutService;
+    }
+    this.browserShortcutService = new ChromeShortcutService();
     return this.browserShortcutService;
   }
 
+  private static browserMessageEventService: BrowserMessageEventService;
+  static getBrowserMessageEventService(): BrowserMessageEventService {
+    if(this.browserMessageEventService) {
+      return this.browserMessageEventService;
+    }
+    this.browserMessageEventService = new ChromeMessageEventService();
+    return this.browserMessageEventService;
+  }
+
+  //Use Cases
+  private static contextMenuListenerUseCase: ContextMenuListenerUseCases;
   static getContextMenuListenerUseCase(): ContextMenuListenerUseCases {
     if(this.contextMenuListenerUseCase) {
       return this.contextMenuListenerUseCase;
@@ -95,6 +75,7 @@ export class DependencyProvider {
     return this.contextMenuListenerUseCase;
   }
 
+  private static shortcutListenerUseCase: ShortcutListenerUseCases;
   static getShortcutListenerUseCase(): ShortcutListenerUseCases {
     if(this.shortcutListenerUseCase) {
       return this.shortcutListenerUseCase;
@@ -102,6 +83,8 @@ export class DependencyProvider {
     this.shortcutListenerUseCase = new ShortcutListenerUseCases(DependencyProvider.getBrowserShortcutService());
     return this.shortcutListenerUseCase;
   }
+
+  private static tabEventListenerUseCase: TabEventListenerUseCases;
   static getTabEventListenerUseCase(): TabEventListenerUseCases {
     if(this.tabEventListenerUseCase) {
       return this.tabEventListenerUseCase;
@@ -109,6 +92,8 @@ export class DependencyProvider {
     this.tabEventListenerUseCase = new TabEventListenerUseCases(DependencyProvider.getBrowserTabEventService());
     return this.tabEventListenerUseCase;
   }
+
+  private static extensionListenerUseCase: ExtensionListenerUseCases;
   static getExtensionListenerUseCase(): ExtensionListenerUseCases {
     if(this.extensionListenerUseCase) {
       return this.extensionListenerUseCase;
@@ -116,4 +101,14 @@ export class DependencyProvider {
     this.extensionListenerUseCase = new ExtensionListenerUseCases(DependencyProvider.getBrowserExtensionService());
     return this.extensionListenerUseCase;
   }
+
+  private static useCaseEventListenersUseCases: MessageEventListenerUseCases;
+  static getUseCaseEventListenersUseCases(): MessageEventListenerUseCases {
+    if(this.useCaseEventListenersUseCases) {
+      return this.useCaseEventListenersUseCases;
+    }
+    this.useCaseEventListenersUseCases = new MessageEventListenerUseCases();
+    return this.useCaseEventListenersUseCases;
+  }
+
 }

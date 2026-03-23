@@ -3,10 +3,10 @@ import type { BrowserShortcutSettingsService } from "@/shared/domain/interfaces/
 import { DefaultUrlDependencyProvider } from "../dependency-provider";
 import type { SettingsUseCases } from "../use-cases/settings-use-cases";
 import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
-import type { TabsService } from "@/shared/domain/interfaces/tabs-service";
+import type { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
 
 interface SettingsContextType {
-  tabsService: TabsService;
+  tabsService: BrowserTabsService;
   shortcutSettingsService: BrowserShortcutSettingsService;
   shortcutListeners: ShortcutListener[];
   settingsUseCases: SettingsUseCases;
@@ -14,12 +14,12 @@ interface SettingsContextType {
 
 export function ContextProvider({ children }: { children: ReactNode }) {
   const tabsService = useMemo(
-    () => DefaultUrlDependencyProvider.getTabsService(),
+    () => DefaultUrlDependencyProvider.getBrowserTabsService(),
     [],
   );
 
   const shortcutSettingsService = useMemo(
-    () => DefaultUrlDependencyProvider.getShortcutSettingsService(),
+    () => DefaultUrlDependencyProvider.getBrowserShortcutSettingsService(),
     [],
   );
 

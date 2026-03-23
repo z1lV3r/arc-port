@@ -1,7 +1,7 @@
 export default {
   manifest_version: 3,
   name: "Arc Port",
-  version: "1.0.0",
+  version: "1.0.1",
   description: "Port Arc browser features into chrome",
   icons: {
     "16": "app/assets/icon/arc-port-16.png",
@@ -15,7 +15,7 @@ export default {
     page: "src/options.html",
     open_in_tab: true,
   },
-  permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus"],
+  permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus", "tabGroups"],
   host_permissions: ["<all_urls>"],
   background: {
     service_worker: "background.js",

@@ -53,7 +53,7 @@ describe('ResetTabToDefaultUrlUseCases - resetCurrentTabToDefaultUrl', () => {
     // Assert
     // 1. Check calls
     expect(closeTabSpy).toHaveBeenCalledWith(oldTabId);
-    expect(createTabSpy).toHaveBeenCalledWith(defaultUrl, 0); // Mock sets index to 0 by default
+    expect(createTabSpy).toHaveBeenCalledWith(defaultUrl, 0, undefined); // Mock sets index to 0 by default
 
     // 2. Check logic: old tab gone, new tab exists
     await expect(mockTabsService.getTab(oldTabId)).rejects.toThrow();

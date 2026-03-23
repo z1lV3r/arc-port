@@ -1,14 +1,14 @@
-import type { TabsService } from "@/shared/domain/interfaces/tabs-service";
+import type { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
 import type { DefaultUrlRepository } from "../domain/interfaces/default-url-repository";
 import { Tab } from "../domain/models/tab";
 
 export class ClearDefaultUrlUseCases {
 
-  private tabsService: TabsService;
+  private tabsService: BrowserTabsService;
   private defaultUrlRepository: DefaultUrlRepository;
 
   constructor(
-    tabsService: TabsService,
+    tabsService: BrowserTabsService,
     defaultUrlRepository: DefaultUrlRepository,
   ) {
     this.tabsService = tabsService;
