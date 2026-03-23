@@ -69,7 +69,7 @@ describe('ResetTabToDefaultUrlUseCases - resetOrCloseCurrentTabToDefaultUrl', ()
 
     // Assert
     // Should create new tab first, then close old
-    expect(createTabSpy).toHaveBeenCalledWith(defaultUrl, 0);
+    expect(createTabSpy).toHaveBeenCalledWith(defaultUrl, 0, undefined);
     expect(closeTabSpy).toHaveBeenCalledWith(oldTabId);
     
     // Verify default URL persistence for new tab

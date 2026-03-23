@@ -4,28 +4,28 @@ import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-
 
 export class TabEventListenerProvider {
 
-  private useCase: TabEventListenerUseCases;
+  private tabEventListenerUseCases: TabEventListenerUseCases;
 
   constructor(
-    useCase: TabEventListenerUseCases = DependencyProvider.getTabEventListenerUseCase(),
+    tabEventListenerUseCase: TabEventListenerUseCases = DependencyProvider.getTabEventListenerUseCase(),
   ) {
-    this.useCase = useCase;
+    this.tabEventListenerUseCases = tabEventListenerUseCase;
   }
 
   registerFeaturesOnCloseTabEventListeners() {
-    this.useCase.registerOnCloseTabEventListeners([
+    this.tabEventListenerUseCases.registerOnCloseTabEventListeners([
       DefaultUrlDependencyProvider.getOnCloseTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnUpdateTabEventListeners() {
-    this.useCase.registerOnUpdateTabEventListeners([
+    this.tabEventListenerUseCases.registerOnUpdateTabEventListeners([
       DefaultUrlDependencyProvider.getOnUpdateTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnCreateTabEventListeners() {
-    this.useCase.registerOnCreateTabEventListeners([
+    this.tabEventListenerUseCases.registerOnCreateTabEventListeners([
       DefaultUrlDependencyProvider.getOnCreateTabEventListeners(),
     ]);
   }

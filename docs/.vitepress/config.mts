@@ -31,7 +31,7 @@ export default defineConfig({
       {
         text: 'Features',
         items: [
-          { text: 'Markdown Examples', link: '/features/markdown-examples' }
+          { text: 'Default URL', link: '/features/default-url' }
         ]
       }
     ],

@@ -1,7 +1,7 @@
-import { TabsService } from "@/shared/domain/interfaces/tabs-service";
+import { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
 import { Tab } from "@/features/default-url/domain/models/tab";
 
-export class MockTabsService implements TabsService {
+export class MockTabsService implements BrowserTabsService {
   private currentTab: Tab | null = null;
   private tabs = new Map<string, Tab>();
 

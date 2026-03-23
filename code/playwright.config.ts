@@ -9,7 +9,7 @@ import { defineConfig, devices } from '@playwright/test';
  * - Configuring proper test directories
  */
 export default defineConfig({
-  testDir: './tests/integration',
+  testDir: './tests/e2e',
   testMatch: '**/*.test.ts',
   
   /* Maximum time one test can run */
