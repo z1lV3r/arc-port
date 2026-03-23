@@ -25,8 +25,8 @@ test.describe('Default URL Edge Case', () => {
     }, page.url());
 
     // Add the tab to a new group (simulates the user grouping the tab)
-    await background.evaluate(async (id) => {
-      await chrome.tabs.group({ tabIds: [id] });
+    const groupId = await background.evaluate(async (id) => {
+      return await chrome.tabs.group({ tabIds: [id] });
     }, tabId);
     
     // - Validate there should be a default url
@@ -49,5 +49,13 @@ test.describe('Default URL Edge Case', () => {
     await expect(resetPage).toHaveURL('https://example.com/');
     defaultUrlRes = await messageService.sendGetCurrentTabDefaultUrlEventMessage();
     expect(defaultUrlRes).toBe('https://example.com/');
+
+    // the new page should be in the same group as the previous page
+    const resetTabGroupId = await background.evaluate(async (url) => {
+      const tabs = await chrome.tabs.query({ url });
+      return tabs[0]?.groupId;
+    }, resetPage.url());
+
+    expect(resetTabGroupId).toBe(groupId);
   });
 });
