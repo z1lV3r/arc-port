@@ -44,6 +44,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}-beta
+          target_commitish: ${{ github.sha }}
           name: Release v${{ steps.version.outputs.version }} (Beta)
           files: code/arc-port.zip
           generate_release_notes: true
