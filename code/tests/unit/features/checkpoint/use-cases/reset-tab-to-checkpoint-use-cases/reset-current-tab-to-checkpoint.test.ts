@@ -1,21 +1,21 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ResetTabToDefaultUrlUseCases } from '@/features/default-url/use-cases/reset-tab-to-default-url-use-cases';
-import type { DefaultUrlRepository } from '@/features/default-url/domain/interfaces/default-url-repository';
-import { InMemoryDefaultUrlRepository } from '../../infrastructure/in-memory-default-url-repository';
+import { ResetTabToCheckpointUseCases } from '@/features/checkpoint/use-cases/reset-tab-to-checkpoint-use-cases';
+import type { CheckpointRepository } from '@/features/checkpoint/domain/interfaces/checkpoint-repository';
+import { InMemoryCheckpointRepository } from '../../infrastructure/in-memory-checkpoint-repository';
 import { MockTabsService } from '../../infrastructure/mock-tabs-service';
 
-describe('ResetTabToDefaultUrlUseCases - resetCurrentTabToDefaultUrl', () => {
-  let useCases: ResetTabToDefaultUrlUseCases;
+describe('ResetTabToCheckpointUseCases - resetCurrentTabToCheckpoint', () => {
+  let useCases: ResetTabToCheckpointUseCases;
   let mockTabsService: MockTabsService;
-  let mockRepository: DefaultUrlRepository;
+  let mockRepository: CheckpointRepository;
 
   beforeEach(() => {
-    mockRepository = new InMemoryDefaultUrlRepository();
+    mockRepository = new InMemoryCheckpointRepository();
     mockTabsService = new MockTabsService();
-    useCases = new ResetTabToDefaultUrlUseCases(mockTabsService, mockRepository);
+    useCases = new ResetTabToCheckpointUseCases(mockTabsService, mockRepository);
   });
 
-  it('should do nothing if the current tab has no default URL', async () => {
+  it('should do nothing if the current tab has no checkpoint', async () => {
     // Arrange
     const tabId = 'tab-no-default';
     const currentUrl = 'https://example.com';
@@ -26,7 +26,7 @@ describe('ResetTabToDefaultUrlUseCases - resetCurrentTabToDefaultUrl', () => {
     const closeTabSpy = vi.spyOn(mockTabsService, 'closeTab');
 
     // Act
-    await useCases.resetCurrentTabToDefaultUrl();
+    await useCases.resetCurrentTabToCheckpoint();
 
     // Assert
     expect(createTabSpy).not.toHaveBeenCalled();
@@ -34,26 +34,26 @@ describe('ResetTabToDefaultUrlUseCases - resetCurrentTabToDefaultUrl', () => {
     expect(await mockTabsService.getTab(tabId)).toBeDefined();
   });
 
-  it('should close the current tab and open a new one with the default URL if it exists', async () => {
+  it('should close the current tab and open a new one with the checkpoint URL if it exists', async () => {
     // Arrange
     const oldTabId = 'tab-old';
-    const defaultUrl = 'https://default.com';
+    const checkpointUrl = 'https://checkpoint.com';
     const currentUrl = 'https://current.com';
     
     mockTabsService.setTabs([{ tabId: oldTabId, expectedUrl: currentUrl }]);
-    await mockRepository.save(oldTabId, defaultUrl);
+    await mockRepository.save(oldTabId, checkpointUrl);
 
     // Spies
     const createTabSpy = vi.spyOn(mockTabsService, 'createTab');
     const closeTabSpy = vi.spyOn(mockTabsService, 'closeTab');
 
     // Act
-    await useCases.resetCurrentTabToDefaultUrl();
+    await useCases.resetCurrentTabToCheckpoint();
 
     // Assert
     // 1. Check calls
     expect(closeTabSpy).toHaveBeenCalledWith(oldTabId);
-    expect(createTabSpy).toHaveBeenCalledWith(defaultUrl, 0, undefined); // Mock sets index to 0 by default
+    expect(createTabSpy).toHaveBeenCalledWith(checkpointUrl, 0, undefined); // Mock sets index to 0 by default
 
     // 2. Check logic: old tab gone, new tab exists
     await expect(mockTabsService.getTab(oldTabId)).rejects.toThrow();
@@ -66,14 +66,14 @@ describe('ResetTabToDefaultUrlUseCases - resetCurrentTabToDefaultUrl', () => {
     const newTabId = newTabResult.id;
     
     const savedUrl = await mockRepository.get(newTabId);
-    expect(savedUrl).toBe(defaultUrl);
+    expect(savedUrl).toBe(checkpointUrl);
   });
 
   it('should only affect the current tab', async () => {
     // Arrange
     const currentTabId = 'tab-current';
     const otherTabId = 'tab-other';
-    const defaultUrl = 'https://default.com';
+    const checkpointUrl = 'https://default.com';
     
     mockTabsService.setTabs([
         { tabId: currentTabId, expectedUrl: 'https://current.com' },
@@ -81,10 +81,10 @@ describe('ResetTabToDefaultUrlUseCases - resetCurrentTabToDefaultUrl', () => {
     ]);
     mockTabsService.setCurrentTab(currentTabId);
     
-    await mockRepository.save(currentTabId, defaultUrl);
+    await mockRepository.save(currentTabId, checkpointUrl);
     
     // Act
-    await useCases.resetCurrentTabToDefaultUrl();
+    await useCases.resetCurrentTabToCheckpoint();
 
     // Assert
     // Current tab closed

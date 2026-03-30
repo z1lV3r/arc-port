@@ -2,22 +2,22 @@ import { test, expect } from '../../../../fixtures';
 import type { Page, BrowserContext } from '@playwright/test';
 
 /*
- * Functional Test: Set Default URL When Tab is Pinned
+ * Functional Test: Set Checkpoint When Tab is Pinned
  * 
  * End-to-end testing approach: We test the actual Chrome extension behavior
- * when a user pins a tab, verifying that the default URL is set appropriately.
+ * when a user pins a tab, verifying that the checkpoint is set appropriately.
  * 
  * Test Scenarios:
  * 1. When a normal tab is pinned by the user:
- *    - if no default URL exists for that tab, the current URL should be saved as default
+ *    - if no checkpoint exists for that tab, the current URL should be saved as checkpoint
  *    - the pinned state should be true
  * 
- * 2. When a tab with an existing default URL is pinned:
- *    - the existing default URL should remain unchanged
+ * 2. When a tab with an existing checkpoint is pinned:
+ *    - the existing checkpoint should remain unchanged
  *    - the tab should be pinned successfully
  */
 
-test.describe('Tab Event - Pin Tab Sets Default URL', () => {
+test.describe('Tab Event - Pin Tab Sets Checkpoint', () => {
   let page: Page;
   let context: BrowserContext;
 
@@ -34,7 +34,7 @@ test.describe('Tab Event - Pin Tab Sets Default URL', () => {
     await page.close();
   });
 
-  test('should save current URL as default when pinning a tab without existing default URL', async () => {
+  test('should save current URL as checkpoint when pinning a tab without existing checkpoint', async () => {
     const currentUrl = 'https://example.com/';
     
     // Get the background service worker
@@ -68,16 +68,16 @@ test.describe('Tab Event - Pin Tab Sets Default URL', () => {
     // Wait a moment for any potential event processing
     await page.waitForTimeout(1000);
 
-    // Verify the default URL remained unchanged (should still be the existing URL, not current)
+    // Verify the checkpoint remained unchanged (should still be the existing URL, not current)
     const savedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(savedUrl).toBe(currentUrl);
   });
 
-  test('should keep existing default URL when pinning a tab that already has one', async () => {
+  test('should keep existing checkpoint when pinning a tab that already has one', async () => {
     const existingUrl = 'https://existing-default.com/';
     const currentUrl = 'https://example.com/';
     
@@ -96,15 +96,15 @@ test.describe('Tab Event - Pin Tab Sets Default URL', () => {
 
     expect(tabId).toBeDefined();
 
-    // Set an existing default URL
+    // Set an existing checkpoint
     await background.evaluate(async ({ id, url }) => {
-      await chrome.storage.local.set({ [`${id}-default-url`]: url });
+      await chrome.storage.local.set({ [`${id}-checkpoint`]: url });
     }, { id: tabId, url: existingUrl });
 
-    // Verify the default URL was set
+    // Verify the checkpoint was set
     const initialStorage = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(initialStorage).toBe(existingUrl);
@@ -125,10 +125,10 @@ test.describe('Tab Event - Pin Tab Sets Default URL', () => {
     // Wait a moment for any potential event processing
     await page.waitForTimeout(500);
 
-    // Verify the default URL remained unchanged (should still be the existing URL, not current)
+    // Verify the checkpoint remained unchanged (should still be the existing URL, not current)
     const savedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(savedUrl).toBe(existingUrl);

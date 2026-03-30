@@ -1,7 +1,7 @@
 import { test, expect } from '../../../../fixtures';
 import { PlaywrightBrowserMessageService } from '../../test-services/playwright-browser-message-service';
 
-test.describe('Default URL Edge Case', () => {
+test.describe('Checkpoint Edge Case', () => {
   let messageService: PlaywrightBrowserMessageService;
   
   test('reset first tab in window', async ({ context, extensionId }) => {
@@ -12,14 +12,14 @@ test.describe('Default URL Edge Case', () => {
     await page.goto('https://example.com/');
     await page.waitForLoadState('networkidle');
 
-    // 2. Set default url
-    await messageService.sendSetCurrentTabDefaultUrlEventMessage();
+    // 2. Set checkpoint
+    await messageService.sendSetCurrentTabCheckpointEventMessage();
     
-    // - Validate there should be a default url
-    let defaultUrlRes = await messageService.sendGetCurrentTabDefaultUrlEventMessage();
-    expect(defaultUrlRes).toBe('https://example.com/');
+    // - Validate there should be a checkpoint
+    let checkpointUrl = await messageService.sendGetCurrentTabCheckpointEventMessage();
+    expect(checkpointUrl).toBe('https://example.com/');
 
-    // 3. Reset tab to default url
+    // 3. Reset tab to checkpoint
     // Go to a different URL first to see if it resets
     await page.goto('https://example.net/');
     await page.waitForLoadState('networkidle');
@@ -27,13 +27,13 @@ test.describe('Default URL Edge Case', () => {
     const resetPagePromise = context.waitForEvent('page', {
       predicate: (p) => !p.url().startsWith('chrome-extension://') && !p.url().startsWith('about:'),
     });
-    await messageService.sendResetCurrentTabToDefaultUrlEventMessage();
+    await messageService.sendResetCurrentTabToCheckpointEventMessage();
     const resetPage = await resetPagePromise;
 
-    // - Validate there should be a default url with the new tab id
+    // - Validate there should be a checkpoint with the new tab id
     await resetPage.waitForLoadState('load');
     await expect(resetPage).toHaveURL('https://example.com/');
-    defaultUrlRes = await messageService.sendGetCurrentTabDefaultUrlEventMessage();
-    expect(defaultUrlRes).toBe('https://example.com/');
+    checkpointUrl = await messageService.sendGetCurrentTabCheckpointEventMessage();
+    expect(checkpointUrl).toBe('https://example.com/');
   });
 });

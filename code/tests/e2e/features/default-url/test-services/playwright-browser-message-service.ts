@@ -38,31 +38,31 @@ export class PlaywrightBrowserMessageService implements BrowserMessageService {
     }
   }
 
-  async sendSetCurrentTabDefaultUrlEventMessage(): Promise<string> {
-    return (await this.sendEventMessage("set-current-tab-default-url-message-event-listener", {})).data;
+  async sendSetCurrentTabCheckpointEventMessage(): Promise<string> {
+    return (await this.sendEventMessage("set-current-tab-checkpoint-message-event-listener", {})).data;
   }
 
-  async sendSetTabDefaultUrlIfUnsetMessageEventMessage(tabId: number): Promise<string> {
-    return (await this.sendEventMessage("set-tab-default-url-if-unset-message-event-listener", { tabId })).data;
+  async sendSetTabCheckpointIfUnsetMessageEventMessage(tabId: number): Promise<string> {
+    return (await this.sendEventMessage("set-tab-checkpoint-if-unset-message-event-listener", { tabId })).data;
   }
 
-  async sendGetCurrentTabDefaultUrlEventMessage(): Promise<string> {
-    return (await this.sendEventMessage("get-current-tab-default-url-message-event-listener", {})).data;
+  async sendGetCurrentTabCheckpointEventMessage(): Promise<string> {
+    return (await this.sendEventMessage("get-current-tab-checkpoint-message-event-listener", {})).data;
   }
 
-  async sendResetCurrentTabToDefaultUrlEventMessage(): Promise<void> {
-    await this.sendEventMessage("reset-current-tab-to-default-url-message-event-listener", {});
+  async sendResetCurrentTabToCheckpointEventMessage(): Promise<void> {
+    await this.sendEventMessage("reset-current-tab-to-checkpoint-message-event-listener", {});
   }
 
-  async sendResetOrCloseCurrentTabToDefaultUrlEventMessage(): Promise<void> {
-    await this.sendEventMessage("reset-or-close-current-tab-to-default-url-message-event-listener", {});
+  async sendResetOrCloseCurrentTabToCheckpointEventMessage(): Promise<void> {
+    await this.sendEventMessage("reset-or-close-current-tab-to-checkpoint-message-event-listener", {});
   }
 
-  async sendClearCurrentTabDefaultUrlEventMessage(): Promise<void> {
-    await this.sendEventMessage("clear-current-tab-default-url-message-event-listener", {});
+  async sendClearCurrentTabCheckpointEventMessage(): Promise<void> {
+    await this.sendEventMessage("clear-current-tab-checkpoint-message-event-listener", {});
   }
 
-  async sendClearTabDefaultUrlEventMessage(tabId: string): Promise<void> {
-    await this.sendEventMessage("clear-tab-default-url-message-event-listener", { tabId });
+  async sendClearTabCheckpointEventMessage(tabId: string): Promise<void> {
+    await this.sendEventMessage("clear-tab-checkpoint-message-event-listener", { tabId });
   }
 }

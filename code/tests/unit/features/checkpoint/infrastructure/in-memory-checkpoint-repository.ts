@@ -1,6 +1,6 @@
-import type { DefaultUrlRepository } from "@/features/default-url/domain/interfaces/default-url-repository";
+import type { CheckpointRepository } from "@/features/checkpoint/domain/interfaces/checkpoint-repository";
 
-export class InMemoryDefaultUrlRepository implements DefaultUrlRepository {
+export class InMemoryCheckpointRepository implements CheckpointRepository {
   private storage = new Map<string, string>();
 
   async save(tabId: string, url: string): Promise<void> {

@@ -1,28 +1,28 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SetDefaultUrlUseCases } from '@/features/default-url/use-cases/set-default-url-use-cases';
-import type { DefaultUrlRepository } from '@/features/default-url/domain/interfaces/default-url-repository';
-import { InMemoryDefaultUrlRepository } from '../../infrastructure/in-memory-default-url-repository';
+import { SetCheckpointUseCases } from '@/features/checkpoint/use-cases/set-checkpoint-use-cases';
+import type { CheckpointRepository } from '@/features/checkpoint/domain/interfaces/checkpoint-repository';
+import { InMemoryCheckpointRepository } from '../../infrastructure/in-memory-checkpoint-repository';
 import { MockTabsService } from '../../infrastructure/mock-tabs-service';
 
-describe('SetDefaultUrlUseCases - setTabDefaultUrlIfUnset', () => {
-  let useCases: SetDefaultUrlUseCases;
+describe('SetCheckpointUseCases - setTabCheckpointIfUnset', () => {
+  let useCases: SetCheckpointUseCases;
   let mockTabsService: MockTabsService;
-  let mockRepository: DefaultUrlRepository;
+  let mockRepository: CheckpointRepository;
 
   beforeEach(() => {
-    mockRepository = new InMemoryDefaultUrlRepository();
+    mockRepository = new InMemoryCheckpointRepository();
     mockTabsService = new MockTabsService();
-    useCases = new SetDefaultUrlUseCases(mockTabsService, mockRepository);
+    useCases = new SetCheckpointUseCases(mockTabsService, mockRepository);
   });
 
-  it('should return the tab URL and save it as default if no default URL is set', async () => {
+  it('should return the tab URL and save it as checkpoint if no checkpoint URL is set', async () => {
     // Arrange
     const tabId = 'tab-new-default';
     const currentUrl = 'https://example.com/page';
     mockTabsService.setTabs([{ tabId, expectedUrl: currentUrl }]);
 
     // Act
-    const result = await useCases.setTabDefaultUrlIfUnset(tabId);
+    const result = await useCases.setTabCheckpointIfUnset(tabId);
 
     // Assert
     // 1. Return values
@@ -33,28 +33,28 @@ describe('SetDefaultUrlUseCases - setTabDefaultUrlIfUnset', () => {
     expect(savedUrl).toBe(currentUrl);
   });
 
-  it('should return the existing default URL and not overwrite if already set', async () => {
+  it('should return the existing checkpoint URL and not overwrite if already set', async () => {
     // Arrange
     const tabId = 'tab-existing-default';
-    const oldDefaultUrl = 'https://default.com';
+    const oldCheckpointUrl = 'https://default.com';
     const currentUrl = 'https://current.com';
     
     // Set initial storage state
-    await mockRepository.save(tabId, oldDefaultUrl);
+    await mockRepository.save(tabId, oldCheckpointUrl);
     
     // Setup tab with different URL
     mockTabsService.setTabs([{ tabId, expectedUrl: currentUrl }]);
 
     // Act
-    const result = await useCases.setTabDefaultUrlIfUnset(tabId);
+    const result = await useCases.setTabCheckpointIfUnset(tabId);
 
     // Assert
-    // 1. Return values (should correspond to the default URL, not the current one)
-    expect(result).toBe(oldDefaultUrl);
+    // 1. Return values (should correspond to the checkpoint URL, not the current one)
+    expect(result).toBe(oldCheckpointUrl);
 
     // 2. Storage state (should remain unchanged)
     const savedUrl = await mockRepository.get(tabId);
-    expect(savedUrl).toBe(oldDefaultUrl);
+    expect(savedUrl).toBe(oldCheckpointUrl);
   });
 
   it('should return an empty string and not save if the tab has no URL', async () => {
@@ -64,7 +64,7 @@ describe('SetDefaultUrlUseCases - setTabDefaultUrlIfUnset', () => {
     mockTabsService.setTabs([{ tabId, expectedUrl: emptyUrl }]);
 
     // Act
-    const result = await useCases.setTabDefaultUrlIfUnset(tabId);
+    const result = await useCases.setTabCheckpointIfUnset(tabId);
 
     // Assert
     // 1. Return values

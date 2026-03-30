@@ -2,28 +2,28 @@ import { test, expect } from '../../../../fixtures';
 import type { Page, BrowserContext } from '@playwright/test';
 
 /*
- * Functional Test: Remove Default URL When Tab is Closed
+ * Functional Test: Remove Checkpoint When Tab is Closed
  * 
  * End-to-end testing approach: We test the actual Chrome extension behavior
- * when a user closes a tab, verifying that the default URL is cleaned up.
+ * when a user closes a tab, verifying that the checkpoint is cleaned up.
  * 
  * Test Scenarios:
  * 1. When a tab is closed:
- *    - the default URL associated with that tab ID should be removed from storage.
+ *    - the checkpoint associated with that tab ID should be removed from storage.
  * 
  * 2. When one of multiple tabs is closed:
- *    - only the closed tab's default URL should be removed.
- *    - other tabs' default URLs should remain intact.
+ *    - only the closed tab's checkpoint should be removed.
+ *    - other tabs' checkpoints should remain intact.
  */
 
-test.describe('Tab Event - Close Tab Removes Default URL', () => {
+test.describe('Tab Event - Close Tab Removes Checkpoint', () => {
   let context: BrowserContext;
 
   test.beforeEach(async ({ context: ctx }) => {
     context = ctx;
   });
 
-  test('should remove default URL from storage when the tab is closed', async () => {
+  test('should remove checkpoint from storage when the tab is closed', async () => {
     // Create a new page
     const page = await context.newPage();
     await page.goto('https://example.com');
@@ -44,19 +44,19 @@ test.describe('Tab Event - Close Tab Removes Default URL', () => {
 
     expect(tabId).toBeDefined();
 
-    // Set a default URL for this tab
-    const defaultUrl = 'https://example.org/';
+    // Set a checkpoint for this tab
+    const checkpointUrl = 'https://example.org/';
     await background.evaluate(async ({ id, url }) => {
-      await chrome.storage.local.set({ [`${id}-default-url`]: url });
-    }, { id: tabId, url: defaultUrl });
+      await chrome.storage.local.set({ [`${id}-checkpoint`]: url });
+    }, { id: tabId, url: checkpointUrl });
 
     // Verify it was set
     const storedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
-    expect(storedUrl).toBe(defaultUrl);
+    expect(storedUrl).toBe(checkpointUrl);
 
     // Close the tab
     await page.close();
@@ -72,16 +72,16 @@ test.describe('Tab Event - Close Tab Removes Default URL', () => {
         return new Promise(resolve => setTimeout(resolve, 500));
     });
 
-    // Verify the default URL is gone
+    // Verify the checkpoint is gone
     const storedUrlAfterClose = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(storedUrlAfterClose).toBeUndefined();
   });
 
-  test('should NOT affect other tabs default URLs when one is closed', async () => {
+  test('should NOT affect other tabs checkpoints when one is closed', async () => {
     // Create two pages
     const page1 = await context.newPage();
     await page1.goto('https://example.com/1');
@@ -110,14 +110,14 @@ test.describe('Tab Event - Close Tab Removes Default URL', () => {
     expect(tabId1).toBeDefined();
     expect(tabId2).toBeDefined();
 
-    // Set default URLs for both
+    // Set checkpoints for both
     const url1 = 'https://target1.com/';
     const url2 = 'https://target2.com/';
 
     await background.evaluate(async ({ id1, u1, id2, u2 }) => {
       await chrome.storage.local.set({ 
-        [`${id1}-default-url`]: u1,
-        [`${id2}-default-url`]: u2 
+        [`${id1}-checkpoint`]: u1,
+        [`${id2}-checkpoint`]: u2 
       });
     }, { id1: tabId1, u1: url1, id2: tabId2, u2: url2 });
 
@@ -131,15 +131,15 @@ test.describe('Tab Event - Close Tab Removes Default URL', () => {
 
     // Verify Tab 1 data is gone
     const stored1 = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId1);
     expect(stored1).toBeUndefined();
 
     // Verify Tab 2 data is still there
     const stored2 = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId2);
     expect(stored2).toBe(url2);
 

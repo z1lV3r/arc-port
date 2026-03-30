@@ -1,5 +1,6 @@
 import { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
-import { Tab } from "@/features/default-url/domain/models/tab";
+import { Tab } from "@/shared/domain/models/tab";
+
 
 export class MockTabsService implements BrowserTabsService {
   private currentTab: Tab | null = null;
