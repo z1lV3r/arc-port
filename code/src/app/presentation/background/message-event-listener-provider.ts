@@ -1,6 +1,6 @@
 import { DependencyProvider } from "@/app/dependency-provider";
 import { MessageEventListenerUseCases } from "../../use-cases/message-event-listeners-use-cases";
-import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
+import { CheckpointDependencyProvider } from "@/features/checkpoint/dependency-provider";
 
 export class MessageEventListenerProvider {
 
@@ -14,7 +14,7 @@ export class MessageEventListenerProvider {
 
     registerFeaturesMessageEventListeners() {
         this.useCaseEventListenersUseCases.registerMessageEventListeners([
-            DefaultUrlDependencyProvider.getMessageEventListeners(),
+            CheckpointDependencyProvider.getMessageEventListeners(),
         ]);
     }
 

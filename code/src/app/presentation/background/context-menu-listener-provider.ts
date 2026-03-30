@@ -1,4 +1,4 @@
-import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
+import { CheckpointDependencyProvider } from "@/features/checkpoint/dependency-provider";
 import { ContextMenuListenerUseCases } from "@/app/use-cases/context-menu-listener-use-cases";
 import { DependencyProvider } from "@/app/dependency-provider";
 
@@ -12,7 +12,7 @@ export class ContextMenuListenerProvider {
 
   registerFeaturesContextMenuListeners() {
     this.contextMenuListenerUseCase.registerContextMenuListeners([
-      DefaultUrlDependencyProvider.getContextMenuListeners(),
+      CheckpointDependencyProvider.getContextMenuListeners(),
     ]);
   }
 }

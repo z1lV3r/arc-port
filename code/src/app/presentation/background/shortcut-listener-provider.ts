@@ -1,6 +1,6 @@
 import { DependencyProvider } from "@/app/dependency-provider";
 import { ShortcutListenerUseCases } from "@/app/use-cases/shortcut-listener-use-cases";
-import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
+import { CheckpointDependencyProvider } from "@/features/checkpoint/dependency-provider";
 
 export class ShortcutListenerProvider {
   private shortcutListenerUseCase: ShortcutListenerUseCases;
@@ -10,7 +10,7 @@ export class ShortcutListenerProvider {
 
   registerFeaturesShortcutListeners() {
     this.shortcutListenerUseCase.registerShortcutListeners([
-      DefaultUrlDependencyProvider.getShortcutListeners(),
+      CheckpointDependencyProvider.getShortcutListeners(),
     ]);
   }
 }
