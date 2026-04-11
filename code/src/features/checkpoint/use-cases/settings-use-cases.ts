@@ -42,9 +42,9 @@ export class SettingsUseCases {
 
   async setShowContextMenu(showContextMenu: boolean): Promise<void> {
     if (showContextMenu) {
-      this.browserContextMenuService.createFeatureContextMenus("Default URL", this.contextMenuListeners);
+      this.browserContextMenuService.createFeatureContextMenus("Checkpoint", this.contextMenuListeners);
     } else {
-      this.browserContextMenuService.removeFeatureContextMenus("Default URL", this.contextMenuListeners);
+      this.browserContextMenuService.removeFeatureContextMenus("Checkpoint", this.contextMenuListeners);
     }
     await this.settingsRepository.set(this.showContextMenuKey, showContextMenu);
   }

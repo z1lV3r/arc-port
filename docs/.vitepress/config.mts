@@ -31,7 +31,7 @@ export default defineConfig({
       {
         text: 'Features',
         items: [
-          { text: 'Default URL', link: '/features/default-url' }
+          { text: 'Checkpoint', link: '/features/checkpoint' }
         ]
       }
     ],
