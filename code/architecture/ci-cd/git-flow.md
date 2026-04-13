@@ -78,7 +78,7 @@ gitGraph
   - [feature/\<name>](#featurename) - Updates the version to `a+1.0.0`
   - [improvement/\<name>](#improvementname) - Updates the version to `a.b+1.0`
   - [fix/\<name>](#fixname) - Updates the version to `a.b.c+1`
-  - [docs/\<name>](#docsname)
+  - [release/\<version>](#releaseversion) - Updates the version to `a.b.c+1`
 
 ```mermaid
 ---
@@ -108,10 +108,10 @@ gitGraph
     commit id: "fi2"
     checkout beta
     merge fix/a tag: "2.1.1-beta"
-    branch docs/2.1.1
+    branch release/2.1.1
     commit id: "d1"
     checkout beta
-    merge docs/2.1.1
+    merge release/2.1.1 tag: "2.1.2-beta"
 ```
 
 ## feature/\<name> branches
@@ -212,8 +212,8 @@ gitGraph
     commit id: "fi2"
 ```
 
-## docs/\<name>
-Update documentation and social media
+## release/\<version>
+Update any documentation and/or any other changes detected during release process
 - Will have beta as base branch with the version as branch name
 
 ```mermaid
@@ -226,10 +226,10 @@ config:
 ---
 gitGraph
     commit id: "b1" tag: "1.0.0-beta"
-    branch docs/1.0.0
+    branch release/1.0.0
     commit id: "d1"
     checkout beta
-    merge docs/1.0.0
+    merge release/1.0.0
 ```
 
 - Won't merge any branch
@@ -240,13 +240,13 @@ config:
   theme: 'base'
   gitGraph:
     showCommitLabel: false
-    mainBranchName: 'docs/a'
+    mainBranchName: 'release/1.0.0'
 ---
 gitGraph
     commit id: "d1"
     branch any
     commit id: "a1"
     commit id: "a2"
-    checkout docs/a
+    checkout release/a
     merge any type:REVERSE
 ```
