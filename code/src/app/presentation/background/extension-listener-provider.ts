@@ -1,5 +1,5 @@
 import { DependencyProvider } from "@/app/dependency-provider";
-import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
+import { CheckpointDependencyProvider } from "@/features/checkpoint/dependency-provider";
 import { ExtensionListenerUseCases } from "@/app/use-cases/extension-listener-use-cases";
 
 export class ExtensionListenerProvider {
@@ -14,7 +14,7 @@ export class ExtensionListenerProvider {
 
   registerFeaturesOnExtensionInstalledListeners() {
     this.extensionListenerUseCases.registerOnExtensionInstalledListeners([
-      DefaultUrlDependencyProvider.getOnExtensionInstalledListeners(),
+      CheckpointDependencyProvider.getOnExtensionInstalledListeners(),
     ]);
   }
 }

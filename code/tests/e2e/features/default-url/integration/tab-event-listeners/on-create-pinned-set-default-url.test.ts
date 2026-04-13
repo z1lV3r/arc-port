@@ -2,21 +2,21 @@ import { test, expect } from '../../../../fixtures';
 import type { Page, BrowserContext } from '@playwright/test';
 
 /*
- * Functional Test: Set Default URL When Pinned Tab is Created
+ * Functional Test: Set Checkpoint When Pinned Tab is Created
  * 
  * End-to-end testing approach: We test the actual Chrome extension behavior
- * when a user creates a new pinned tab (or duplicates one), verifying that the default URL is set appropriately.
+ * when a user creates a new pinned tab (or duplicates one), verifying that the checkpoint is set appropriately.
  * 
  * Test Scenarios:
  * 1. When a pinned tab is created (e.g. via duplicate or create with pinned: true):
- *    - if no default URL exists for that tab, the current URL should be saved as default.
+ *    - if no checkpoint exists for that tab, the current URL should be saved as checkpoint.
  *    - the tab should be pinned.
  * 
  * 2. When an unpinned tab is created:
- *    - no default URL should be set (regression check).
+ *    - no checkpoint should be set (regression check).
  */
 
-test.describe('Tab Event - Create Pinned Tab Sets Default URL', () => {
+test.describe('Tab Event - Create Pinned Tab Sets Checkpoint', () => {
   let page: Page;
   let context: BrowserContext;
 
@@ -33,7 +33,7 @@ test.describe('Tab Event - Create Pinned Tab Sets Default URL', () => {
     await page.close();
   });
 
-  test('should save current URL as default when creating a new pinned tab', async () => {
+  test('should save current URL as checkpoint when creating a new pinned tab', async () => {
     const targetUrl = 'https://example.org/';
     
     // Get the background service worker
@@ -61,17 +61,17 @@ test.describe('Tab Event - Create Pinned Tab Sets Default URL', () => {
     // Wait a moment for any potential event processing
     await page.waitForTimeout(1000);
 
-    // Verify the default URL was saved
+    // Verify the checkpoint was saved
     const savedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, newTabId);
 
     // Note: Chrome might add a trailing slash to the URL
     expect(savedUrl).toMatch(/https:\/\/example\.org\/?/);
   });
 
-  test('should NOT set default URL when creating a new UNPINNED tab', async () => {
+  test('should NOT set checkpoint when creating a new UNPINNED tab', async () => {
     const targetUrl = 'https://example.net/';
     
     // Get the background service worker
@@ -99,10 +99,10 @@ test.describe('Tab Event - Create Pinned Tab Sets Default URL', () => {
     // Wait a moment for any potential event processing
     await page.waitForTimeout(1000);
 
-    // Verify the default URL was NOT saved
+    // Verify the checkpoint was NOT saved
     const savedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, newTabId);
 
     expect(savedUrl).toBeUndefined();

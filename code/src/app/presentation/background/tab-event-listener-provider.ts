@@ -1,6 +1,6 @@
 import { DependencyProvider } from "@/app/dependency-provider";
 import { TabEventListenerUseCases } from "@/app/use-cases/tab-event-listener-use-cases";
-import { DefaultUrlDependencyProvider } from "@/features/default-url/dependency-provider";
+import { CheckpointDependencyProvider } from "@/features/checkpoint/dependency-provider";
 
 export class TabEventListenerProvider {
 
@@ -14,19 +14,19 @@ export class TabEventListenerProvider {
 
   registerFeaturesOnCloseTabEventListeners() {
     this.tabEventListenerUseCases.registerOnCloseTabEventListeners([
-      DefaultUrlDependencyProvider.getOnCloseTabEventListeners(),
+      CheckpointDependencyProvider.getOnCloseTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnUpdateTabEventListeners() {
     this.tabEventListenerUseCases.registerOnUpdateTabEventListeners([
-      DefaultUrlDependencyProvider.getOnUpdateTabEventListeners(),
+      CheckpointDependencyProvider.getOnUpdateTabEventListeners(),
     ]);
   }
 
   registerFeaturesOnCreateTabEventListeners() {
     this.tabEventListenerUseCases.registerOnCreateTabEventListeners([
-      DefaultUrlDependencyProvider.getOnCreateTabEventListeners(),
+      CheckpointDependencyProvider.getOnCreateTabEventListeners(),
     ]);
   }
 }

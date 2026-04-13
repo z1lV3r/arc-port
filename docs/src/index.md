@@ -18,7 +18,7 @@ hero:
       link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.0-beta
 
 features:
-  - title: "Default URL ↩️"
-    details: Set a default URL to reset it when you want
-    link: /features/default-url
+  - title: "↩️ Checkpoint"
+    details: Set a tab navigation checkpoint for a quick reset
+    link: /features/checkpoint
 ---

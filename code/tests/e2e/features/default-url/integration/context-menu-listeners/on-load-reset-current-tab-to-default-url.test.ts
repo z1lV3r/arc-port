@@ -1,11 +1,11 @@
 import { test, expect } from '../../../../fixtures';
-import type { Page, BrowserContext } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 /*
- * Functional Test: Reset Current Tab to Default URL via Context Menu
+ * Functional Test: Reset Current Tab to Checkpoint via Context Menu
  */
 
-test.describe('Context Menu - Reset Current Tab to Default URL', () => {
+test.describe('Context Menu - Reset Current Tab to Checkpoint', () => {
   let page: Page;
 
   test.beforeEach(async ({ context }) => {
@@ -20,7 +20,7 @@ test.describe('Context Menu - Reset Current Tab to Default URL', () => {
     await page.close();
   });
 
-  test('should verify context-menu-reset-current-tab-to-default-url listener is registered', async ({ context }) => {
+  test('should verify context-menu-reset-current-tab-to-checkpoint listener is registered', async ({ context }) => {
     // This test verifies that the specific context menu item is properly registered
     // by accessing the background service worker directly
     
@@ -36,7 +36,7 @@ test.describe('Context Menu - Reset Current Tab to Default URL', () => {
     await expect.poll(async () => {
       return await background.evaluate(async () => {
         return await new Promise<boolean>((resolve) => {
-          const menuItemId = 'context-menu-reset-current-tab-to-default-url';
+          const menuItemId = 'context-menu-reset-current-tab-to-checkpoint';
           
           // Try to update the menu item - if it exists, this will succeed
           // If it doesn't exist, chrome.runtime.lastError will be set

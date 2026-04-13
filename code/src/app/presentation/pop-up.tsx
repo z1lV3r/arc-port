@@ -1,11 +1,11 @@
-import { PopUp as DefaultUrl } from "@/features/default-url/presentation/pop-up";
-import { ContextProvider } from "@/features/default-url/presentation/pop-up-context";
+import { PopUp as Checkpoint } from "@/features/checkpoint/presentation/pop-up";
+import { ContextProvider } from "@/features/checkpoint/presentation/pop-up-context";
 
 function PopUp() {
   return (
     <>
       <ContextProvider>
-        <DefaultUrl />
+        <Checkpoint />
       </ContextProvider>
     </>
   );

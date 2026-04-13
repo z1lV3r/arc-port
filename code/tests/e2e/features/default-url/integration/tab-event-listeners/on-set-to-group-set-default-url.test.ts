@@ -2,22 +2,22 @@ import { test, expect } from '../../../../fixtures';
 import type { Page, BrowserContext } from '@playwright/test';
 
 /*
- * Functional Test: Set Default URL When Tab is Added to a Group
+ * Functional Test: Set Checkpoint When Tab is Added to a Group
  * 
  * End-to-end testing approach: We test the actual Chrome extension behavior
- * when a user adds a tab to a group, verifying that the default URL is set appropriately.
+ * when a user adds a tab to a group, verifying that the checkpoint is set appropriately.
  * 
  * Test Scenarios:
  * 1. When a normal tab is moved to a group by the user:
- *    - if no default URL exists for that tab, the current URL should be saved as default.
+ *    - if no checkpoint exists for that tab, the current URL should be saved as checkpoint.
  *    - the tab should be in a group.
  * 
- * 2. When a tab with an existing default URL is moved to a group:
- *    - the existing default URL should remain unchanged.
+ * 2. When a tab with an existing checkpoint is moved to a group:
+ *    - the existing checkpoint should remain unchanged.
  *    - the tab should be in a group.
  */
 
-test.describe('Tab Event - Group Tab Sets Default URL', () => {
+test.describe('Tab Event - Group Tab Sets Checkpoint', () => {
   let page: Page;
   let context: BrowserContext;
 
@@ -34,7 +34,7 @@ test.describe('Tab Event - Group Tab Sets Default URL', () => {
     await page.close();
   });
 
-  test('should save current URL as default when moving a tab to a group without existing default URL', async () => {
+  test('should save current URL as checkpoint when moving a tab to a group without existing checkpoint', async () => {
     const currentUrl = 'https://example.com/';
     
     // Get the background service worker
@@ -71,16 +71,16 @@ test.describe('Tab Event - Group Tab Sets Default URL', () => {
     // Wait a moment for any potential event processing
     await page.waitForTimeout(1000);
 
-    // Verify the default URL was saved
+    // Verify the checkpoint was saved
     const savedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(savedUrl).toBe(currentUrl);
   });
 
-  test('should keep existing default URL when moving a tab to a group that already has one', async () => {
+  test('should keep existing checkpoint when moving a tab to a group that already has one', async () => {
     const existingUrl = 'https://existing-default.com/';
     const currentUrl = 'https://example.com/';
     
@@ -99,15 +99,15 @@ test.describe('Tab Event - Group Tab Sets Default URL', () => {
 
     expect(tabId).toBeDefined();
 
-    // Set an existing default URL
+    // Set an existing checkpoint
     await background.evaluate(async ({ id, url }) => {
-      await chrome.storage.local.set({ [`${id}-default-url`]: url });
+      await chrome.storage.local.set({ [`${id}-checkpoint`]: url });
     }, { id: tabId, url: existingUrl });
 
-    // Verify the default URL was set
+    // Verify the checkpoint was set
     const initialStorage = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(initialStorage).toBe(existingUrl);
@@ -130,10 +130,10 @@ test.describe('Tab Event - Group Tab Sets Default URL', () => {
     // Wait a moment for any potential event processing
     await page.waitForTimeout(500);
 
-    // Verify the default URL remained unchanged
+    // Verify the checkpoint remained unchanged
     const savedUrl = await background.evaluate(async (id) => {
-      const result = await chrome.storage.local.get(`${id}-default-url`);
-      return result[`${id}-default-url`];
+      const result = await chrome.storage.local.get(`${id}-checkpoint`);
+      return result[`${id}-checkpoint`];
     }, tabId);
 
     expect(savedUrl).toBe(existingUrl);

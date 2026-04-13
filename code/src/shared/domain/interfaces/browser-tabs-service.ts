@@ -1,4 +1,4 @@
-import { Tab } from "@/features/default-url/domain/models/tab";
+import { Tab } from "@/shared/domain/models/tab";
 
 export interface BrowserTabsService {
   getCurrentTab(): Promise<Tab>;
