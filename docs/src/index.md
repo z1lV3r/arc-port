@@ -12,10 +12,10 @@ hero:
   actions:
     - theme: brand
       text: Download
-      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.0-beta
+      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.2-beta
     - theme: alt
       text: Beta
-      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.0-beta
+      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.2-beta
 
 features:
   - title: "↩️ Checkpoint"

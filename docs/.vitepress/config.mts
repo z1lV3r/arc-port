@@ -22,8 +22,8 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-nav
     nav: [
       { text: '🏠 Home', link: '/' },
-      { text: '📜 Changelog', link: '/changelog' },
-      { text: '🚀 Features', link: '/features/' }
+      { text: '🚀 Features', link: '/features/' },
+      { text: '📜 Changelog', link: 'https://github.com/z1lV3r/arc-port/releases' }
     ],
 
     // https://vitepress.dev/reference/default-theme-sidebar
@@ -40,7 +40,13 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/z1lV3r/arc-port' },
       { icon: 'reddit', link: 'https://www.reddit.com/r/arc-port' }
-    ]
+    ],
+
+    // https://vitepress.dev/reference/default-theme-config#footer
+    footer: {
+      message: '<a href="/arc-port/app/terms-and-conditions">Terms and Conditions</a>',
+      copyright: `© ${new Date().getFullYear()} Arc Port. Open-source.`
+    }
   },
 
   // https://vitepress.dev/guide/routing#route-rewrites
