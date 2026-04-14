@@ -2,6 +2,11 @@
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
+head:
+  - - meta
+    - name: google-site-verification
+      content: 7EsBKiLlMWVWHpxImSqnAQXbOlXuDjsWodkHBAVIu8k
+
 hero:
   name: "Arc Port"
   text: "Chrome extension"
