@@ -44,7 +44,7 @@ export default defineConfig({
 
     // https://vitepress.dev/reference/default-theme-config#footer
     footer: {
-      message: '<a href="/arc-port/app/terms-and-conditions">Terms and Conditions</a>',
+      message: '<a href="/arc-port/terms-and-conditions">Terms and Conditions</a>',
       copyright: `© ${new Date().getFullYear()} Arc Port. Open-source.`
     }
   },

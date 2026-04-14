@@ -46,7 +46,7 @@ To the fullest extent permitted by applicable law, the author(s) of Arc Port sha
 
 Arc Port does **not** collect, store, or transmit any personal data. All extension functionality operates locally within your browser. No analytics, tracking, or telemetry is included.
 
-For more detail, please refer to the [privacy policy](/app/privacy-policy.md).
+For more detail, please refer to the [privacy policy](privacy-policy.md).
 
 ---
 
