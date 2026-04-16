@@ -16,14 +16,15 @@ hero:
     alt: Arc Port
   actions:
     - theme: brand
-      text: Download
-      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.2-beta
+      text: Chrome web store
+      link: https://chrome.google.com/webstore/detail/arc-port/
     - theme: alt
-      text: Beta
-      link: https://github.com/z1lV3r/arc-port/releases/tag/v1.0.2-beta
+      text: Download
+      link: https://github.com/z1lV3r/arc-port/releases/latest
 
 features:
-  - title: "↩️ Checkpoint"
+  - icon: ↩️
+    title: "Checkpoint"
     details: Set a tab navigation checkpoint for a quick reset
     link: /features/checkpoint
 ---
