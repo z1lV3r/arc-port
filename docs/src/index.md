@@ -17,7 +17,7 @@ hero:
   actions:
     - theme: brand
       text: Chrome web store
-      link: https://chrome.google.com/webstore/detail/arc-port/
+      link: https://chromewebstore.google.com/detail/arc-port/kajmnfhpmkimleehomeioondgfcjjnbp
     - theme: alt
       text: Download
       link: https://github.com/z1lV3r/arc-port/releases/latest
