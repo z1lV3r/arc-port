@@ -38,7 +38,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Zip Extension
-        run: zip -r arc-port.zip dist
+        run: cd dist && zip -r ../arc-port.zip .
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
