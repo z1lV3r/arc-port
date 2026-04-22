@@ -30,9 +30,9 @@ export class MockTabsService implements BrowserTabsService {
     return tab;
   }
 
-  async createTab(url: string, index: number): Promise<Tab> {
+  async createTab(url: string, index: number, groupId?: number, pinned?: boolean): Promise<Tab> {
     const id = Math.random().toString(36).substring(7);
-    const tab = new Tab(id, url, index);
+    const tab = new Tab(id, url, index, groupId, pinned);
     this.tabs.set(id, tab);
     return tab;
   }

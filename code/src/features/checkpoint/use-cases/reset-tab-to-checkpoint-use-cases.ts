@@ -38,7 +38,12 @@ export class ResetTabToCheckpointUseCases {
 
   private async resetTabToCheckpoint(tab: Tab, checkpoint: string): Promise<void> {
     if (checkpoint) {
-      const newTab: Tab = await this.tabsService.createTab(checkpoint, tab.index, tab.groupId);
+      const newTab: Tab = await this.tabsService.createTab(
+        checkpoint,
+        tab.index,
+        tab.groupId,
+        tab.pinned
+      );
       const closeTabPromise = this.tabsService.closeTab(tab.id);
       await this.checkpointRepository.save(newTab.id, checkpoint);
       await closeTabPromise;
