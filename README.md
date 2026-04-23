@@ -6,7 +6,7 @@
 
 > Chrome extension that brings the best Arc browser features to Google Chrome.
 
-[![Official site](https://img.shields.io/badge/Official_site-grey?logo=github&style=for-the-badge)](https://z1lv3r.github.io/arc-port/) [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-grey?logo=chromewebstore&style=for-the-badge)](https://chromewebstore.google.com/detail/arc-port/)
+[![Official site](https://img.shields.io/badge/Official_site-grey?logo=github&style=for-the-badge)](https://z1lv3r.github.io/arc-port/) [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-grey?logo=chromewebstore&style=for-the-badge)](https://chromewebstore.google.com/detail/arc-port/kajmnfhpmkimleehomeioondgfcjjnbp)
 
 [![Release](https://img.shields.io/github/v/release/z1lV3r/arc-port?label=release&color=orange)](https://github.com/z1lV3r/arc-port/releases)
 [![Beta Release](https://img.shields.io/github/v/release/z1lV3r/arc-port?include_prereleases&label=beta&color=blueviolet)](https://github.com/z1lV3r/arc-port/releases)

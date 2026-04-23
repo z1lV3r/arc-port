@@ -69,7 +69,7 @@ describe('ResetTabToCheckpointUseCases - resetOrCloseCurrentTabToCheckpoint', ()
 
     // Assert
     // Should create new tab first, then close old
-    expect(createTabSpy).toHaveBeenCalledWith(checkpointUrl, 0, undefined);
+    expect(createTabSpy).toHaveBeenCalledWith(checkpointUrl, 0, undefined, undefined);
     expect(closeTabSpy).toHaveBeenCalledWith(oldTabId);
     
     // Verify checkpoint URL persistence for new tab
