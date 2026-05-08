@@ -3,6 +3,7 @@ import { ResetTabToCheckpointUseCases } from '@/features/checkpoint/use-cases/re
 import type { CheckpointRepository } from '@/features/checkpoint/domain/interfaces/checkpoint-repository';
 import { InMemoryCheckpointRepository } from '../../infrastructure/in-memory-checkpoint-repository';
 import { MockTabsService } from '../../infrastructure/mock-tabs-service';
+import { Tab } from '@/shared/domain/models/tab';
 
 describe('ResetTabToCheckpointUseCases - resetOrCloseCurrentTabToCheckpoint', () => {
   let useCases: ResetTabToCheckpointUseCases;
@@ -69,7 +70,7 @@ describe('ResetTabToCheckpointUseCases - resetOrCloseCurrentTabToCheckpoint', ()
 
     // Assert
     // Should create new tab first, then close old
-    expect(createTabSpy).toHaveBeenCalledWith(checkpointUrl, 0, undefined, undefined);
+    expect(createTabSpy).toHaveBeenCalledWith(expect.any(Tab));
     expect(closeTabSpy).toHaveBeenCalledWith(oldTabId);
     
     // Verify checkpoint URL persistence for new tab

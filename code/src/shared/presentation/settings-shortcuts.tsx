@@ -33,7 +33,7 @@ export function SettingsShortcuts({tabsService, shortcuts }: { tabsService: Brow
         variant={"outline"}
         size="sm"
         className="col-span-4 hover:text-blue-500"
-        onClick={() => tabsService.createTab("chrome://extensions/shortcuts")}
+        onClick={() => tabsService.createTabByUrl("chrome://extensions/shortcuts")}
       >
         Edit shortcuts
       </Button>
