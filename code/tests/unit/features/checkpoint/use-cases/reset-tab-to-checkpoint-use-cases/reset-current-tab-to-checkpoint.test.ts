@@ -44,7 +44,7 @@ describe('ResetTabToCheckpointUseCases - resetCurrentTabToCheckpoint', () => {
     await mockRepository.save(oldTabId, checkpointUrl);
 
     // Spies
-    const createTabSpy = vi.spyOn(mockTabsService, 'createTab');
+    const createTabSpy = vi.spyOn(mockTabsService, 'createTabByUrl');
     const closeTabSpy = vi.spyOn(mockTabsService, 'closeTab');
 
     // Act
@@ -53,7 +53,7 @@ describe('ResetTabToCheckpointUseCases - resetCurrentTabToCheckpoint', () => {
     // Assert
     // 1. Check calls
     expect(closeTabSpy).toHaveBeenCalledWith(oldTabId);
-    expect(createTabSpy).toHaveBeenCalledWith(checkpointUrl, 0, undefined, undefined); // Mock sets index to 0, groupId and pinned are undefined by default
+    expect(createTabSpy).toHaveBeenCalledWith(checkpointUrl); // Mock sets index to 0, groupId and pinned are undefined by default
 
     // 2. Check logic: old tab gone, new tab exists
     await expect(mockTabsService.getTab(oldTabId)).rejects.toThrow();

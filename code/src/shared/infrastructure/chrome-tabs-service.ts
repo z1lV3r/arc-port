@@ -34,20 +34,33 @@ export class ChromeTabsService implements BrowserTabsService {
     return new Tab(tab.id?.toString() || "", url, tab.index, tab.groupId, tab.pinned);
   }
 
-  async createTab(url: string, index?: number, groupId?: number, pinned?: boolean): Promise<Tab> {
-    const options: chrome.tabs.CreateProperties = index !== undefined ? { url, index, pinned } : { url, pinned };
+  async createTabByUrl(url: string): Promise<Tab> {
+    const options: chrome.tabs.CreateProperties = { url };
     const tab = await chrome.tabs.create(options);
-
-    if (groupId !== undefined && tab.id !== undefined && groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
-      await chrome.tabs.group({ tabIds: tab.id, groupId });
-    }
 
     return new Tab(
       tab.id?.toString() || "",
       tab.url || "",
       tab.index,
-      groupId ?? tab.groupId,
-      pinned ?? tab.pinned
+      tab.groupId,
+      tab.pinned
+    );
+  }
+
+  async createTab(tab: Tab): Promise<Tab> {
+    const options: chrome.tabs.CreateProperties = tab.index !== undefined ? { url: tab.url, index: tab.index, pinned: tab.pinned } : { url: tab.url, pinned: tab.pinned };
+    const newTab = await chrome.tabs.create(options);
+
+    if (tab.groupId !== undefined && newTab.id !== undefined && tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+      await chrome.tabs.group({ tabIds: newTab.id, groupId: tab.groupId });
+    }
+
+    return new Tab(
+      newTab.id?.toString() || "",
+      newTab.url || "",
+      newTab.index,
+      tab.groupId ?? newTab.groupId,
+      tab.pinned ?? newTab.pinned
     );
   }
 
