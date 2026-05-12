@@ -1,13 +1,15 @@
 import { PopUp as Checkpoint } from "@/features/checkpoint/presentation/pop-up";
-import { ContextProvider } from "@/features/checkpoint/presentation/pop-up-context";
+import { ContextProvider as CheckpointContextProvider } from "@/features/checkpoint/presentation/pop-up-context";
+import { PopUp as TabRebrand } from "@/features/tab-rebrand/presentation/pop-up";
 
 function PopUp() {
   return (
-    <>
-      <ContextProvider>
+    <div className="flex flex-col gap-4 w-fit min-w-80 px-2">
+      <TabRebrand />
+      <CheckpointContextProvider>
         <Checkpoint />
-      </ContextProvider>
-    </>
+      </CheckpointContextProvider>
+    </div>
   );
 }
 
