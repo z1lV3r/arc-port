@@ -53,7 +53,7 @@ function PopUp() {
   if (!showPopUp) return null;
 
   return (
-    <GroupCard className="w-fit">
+    <GroupCard>
       <GroupCardHeader>
         <GroupCardTitle>Checkpoint</GroupCardTitle>
       </GroupCardHeader>
