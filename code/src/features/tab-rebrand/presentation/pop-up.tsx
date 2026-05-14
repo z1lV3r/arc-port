@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
+import { type EmojiClickData } from "emoji-picker-react";
+import { EmojiPickerPortal } from "@/shared/presentation/EmojiPickerPortal";
 import {
   GroupCard,
   GroupCardHeader,
@@ -13,7 +14,6 @@ import {
   InputGroupInput,
 } from "@/shared/presentation/input-group";
 import { Eraser, SmilePlus } from "lucide-react";
-
 
 function PopUp() {
   const [name, setName] = useState("");
@@ -79,77 +79,68 @@ function PopUp() {
         <GroupCardTitle>Tab Rebrand</GroupCardTitle>
       </GroupCardHeader>
       <GroupCardContent className="p-3">
-        <div className="relative">
-          <InputGroup>
-            <InputGroupAddon>
-              <div className="group/icon relative">
-                <InputGroupButton
-                  ref={sparkleRef}
-                  size="icon-sm"
-                  className="text-base"
-                  aria-label="Open emoji picker"
-                  aria-expanded={pickerOpen}
-                  onClick={() => setPickerOpen((o) => !o)}
-                >
-                  {iconUrl ? (
-                    <img
-                      src={iconUrl}
-                      alt={icon}
-                      className="size-6"
-                      style={{ imageRendering: "smooth" }}
-                    />
-                  ) : (
-                    <SmilePlus className="size-4" />
-                  )}
-                </InputGroupButton>
-                {hasCustomIcon && (
-                  <button
-                    type="button"
-                    aria-label="Reset emoji"
-                    onClick={handleClearIcon}
-                    className="absolute -right-1 -top-1 flex size-3.5 items-center justify-center rounded-full bg-destructive text-[8px] font-bold leading-none text-destructive-foreground shadow-sm transition-opacity opacity-0 group-hover/icon:opacity-100 hover:brightness-110"
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-            </InputGroupAddon>
-            <InputGroupInput
-              ref={inputRef}
-              autoFocus
-              autoComplete="off"
-              maxLength={64}
-              placeholder="Custom name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <InputGroupAddon align="inline-end">
+        <InputGroup>
+          <InputGroupAddon>
+            <div className="group/icon relative">
               <InputGroupButton
+                ref={sparkleRef}
                 size="icon-sm"
-                aria-label="Clear name"
-                disabled={!name}
-                onClick={handleClear}
+                className="text-base"
+                aria-label="Open emoji picker"
+                aria-expanded={pickerOpen}
+                onClick={() => setPickerOpen((o) => !o)}
               >
-                <Eraser className="text-destructive" />
+                {iconUrl ? (
+                  <img
+                    src={iconUrl}
+                    alt={icon}
+                    className="size-5"
+                    style={{ imageRendering: "smooth" }}
+                  />
+                ) : (
+                  <SmilePlus className="size-5" />
+                )}
               </InputGroupButton>
-            </InputGroupAddon>
-          </InputGroup>
-
-          {pickerOpen && (
-            <div
-              ref={pickerRef}
-              className="absolute left-0 top-full z-50 mt-1"
-            >
-              <EmojiPicker
-                theme={Theme.AUTO}
-                onEmojiClick={handleEmojiClick}
-                lazyLoadEmojis
-              />
+              {hasCustomIcon && (
+                <button
+                  type="button"
+                  aria-label="Reset emoji"
+                  onClick={handleClearIcon}
+                  className="absolute -right-1 -top-1 flex size-3.5 items-center justify-center rounded-full bg-destructive text-[8px] font-bold leading-none text-destructive-foreground shadow-sm transition-opacity opacity-0 group-hover/icon:opacity-100 hover:brightness-110"
+                >
+                  ×
+                </button>
+              )}
             </div>
-          )}
-        </div>
+          </InputGroupAddon>
+          <InputGroupInput
+            ref={inputRef}
+            autoFocus
+            autoComplete="off"
+            maxLength={64}
+            placeholder="Custom name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton
+              size="icon-sm"
+              aria-label="Clear name"
+              disabled={!name}
+              onClick={handleClear}
+            >
+              <Eraser className="text-destructive" />
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
       </GroupCardContent>
+
+      <EmojiPickerPortal
+        open={pickerOpen}
+        pickerRef={pickerRef}
+        onEmojiClick={handleEmojiClick}
+      />
     </GroupCard>
   );
 }
