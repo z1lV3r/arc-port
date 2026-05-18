@@ -1,6 +1,7 @@
 import { DependencyProvider } from "@/app/dependency-provider";
 import { MessageEventListenerUseCases } from "../../use-cases/message-event-listeners-use-cases";
 import { CheckpointDependencyProvider } from "@/features/checkpoint/dependency-provider";
+import { TabRebrandDependencyProvider } from "@/features/tab-rebrand/dependency-provider";
 
 export class MessageEventListenerProvider {
 
@@ -15,6 +16,7 @@ export class MessageEventListenerProvider {
     registerFeaturesMessageEventListeners() {
         this.useCaseEventListenersUseCases.registerMessageEventListeners([
             CheckpointDependencyProvider.getMessageEventListeners(),
+            TabRebrandDependencyProvider.getMessageEventListeners(),
         ]);
     }
 
