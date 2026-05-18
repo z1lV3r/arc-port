@@ -14,8 +14,10 @@ import {
   InputGroupInput,
 } from "@/shared/presentation/input-group";
 import { Eraser, SmilePlus } from "lucide-react";
+import { useTabRebrandContext } from "./pop-up-context";
 
 function PopUp() {
+  const { setTabCustomNameMessageEventSender } = useTabRebrandContext();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
@@ -48,9 +50,9 @@ function PopUp() {
     inputRef.current?.focus();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      console.log(name);
+      await setTabCustomNameMessageEventSender.sendSetCurrentTabCustomNameEventMessage(name);
     }
     if (e.key === "Escape") {
       if (pickerOpen) {
