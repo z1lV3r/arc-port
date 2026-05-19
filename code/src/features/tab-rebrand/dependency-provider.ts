@@ -1,8 +1,13 @@
 import type { BrowserMessageService } from "@/shared/domain/interfaces/browser-message-service";
-import { ChromeMessageService } from "@/shared/infrastructure/chrome-message-service"
-import { SetTabCustomNameMessageEventSender } from "./presentation/background/message-events/set-custom-name-message-event-senders";
+import { ChromeMessageService } from "@/shared/infrastructure/chrome-message-service";
+import type { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
+import { ChromeTabsService } from "@/shared/infrastructure/chrome-tabs-service";
+import type { CustomNameRepository } from "./domain/interfaces/custom-name-repository";
+import { ChromeStorageCustomNameRepository } from "./infrastructure/chrome-storage-custom-name-respository";
+import { SetTabCustomNameMessageEventSender } from "./presentation/background/message-events/set-tab-custom-name-message-event-senders";
 import { SetCurrentTabCustomNameMessageEventListener } from "./presentation/background/message-events/set-custom-name-use-cases-listeners/set-current-tab-custom-name-message-event-listener";
 import type { MessageEventListener } from "@/shared/domain/models/message-event-listener";
+import { SetTabCustomNameUseCases } from "./use-cases/set-tab-custom-name-use-cases";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -17,6 +22,36 @@ export class TabRebrandDependencyProvider {
     }
     this.browserMessageService = new ChromeMessageService();
     return this.browserMessageService;
+  }
+
+  private static browserTabsService: BrowserTabsService;
+  static getBrowserTabsService(): BrowserTabsService {
+    if(this.browserTabsService) {
+      return this.browserTabsService;
+    }
+    this.browserTabsService = new ChromeTabsService();
+    return this.browserTabsService;
+  }
+
+  private static tabCustomNameRepository: CustomNameRepository;
+  static getTabCustomNameRepository(): CustomNameRepository {
+    if(this.tabCustomNameRepository) {
+      return this.tabCustomNameRepository;
+    }
+    this.tabCustomNameRepository = new ChromeStorageCustomNameRepository();
+    return this.tabCustomNameRepository;
+  }
+
+  //Use cases
+  private static setTabCustomNameUseCases: SetTabCustomNameUseCases;
+  static getSetTabCustomNameUseCases(): SetTabCustomNameUseCases {
+      if(this.setTabCustomNameUseCases) {
+        return this.setTabCustomNameUseCases;
+      }
+      this.setTabCustomNameUseCases = new SetTabCustomNameUseCases(
+        TabRebrandDependencyProvider.getBrowserTabsService(),
+        TabRebrandDependencyProvider.getTabCustomNameRepository());
+      return this.setTabCustomNameUseCases;
   }
 
   //Presentation - Message events - Listeners
@@ -40,7 +75,7 @@ export class TabRebrandDependencyProvider {
     }
 
     this.setCurrentTabCustomNameMessageEventListener = [
-        new SetCurrentTabCustomNameMessageEventListener()
+        new SetCurrentTabCustomNameMessageEventListener(TabRebrandDependencyProvider.getSetTabCustomNameUseCases())
     ];
     return this.setCurrentTabCustomNameMessageEventListener;
   }
