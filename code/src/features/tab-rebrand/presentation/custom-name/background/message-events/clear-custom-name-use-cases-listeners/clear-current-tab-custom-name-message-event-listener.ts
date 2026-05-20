@@ -1,5 +1,5 @@
 import type { MessageEventListener } from "@/shared/domain/models/message-event-listener";
-import type { ClearTabCustomNameUseCases } from "@/features/tab-rebrand/use-cases/clear-tab-custom-name-use-cases";
+import type { ClearTabCustomNameUseCases } from "@/features/tab-rebrand/use-cases/custom-name/clear-tab-custom-name-use-cases";
 
 export class ClearCurrentTabCustomNameMessageEventListener implements MessageEventListener {
   private readonly clearTabCustomNameUseCases: ClearTabCustomNameUseCases;

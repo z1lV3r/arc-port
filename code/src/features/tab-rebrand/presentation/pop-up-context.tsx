@@ -1,8 +1,8 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { TabRebrandDependencyProvider } from "../dependency-provider";
-import type { SetTabCustomNameMessageEventSender } from "./background/message-events/set-tab-custom-name-message-event-senders";
-import type { GetTabCustomNameMessageEventSender } from "./background/message-events/get-tab-custom-name-message-event-senders";
-import type { ClearTabCustomNameMessageEventSender } from "./background/message-events/clear-tab-custom-name-message-event-senders";
+import type { SetTabCustomNameMessageEventSender } from "./custom-name/background/message-events/set-tab-custom-name-message-event-senders";
+import type { GetTabCustomNameMessageEventSender } from "./custom-name/background/message-events/get-tab-custom-name-message-event-senders";
+import type { ClearTabCustomNameMessageEventSender } from "./custom-name/background/message-events/clear-tab-custom-name-message-event-senders";
 
 interface TabRebrandContextType {
   setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;

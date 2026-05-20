@@ -1,4 +1,4 @@
-import type { SetTabCustomNameUseCases } from "@/features/tab-rebrand/use-cases/set-tab-custom-name-use-cases";
+import type { SetTabCustomNameUseCases } from "@/features/tab-rebrand/use-cases/custom-name/set-tab-custom-name-use-cases";
 import type { MessageEventListener } from "@/shared/domain/models/message-event-listener";
 
 export class SetCurrentTabCustomNameMessageEventListener implements MessageEventListener {

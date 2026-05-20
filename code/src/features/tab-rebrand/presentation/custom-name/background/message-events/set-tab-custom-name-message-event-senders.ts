@@ -15,7 +15,7 @@ export class SetTabCustomNameMessageEventSender {
   }
 
   async sendSetCurrentTabCustomNameEventMessage(name: string): Promise<string> {
-    const response = await this.browserMessageService.sendEventMessage(this.setCurrentTabCustomNameMessageEventListener.name, {name});
+    const response = await this.browserMessageService.sendEventMessage(this.setCurrentTabCustomNameMessageEventListener.name, { name });
     return response?.data ?? "";
   }
 
