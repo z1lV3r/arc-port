@@ -17,7 +17,13 @@ import { Eraser, SmilePlus } from "lucide-react";
 import { useTabRebrandContext } from "./pop-up-context";
 
 function PopUp() {
-  const { setTabCustomNameMessageEventSender, getTabCustomNameMessageEventSender, clearTabCustomNameMessageEventSender } = useTabRebrandContext();
+  const {
+    setTabCustomNameMessageEventSender,
+    getTabCustomNameMessageEventSender,
+    clearTabCustomNameMessageEventSender,
+    setTabCustomIconMessageEventSender,
+  } = useTabRebrandContext();
+
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
@@ -45,19 +51,20 @@ function PopUp() {
 
   useEffect(() => {
     const fetchInitialData = async () => {
-    const [name] = await Promise.all([
-      getTabCustomNameMessageEventSender.sendGetCurrentTabCustomNameEventMessage(),
-    ]);
-    setName(name);
-  };
+      const [name] = await Promise.all([
+        getTabCustomNameMessageEventSender.sendGetCurrentTabCustomNameEventMessage(),
+      ]);
+      setName(name);
+    };
 
     fetchInitialData();
   }, []);
 
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
+  const handleEmojiClick = async (emojiData: EmojiClickData) => {
     setIcon(emojiData.emoji);
     setIconUrl(emojiData.imageUrl);
     setPickerOpen(false);
+    await setTabCustomIconMessageEventSender.sendSetCurrentTabCustomIconEventMessage(emojiData.imageUrl);
     inputRef.current?.focus();
   };
 

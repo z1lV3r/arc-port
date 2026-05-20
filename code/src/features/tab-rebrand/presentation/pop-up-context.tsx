@@ -3,11 +3,13 @@ import { TabRebrandDependencyProvider } from "../dependency-provider";
 import type { SetTabCustomNameMessageEventSender } from "./custom-name/background/message-events/set-tab-custom-name-message-event-senders";
 import type { GetTabCustomNameMessageEventSender } from "./custom-name/background/message-events/get-tab-custom-name-message-event-senders";
 import type { ClearTabCustomNameMessageEventSender } from "./custom-name/background/message-events/clear-tab-custom-name-message-event-senders";
+import type { SetTabCustomIconMessageEventSender } from "./custom-icon/background/message-events/set-tab-custom-icon-message-event-senders";
 
 interface TabRebrandContextType {
   setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;
   getTabCustomNameMessageEventSender: GetTabCustomNameMessageEventSender;
   clearTabCustomNameMessageEventSender: ClearTabCustomNameMessageEventSender;
+  setTabCustomIconMessageEventSender: SetTabCustomIconMessageEventSender;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
@@ -26,12 +28,18 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const setTabCustomIconMessageEventSender = useMemo(
+    () => TabRebrandDependencyProvider.getSetTabCustomIconMessageEventSender(),
+    [],
+  );
+
   return (
     <TabRebrandContext.Provider
       value={{
         setTabCustomNameMessageEventSender: setTabCustomNameMessageEventSender,
         getTabCustomNameMessageEventSender: getTabCustomNameMessageEventSender,
         clearTabCustomNameMessageEventSender: clearTabCustomNameMessageEventSender,
+        setTabCustomIconMessageEventSender: setTabCustomIconMessageEventSender,
       }}
     >
       {children}
