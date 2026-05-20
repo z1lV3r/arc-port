@@ -1,5 +1,5 @@
 import type { MessageEventListener } from "@/shared/domain/models/message-event-listener";
-import type { GetTabCustomNameUseCases } from "@/features/tab-rebrand/use-cases/get-tab-custom-name-use-cases";
+import type { GetTabCustomNameUseCases } from "@/features/tab-rebrand/use-cases/custom-name/get-tab-custom-name-use-cases";
 
 export class GetCurrentTabCustomNameMessageEventListener implements MessageEventListener {
   private readonly getTabCustomNameUseCases: GetTabCustomNameUseCases;
