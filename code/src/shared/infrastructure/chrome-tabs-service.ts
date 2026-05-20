@@ -96,4 +96,23 @@ export class ChromeTabsService implements BrowserTabsService {
       args: [originalTitle],
     });
   }
+
+  async setCustomIcon(id: string, customIcon: string): Promise<void> {
+    if (!id || !customIcon) return;
+    await chrome.scripting.executeScript({
+      target: { tabId: parseInt(id) },
+      func: (iconUrl: string) => {
+        const existingLinks = document.querySelectorAll<HTMLLinkElement>(
+          "link[rel~='icon'], link[rel~='shortcut']"
+        );
+        existingLinks.forEach((el) => el.remove());
+
+        const link = document.createElement("link");
+        link.rel = "icon";
+        link.href = iconUrl;
+        document.head.appendChild(link);
+      },
+      args: [customIcon],
+    });
+  }
 }

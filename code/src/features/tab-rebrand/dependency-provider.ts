@@ -14,6 +14,11 @@ import { GetTabCustomNameUseCases } from "./use-cases/custom-name/get-tab-custom
 import { ClearTabCustomNameMessageEventSender } from "./presentation/custom-name/background/message-events/clear-tab-custom-name-message-event-senders";
 import { ClearCurrentTabCustomNameMessageEventListener } from "./presentation/custom-name/background/message-events/clear-custom-name-use-cases-listeners/clear-current-tab-custom-name-message-event-listener";
 import { ClearTabCustomNameUseCases } from "./use-cases/custom-name/clear-tab-custom-name-use-cases";
+import { SetTabCustomIconMessageEventSender } from "./presentation/custom-icon/background/message-events/set-tab-custom-icon-message-event-senders";
+import { SetCurrentTabCustomIconMessageEventListener } from "./presentation/custom-icon/background/message-events/set-icon-use-cases-listeners/set-current-tab-custom-icon-message-event-listener";
+import type { CustomIconRepository } from "./domain/interfaces/custom-icon-repository";
+import { ChromeStorageCustomIconRepository } from "./infrastructure/chrome-storage-custom-icon-repository";
+import { SetTabCustomIconUseCases } from "./use-cases/custom-icon/set-tab-custom-icon-use-cases";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -46,6 +51,15 @@ export class TabRebrandDependencyProvider {
     }
     this.tabCustomNameRepository = new ChromeStorageCustomNameRepository();
     return this.tabCustomNameRepository;
+  }
+
+  private static tabCustomIconRepository: CustomIconRepository;
+  static getTabCustomIconRepository(): CustomIconRepository {
+    if (this.tabCustomIconRepository) {
+      return this.tabCustomIconRepository;
+    }
+    this.tabCustomIconRepository = new ChromeStorageCustomIconRepository();
+    return this.tabCustomIconRepository;
   }
 
   //Use cases
@@ -82,6 +96,17 @@ export class TabRebrandDependencyProvider {
     return this.clearTabCustomNameUseCases;
   }
 
+  private static setTabCustomIconUseCases: SetTabCustomIconUseCases;
+  static getSetTabCustomIconUseCases(){
+    if (this.setTabCustomIconUseCases) {
+      return this.setTabCustomIconUseCases;
+    }
+    this.setTabCustomIconUseCases = new SetTabCustomIconUseCases(
+      TabRebrandDependencyProvider.getBrowserTabsService(),
+      TabRebrandDependencyProvider.getTabCustomIconRepository());
+    return this.setTabCustomIconUseCases;
+  }
+
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
@@ -93,6 +118,7 @@ export class TabRebrandDependencyProvider {
       ...TabRebrandDependencyProvider.getSetCurrentTabCustomNameMessageEventListener(),
       ...TabRebrandDependencyProvider.getGetCurrentTabCustomNameMessageEventListener(),
       ...TabRebrandDependencyProvider.getClearCurrentTabCustomNameMessageEventListener(),
+      ...TabRebrandDependencyProvider.getSetCurrentTabCustomIconMessageEventListener(),
     ];
 
     return this.messageEventListeners;
@@ -134,6 +160,18 @@ export class TabRebrandDependencyProvider {
     return this.clearCurrentTabCustomNameMessageEventListener;
   }
 
+  private static setCurrentTabCustomIconMessageEventListener: [SetCurrentTabCustomIconMessageEventListener];
+  static getSetCurrentTabCustomIconMessageEventListener(): [SetCurrentTabCustomIconMessageEventListener] {
+    if (this.setCurrentTabCustomIconMessageEventListener) {
+      return this.setCurrentTabCustomIconMessageEventListener;
+    }
+
+    this.setCurrentTabCustomIconMessageEventListener = [
+      new SetCurrentTabCustomIconMessageEventListener(TabRebrandDependencyProvider.getSetTabCustomIconUseCases())
+    ];
+    return this.setCurrentTabCustomIconMessageEventListener;
+  }
+
   //Presentation - Message events - Senders
   private static setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;
   static getSetTabCustomNameMessageEventSender(): SetTabCustomNameMessageEventSender {
@@ -173,4 +211,19 @@ export class TabRebrandDependencyProvider {
 
     return this.clearTabCustomNameMessageEventSender;
   }
+
+  private static setTabCustomIconMessageEventSender: SetTabCustomIconMessageEventSender;
+  static getSetTabCustomIconMessageEventSender(): SetTabCustomIconMessageEventSender {
+    if (this.setTabCustomIconMessageEventSender) {
+      return this.setTabCustomIconMessageEventSender;
+    }
+
+    this.setTabCustomIconMessageEventSender = new SetTabCustomIconMessageEventSender(
+      TabRebrandDependencyProvider.getBrowserMessageService(),
+      TabRebrandDependencyProvider.getSetCurrentTabCustomIconMessageEventListener());
+
+    return this.setTabCustomIconMessageEventSender;
+  }
+
+
 }

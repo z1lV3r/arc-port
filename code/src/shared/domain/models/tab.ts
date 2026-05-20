@@ -5,6 +5,7 @@ export class Tab {
   groupId?: number;
   pinned?: boolean;
   customTitle?: string;
+  customIconUrl?: string;
 
   constructor(
     id: string,
@@ -13,6 +14,7 @@ export class Tab {
     groupId?: number,
     pinned?: boolean,
     customTitle?: string,
+    customIconUrl?: string,
   ) {
     this.id = id;
     this.url = url;
@@ -20,5 +22,6 @@ export class Tab {
     this.groupId = groupId;
     this.pinned = pinned;
     this.customTitle = customTitle;
+    this.customIconUrl = customIconUrl;
   }
 }

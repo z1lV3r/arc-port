@@ -60,4 +60,10 @@ export class MockTabsService implements BrowserTabsService {
     if (!tab) throw new Error(`Tab ${id} not found`);
     tab.customTitle = "";
   }
+
+  async setCustomIcon(id: string, customIcon: string): Promise<void> {
+    const tab = this.tabs.get(id);
+    if (!tab) throw new Error(`Tab ${id} not found`);
+    tab.customIconUrl = customIcon;
+  }
 }

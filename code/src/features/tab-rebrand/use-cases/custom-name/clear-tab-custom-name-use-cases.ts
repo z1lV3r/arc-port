@@ -1,7 +1,6 @@
 import type { CustomNameRepository } from "@/features/tab-rebrand/domain/interfaces/custom-name-repository";
 import type { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
 
-
 export class ClearTabCustomNameUseCases {
     private tabsService: BrowserTabsService;
     private customNameRepository: CustomNameRepository;
