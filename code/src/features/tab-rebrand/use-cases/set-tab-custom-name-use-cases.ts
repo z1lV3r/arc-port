@@ -21,6 +21,7 @@ export class SetTabCustomNameUseCases {
     }
     await this.customNameRepository.save(currentTab.id, name);
     const customName: string = await this.customNameRepository.get(currentTab.id);
+    await this.tabsService.setCustomName(currentTab.id, customName);
     return customName;
   }
 }
