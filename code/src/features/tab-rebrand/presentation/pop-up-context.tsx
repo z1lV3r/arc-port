@@ -1,9 +1,11 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { TabRebrandDependencyProvider } from "../dependency-provider";
 import type { SetTabCustomNameMessageEventSender } from "./background/message-events/set-tab-custom-name-message-event-senders";
+import type { GetTabCustomNameMessageEventSender } from "./background/message-events/get-tab-custom-name-message-event-senders";
 
 interface TabRebrandContextType {
   setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;
+  getTabCustomNameMessageEventSender: GetTabCustomNameMessageEventSender;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
@@ -12,10 +14,16 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const getTabCustomNameMessageEventSender = useMemo(
+    () => TabRebrandDependencyProvider.getGetTabCustomNameMessageEventSender(),
+    [],
+  );
+
   return (
     <TabRebrandContext.Provider
       value={{
         setTabCustomNameMessageEventSender: setTabCustomNameMessageEventSender,
+        getTabCustomNameMessageEventSender: getTabCustomNameMessageEventSender,
       }}
     >
       {children}

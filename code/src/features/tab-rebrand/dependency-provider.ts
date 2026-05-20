@@ -5,9 +5,12 @@ import { ChromeTabsService } from "@/shared/infrastructure/chrome-tabs-service";
 import type { CustomNameRepository } from "./domain/interfaces/custom-name-repository";
 import { ChromeStorageCustomNameRepository } from "./infrastructure/chrome-storage-custom-name-respository";
 import { SetTabCustomNameMessageEventSender } from "./presentation/background/message-events/set-tab-custom-name-message-event-senders";
+import { GetTabCustomNameMessageEventSender } from "./presentation/background/message-events/get-tab-custom-name-message-event-senders";
 import { SetCurrentTabCustomNameMessageEventListener } from "./presentation/background/message-events/set-custom-name-use-cases-listeners/set-current-tab-custom-name-message-event-listener";
 import type { MessageEventListener } from "@/shared/domain/models/message-event-listener";
 import { SetTabCustomNameUseCases } from "./use-cases/set-tab-custom-name-use-cases";
+import { GetCurrentTabCustomNameMessageEventListener } from "./presentation/background/message-events/get-custom-name-use-cases-listeners/get-current-tab-custom-name-message-event-listener";
+import { GetTabCustomNameUseCases } from "./use-cases/get-tab-custom-name-use-cases";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -54,6 +57,17 @@ export class TabRebrandDependencyProvider {
       return this.setTabCustomNameUseCases;
   }
 
+  private static getTabCustomNameUseCases: GetTabCustomNameUseCases;
+  static getGetTabCustomNameUseCases(): GetTabCustomNameUseCases {
+      if(this.getTabCustomNameUseCases) {
+        return this.getTabCustomNameUseCases;
+      }
+      this.getTabCustomNameUseCases = new GetTabCustomNameUseCases(
+        TabRebrandDependencyProvider.getBrowserTabsService(),
+        TabRebrandDependencyProvider.getTabCustomNameRepository());
+      return this.getTabCustomNameUseCases;
+  }
+
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
@@ -63,6 +77,7 @@ export class TabRebrandDependencyProvider {
 
     this.messageEventListeners = [
       ...TabRebrandDependencyProvider.getSetCurrentTabCustomNameMessageEventListener(),
+      ...TabRebrandDependencyProvider.getGetCurrentTabCustomNameMessageEventListener(),
     ];
 
     return this.messageEventListeners;
@@ -80,6 +95,18 @@ export class TabRebrandDependencyProvider {
     return this.setCurrentTabCustomNameMessageEventListener;
   }
 
+  private static getCurrentTabCustomNameMessageEventListener: [GetCurrentTabCustomNameMessageEventListener];
+  static getGetCurrentTabCustomNameMessageEventListener(): [GetCurrentTabCustomNameMessageEventListener] {
+    if(this.getCurrentTabCustomNameMessageEventListener) {
+      return this.getCurrentTabCustomNameMessageEventListener;
+    }
+
+    this.getCurrentTabCustomNameMessageEventListener = [
+        new GetCurrentTabCustomNameMessageEventListener(TabRebrandDependencyProvider.getGetTabCustomNameUseCases())
+    ];
+    return this.getCurrentTabCustomNameMessageEventListener;
+  }
+
   //Presentation - Message events - Senders
   private static setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;
   static getSetTabCustomNameMessageEventSender(): SetTabCustomNameMessageEventSender {
@@ -92,5 +119,18 @@ export class TabRebrandDependencyProvider {
         TabRebrandDependencyProvider.getSetCurrentTabCustomNameMessageEventListener());
 
     return this.setTabCustomNameMessageEventSender;
+  }
+
+  private static getTabCustomNameMessageEventSender: GetTabCustomNameMessageEventSender;
+  static getGetTabCustomNameMessageEventSender(): GetTabCustomNameMessageEventSender {
+    if (this.getTabCustomNameMessageEventSender) {
+      return this.getTabCustomNameMessageEventSender;
+    }
+
+    this.getTabCustomNameMessageEventSender = new GetTabCustomNameMessageEventSender(
+        TabRebrandDependencyProvider.getBrowserMessageService(),
+        TabRebrandDependencyProvider.getGetCurrentTabCustomNameMessageEventListener());
+
+    return this.getTabCustomNameMessageEventSender;
   }
 }

@@ -17,7 +17,7 @@ import { Eraser, SmilePlus } from "lucide-react";
 import { useTabRebrandContext } from "./pop-up-context";
 
 function PopUp() {
-  const { setTabCustomNameMessageEventSender } = useTabRebrandContext();
+  const { setTabCustomNameMessageEventSender, getTabCustomNameMessageEventSender } = useTabRebrandContext();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
@@ -43,6 +43,17 @@ function PopUp() {
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [pickerOpen]);
 
+  useEffect(() => {
+    const fetchInitialData = async () => {
+    const [name] = await Promise.all([
+      getTabCustomNameMessageEventSender.sendGetCurrentTabCustomNameEventMessage(),
+    ]);
+    setName(name);
+  };
+
+    fetchInitialData();
+  }, []);
+
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setIcon(emojiData.emoji);
     setIconUrl(emojiData.imageUrl);
@@ -52,13 +63,15 @@ function PopUp() {
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      await setTabCustomNameMessageEventSender.sendSetCurrentTabCustomNameEventMessage(name);
+      if (name.length > 0) {
+        await setTabCustomNameMessageEventSender.sendSetCurrentTabCustomNameEventMessage(name);
+      } else {
+        //clear name
+      }
     }
     if (e.key === "Escape") {
       if (pickerOpen) {
         setPickerOpen(false);
-      } else {
-        setName("");
       }
     }
   };
