@@ -7,4 +7,5 @@ export interface BrowserTabsService {
   createTab(tab: Tab): Promise<Tab>;
   closeTab(id: string): Promise<void>;
   setCustomName(id: string, customName: string): Promise<void>;
+  clearCustomName(id: string): Promise<void>;
 }

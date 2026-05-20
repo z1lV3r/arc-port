@@ -11,6 +11,9 @@ import type { MessageEventListener } from "@/shared/domain/models/message-event-
 import { SetTabCustomNameUseCases } from "./use-cases/set-tab-custom-name-use-cases";
 import { GetCurrentTabCustomNameMessageEventListener } from "./presentation/background/message-events/get-custom-name-use-cases-listeners/get-current-tab-custom-name-message-event-listener";
 import { GetTabCustomNameUseCases } from "./use-cases/get-tab-custom-name-use-cases";
+import { ClearTabCustomNameMessageEventSender } from "./presentation/background/message-events/clear-tab-custom-name-message-event-senders";
+import { ClearCurrentTabCustomNameMessageEventListener } from "./presentation/background/message-events/clear-custom-name-use-cases-listeners/clear-current-tab-custom-name-message-event-listener";
+import { ClearTabCustomNameUseCases } from "./use-cases/clear-tab-custom-name-use-cases";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -68,6 +71,17 @@ export class TabRebrandDependencyProvider {
       return this.getTabCustomNameUseCases;
   }
 
+  private static clearTabCustomNameUseCases: ClearTabCustomNameUseCases;
+  static getClearTabCustomNameUseCases(): ClearTabCustomNameUseCases {
+      if(this.clearTabCustomNameUseCases) {
+        return this.clearTabCustomNameUseCases;
+      }
+      this.clearTabCustomNameUseCases = new ClearTabCustomNameUseCases(
+        TabRebrandDependencyProvider.getBrowserTabsService(),
+        TabRebrandDependencyProvider.getTabCustomNameRepository());
+      return this.clearTabCustomNameUseCases;
+  }
+
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
@@ -78,6 +92,7 @@ export class TabRebrandDependencyProvider {
     this.messageEventListeners = [
       ...TabRebrandDependencyProvider.getSetCurrentTabCustomNameMessageEventListener(),
       ...TabRebrandDependencyProvider.getGetCurrentTabCustomNameMessageEventListener(),
+      ...TabRebrandDependencyProvider.getClearCurrentTabCustomNameMessageEventListener(),
     ];
 
     return this.messageEventListeners;
@@ -107,6 +122,18 @@ export class TabRebrandDependencyProvider {
     return this.getCurrentTabCustomNameMessageEventListener;
   }
 
+  private static clearCurrentTabCustomNameMessageEventListener: [ClearCurrentTabCustomNameMessageEventListener];
+  static getClearCurrentTabCustomNameMessageEventListener(): [ClearCurrentTabCustomNameMessageEventListener] {
+    if(this.clearCurrentTabCustomNameMessageEventListener) {
+      return this.clearCurrentTabCustomNameMessageEventListener;
+    }
+
+    this.clearCurrentTabCustomNameMessageEventListener = [
+        new ClearCurrentTabCustomNameMessageEventListener(TabRebrandDependencyProvider.getClearTabCustomNameUseCases())
+    ];
+    return this.clearCurrentTabCustomNameMessageEventListener;
+  }
+
   //Presentation - Message events - Senders
   private static setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;
   static getSetTabCustomNameMessageEventSender(): SetTabCustomNameMessageEventSender {
@@ -132,5 +159,18 @@ export class TabRebrandDependencyProvider {
         TabRebrandDependencyProvider.getGetCurrentTabCustomNameMessageEventListener());
 
     return this.getTabCustomNameMessageEventSender;
+  }
+
+  private static clearTabCustomNameMessageEventSender: ClearTabCustomNameMessageEventSender;
+  static getClearTabCustomNameMessageEventSender(): ClearTabCustomNameMessageEventSender {
+    if (this.clearTabCustomNameMessageEventSender) {
+      return this.clearTabCustomNameMessageEventSender;
+    }
+
+    this.clearTabCustomNameMessageEventSender = new ClearTabCustomNameMessageEventSender(
+        TabRebrandDependencyProvider.getBrowserMessageService(),
+        TabRebrandDependencyProvider.getClearCurrentTabCustomNameMessageEventListener());
+
+    return this.clearTabCustomNameMessageEventSender;
   }
 }

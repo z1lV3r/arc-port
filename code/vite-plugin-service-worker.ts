@@ -21,7 +21,6 @@ export function buildServiceWorkerPlugin(): Plugin {
           rolldownOptions: {
             output: {
               entryFileNames: "background.js",
-              inlineDynamicImports: true,
             },
           },
           minify: false,

@@ -77,4 +77,23 @@ export class ChromeTabsService implements BrowserTabsService {
       args: [customName],
     });
   }
+
+  async clearCustomName(id: string): Promise<void> {
+    if (!id) return;
+    const tabId = parseInt(id);
+    const tab = await chrome.tabs.get(tabId);
+    const url = tab.url || tab.pendingUrl;
+    if (!url) return;
+
+    const response = await fetch(url);
+    const html = await response.text();
+    const match = html.match(/<title[^>]*>(.*?)<\/title>/is);
+    const originalTitle = match?.[1]?.trim() ?? "";
+
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      func: (title: string) => { document.title = title; },
+      args: [originalTitle],
+    });
+  }
 }
