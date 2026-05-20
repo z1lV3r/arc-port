@@ -68,4 +68,13 @@ export class ChromeTabsService implements BrowserTabsService {
     if (!id) return;
     await chrome.tabs.remove(parseInt(id));
   }
+
+  async setCustomName(id: string, customName: string): Promise<void> {
+    if (!id || !customName) return;
+    await chrome.scripting.executeScript({
+      target: { tabId: parseInt(id) },
+      func: (name: string) => { document.title = name; },
+      args: [customName],
+    });
+  }
 }

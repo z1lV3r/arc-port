@@ -48,4 +48,10 @@ export class MockTabsService implements BrowserTabsService {
       this.currentTab = null;
     }
   }
+
+  async setCustomName(id: string, customName: string): Promise<void> {
+    const tab = this.tabs.get(id);
+    if (!tab) throw new Error(`Tab ${id} not found`);
+    tab.customTitle = customName;
+  }
 }
