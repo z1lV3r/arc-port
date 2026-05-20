@@ -17,7 +17,7 @@ import { Eraser, SmilePlus } from "lucide-react";
 import { useTabRebrandContext } from "./pop-up-context";
 
 function PopUp() {
-  const { setTabCustomNameMessageEventSender, getTabCustomNameMessageEventSender } = useTabRebrandContext();
+  const { setTabCustomNameMessageEventSender, getTabCustomNameMessageEventSender, clearTabCustomNameMessageEventSender } = useTabRebrandContext();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
@@ -66,7 +66,7 @@ function PopUp() {
       if (name.length > 0) {
         await setTabCustomNameMessageEventSender.sendSetCurrentTabCustomNameEventMessage(name);
       } else {
-        //clear name
+        await clearTabCustomNameMessageEventSender.sendClearCurrentTabCustomNameEventMessage();
       }
     }
     if (e.key === "Escape") {
@@ -76,9 +76,10 @@ function PopUp() {
     }
   };
 
-  const handleClear = () => {
+  const handleClear = async () => {
     setName("");
     inputRef.current?.focus();
+    await clearTabCustomNameMessageEventSender.sendClearCurrentTabCustomNameEventMessage();
   };
 
   const handleClearIcon = (e: React.MouseEvent) => {
