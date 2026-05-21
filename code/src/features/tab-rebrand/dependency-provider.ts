@@ -19,6 +19,9 @@ import { SetCurrentTabCustomIconMessageEventListener } from "./presentation/cust
 import type { CustomIconRepository } from "./domain/interfaces/custom-icon-repository";
 import { ChromeStorageCustomIconRepository } from "./infrastructure/chrome-storage-custom-icon-repository";
 import { SetTabCustomIconUseCases } from "./use-cases/custom-icon/set-tab-custom-icon-use-cases";
+import { GetTabCustomIconMessageEventSender } from "./presentation/custom-icon/background/message-events/get-tab-custom-icon-message-event-senders";
+import { GetCurrentTabCustomIconMessageEventListener } from "./presentation/custom-icon/background/message-events/get-icon-use-cases-listeners/get-current-tab-custom-icon-message-event-listener";
+import { GetTabCustomIconUseCases } from "./use-cases/custom-icon/get-tab-custom-icon-use-cases";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -97,7 +100,7 @@ export class TabRebrandDependencyProvider {
   }
 
   private static setTabCustomIconUseCases: SetTabCustomIconUseCases;
-  static getSetTabCustomIconUseCases(){
+  static getSetTabCustomIconUseCases(): SetTabCustomIconUseCases {
     if (this.setTabCustomIconUseCases) {
       return this.setTabCustomIconUseCases;
     }
@@ -105,6 +108,17 @@ export class TabRebrandDependencyProvider {
       TabRebrandDependencyProvider.getBrowserTabsService(),
       TabRebrandDependencyProvider.getTabCustomIconRepository());
     return this.setTabCustomIconUseCases;
+  }
+
+  private static getTabCustomIconUseCases: GetTabCustomIconUseCases;
+  static getGetTabCustomIconUseCases(): GetTabCustomIconUseCases {
+    if (this.getTabCustomIconUseCases) {
+      return this.getTabCustomIconUseCases;
+    }
+    this.getTabCustomIconUseCases = new GetTabCustomIconUseCases(
+      TabRebrandDependencyProvider.getBrowserTabsService(),
+      TabRebrandDependencyProvider.getTabCustomIconRepository());
+    return this.getTabCustomIconUseCases;
   }
 
   //Presentation - Message events - Listeners
@@ -119,6 +133,7 @@ export class TabRebrandDependencyProvider {
       ...TabRebrandDependencyProvider.getGetCurrentTabCustomNameMessageEventListener(),
       ...TabRebrandDependencyProvider.getClearCurrentTabCustomNameMessageEventListener(),
       ...TabRebrandDependencyProvider.getSetCurrentTabCustomIconMessageEventListener(),
+      ...TabRebrandDependencyProvider.getGetCurrentTabCustomIconMessageEventListener(),
     ];
 
     return this.messageEventListeners;
@@ -170,6 +185,18 @@ export class TabRebrandDependencyProvider {
       new SetCurrentTabCustomIconMessageEventListener(TabRebrandDependencyProvider.getSetTabCustomIconUseCases())
     ];
     return this.setCurrentTabCustomIconMessageEventListener;
+  }
+
+  private static getCurrentTabCustomIconMessageEventListener: [GetCurrentTabCustomIconMessageEventListener];
+  static getGetCurrentTabCustomIconMessageEventListener(): [GetCurrentTabCustomIconMessageEventListener] {
+    if (this.getCurrentTabCustomIconMessageEventListener) {
+      return this.getCurrentTabCustomIconMessageEventListener;
+    }
+
+    this.getCurrentTabCustomIconMessageEventListener = [
+      new GetCurrentTabCustomIconMessageEventListener(TabRebrandDependencyProvider.getGetTabCustomIconUseCases())
+    ];
+    return this.getCurrentTabCustomIconMessageEventListener;
   }
 
   //Presentation - Message events - Senders
@@ -225,5 +252,17 @@ export class TabRebrandDependencyProvider {
     return this.setTabCustomIconMessageEventSender;
   }
 
+  private static getTabCustomIconMessageEventSender: GetTabCustomIconMessageEventSender;
+  static getGetTabCustomIconMessageEventSender(): GetTabCustomIconMessageEventSender {
+    if (this.getTabCustomIconMessageEventSender) {
+      return this.getTabCustomIconMessageEventSender;
+    }
+
+    this.getTabCustomIconMessageEventSender = new GetTabCustomIconMessageEventSender(
+      TabRebrandDependencyProvider.getBrowserMessageService(),
+      TabRebrandDependencyProvider.getGetCurrentTabCustomIconMessageEventListener());
+
+    return this.getTabCustomIconMessageEventSender;
+  }
 
 }
