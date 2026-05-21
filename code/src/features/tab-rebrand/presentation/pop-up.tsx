@@ -23,6 +23,7 @@ function PopUp() {
     clearTabCustomNameMessageEventSender,
     setTabCustomIconMessageEventSender,
     getTabCustomIconMessageEventSender,
+    clearTabCustomIconMessageEventSender
   } = useTabRebrandContext();
 
   const [name, setName] = useState("");
@@ -90,10 +91,11 @@ function PopUp() {
     await clearTabCustomNameMessageEventSender.sendClearCurrentTabCustomNameEventMessage();
   };
 
-  const handleClearIcon = (e: React.MouseEvent) => {
+  const handleClearIcon = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIconUrl(null);
     inputRef.current?.focus();
+    await clearTabCustomIconMessageEventSender.sendClearCurrentTabCustomIconEventMessage();
   };
 
   return (

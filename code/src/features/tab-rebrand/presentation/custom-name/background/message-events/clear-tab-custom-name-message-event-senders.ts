@@ -1,7 +1,6 @@
 import type { BrowserMessageService } from "@/shared/domain/interfaces/browser-message-service";
 import type { ClearCurrentTabCustomNameMessageEventListener } from "./clear-custom-name-use-cases-listeners/clear-current-tab-custom-name-message-event-listener";
 
-
 export class ClearTabCustomNameMessageEventSender {
 
   private browserMessageService: BrowserMessageService;

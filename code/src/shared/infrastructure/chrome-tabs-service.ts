@@ -115,4 +115,80 @@ export class ChromeTabsService implements BrowserTabsService {
       args: [customIcon],
     });
   }
+
+  async clearCustomIcon(id: string): Promise<void> {
+    if (!id) return;
+    const tabId = parseInt(id);
+    const tab = await chrome.tabs.get(tabId);
+    const url = tab.url || tab.pendingUrl;
+    console.log("[clearCustomIcon] tabId:", tabId, "url:", url, "favIconUrl:", tab.favIconUrl);
+    if (!url) return;
+
+    let originalIconHref = "";
+
+    // 1. Try Chrome's cached favicon URL
+    
+
+    // 2. Fallback: fetch the page HTML and parse <link rel="icon"> tags
+    if (!originalIconHref) {
+      console.log("[clearCustomIcon] No cached favIconUrl, fetching HTML from:", url);
+      try {
+        const response = await fetch(url);
+        console.log("[clearCustomIcon] Fetch response status:", response.status);
+        const html = await response.text();
+        console.log("[clearCustomIcon] HTML length:", html.length);
+        const iconLinkRegex = /<link[^>]*\brel=["'][^"']*\bicon\b[^"']*["'][^>]*>/gi;
+        const links = html.match(iconLinkRegex);
+        console.log("[clearCustomIcon] Matched icon link tags:", links);
+        if (links && links.length > 0) {
+          const hrefMatch = links[0].match(/\bhref=["']([^"']+)["']/i);
+          console.log("[clearCustomIcon] Extracted href from first link:", hrefMatch?.[1]);
+          if (hrefMatch) {
+            originalIconHref = hrefMatch[1].trim();
+            if (!originalIconHref.startsWith("http") && !originalIconHref.startsWith("data:")) {
+              const resolved = new URL(originalIconHref, url).href;
+              console.log("[clearCustomIcon] Resolved relative URL:", originalIconHref, "->", resolved);
+              originalIconHref = resolved;
+            }
+          }
+        }
+      } catch (e) {
+        console.error("[clearCustomIcon] Fetch failed:", e);
+      }
+    }
+
+    // 3. Final fallback: default /favicon.ico
+    if (!originalIconHref) {
+      try {
+        originalIconHref = new URL("/favicon.ico", url).href;
+        console.log("[clearCustomIcon] Using /favicon.ico fallback:", originalIconHref);
+      } catch {
+        // Invalid URL, leave empty
+      }
+    }
+
+    console.log("[clearCustomIcon] Final originalIconHref:", originalIconHref);
+
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      func: (iconHref: string) => {
+        const existingLinks = document.querySelectorAll<HTMLLinkElement>(
+          "link[rel~='icon'], link[rel~='shortcut']"
+        );
+        console.log("[clearCustomIcon:injected] Removing", existingLinks.length, "existing icon links");
+        existingLinks.forEach((el) => el.remove());
+
+        if (iconHref) {
+          const link = document.createElement("link");
+          link.rel = "icon";
+          link.href = iconHref;
+          document.head.appendChild(link);
+          console.log("[clearCustomIcon:injected] Restored icon to:", iconHref);
+        } else {
+          console.log("[clearCustomIcon:injected] No icon href to restore");
+        }
+      },
+      args: [originalIconHref],
+    });
+  }
 }
