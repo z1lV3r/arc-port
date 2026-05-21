@@ -21,7 +21,10 @@ import { ChromeStorageCustomIconRepository } from "./infrastructure/chrome-stora
 import { SetTabCustomIconUseCases } from "./use-cases/custom-icon/set-tab-custom-icon-use-cases";
 import { GetTabCustomIconMessageEventSender } from "./presentation/custom-icon/background/message-events/get-tab-custom-icon-message-event-senders";
 import { GetCurrentTabCustomIconMessageEventListener } from "./presentation/custom-icon/background/message-events/get-icon-use-cases-listeners/get-current-tab-custom-icon-message-event-listener";
+import { ClearCurrentTabCustomIconMessageEventListener } from "./presentation/custom-icon/background/message-events/clear-icon-use-cases-listeners/clear-current-tab-custom-icon-message-event-listener";
 import { GetTabCustomIconUseCases } from "./use-cases/custom-icon/get-tab-custom-icon-use-cases";
+import { ClearTabCustomIconMessageEventSender } from "./presentation/custom-icon/background/message-events/clear-tab-custom-icon-message-event-senders";
+import { ClearTabCustomIconUseCases } from "./use-cases/custom-icon/clear-tab-custom-icon-use-cases";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -121,6 +124,17 @@ export class TabRebrandDependencyProvider {
     return this.getTabCustomIconUseCases;
   }
 
+  private static clearTabCustomIconUseCases: ClearTabCustomIconUseCases;
+  static getClearTabCustomIconUseCases(): ClearTabCustomIconUseCases {
+    if (this.clearTabCustomIconUseCases) {
+      return this.clearTabCustomIconUseCases;
+    }
+    this.clearTabCustomIconUseCases = new ClearTabCustomIconUseCases(
+      TabRebrandDependencyProvider.getBrowserTabsService(),
+      TabRebrandDependencyProvider.getTabCustomIconRepository());
+    return this.clearTabCustomIconUseCases;
+  }
+
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
@@ -134,6 +148,7 @@ export class TabRebrandDependencyProvider {
       ...TabRebrandDependencyProvider.getClearCurrentTabCustomNameMessageEventListener(),
       ...TabRebrandDependencyProvider.getSetCurrentTabCustomIconMessageEventListener(),
       ...TabRebrandDependencyProvider.getGetCurrentTabCustomIconMessageEventListener(),
+      ...TabRebrandDependencyProvider.getClearCurrentTabCustomIconMessageEventListener(),
     ];
 
     return this.messageEventListeners;
@@ -197,6 +212,18 @@ export class TabRebrandDependencyProvider {
       new GetCurrentTabCustomIconMessageEventListener(TabRebrandDependencyProvider.getGetTabCustomIconUseCases())
     ];
     return this.getCurrentTabCustomIconMessageEventListener;
+  }
+
+  private static clearCurrentTabCustomIconMessageEventListener: [ClearCurrentTabCustomIconMessageEventListener];
+  static getClearCurrentTabCustomIconMessageEventListener(): [ClearCurrentTabCustomIconMessageEventListener] {
+    if (this.clearCurrentTabCustomIconMessageEventListener) {
+      return this.clearCurrentTabCustomIconMessageEventListener;
+    }
+
+    this.clearCurrentTabCustomIconMessageEventListener = [
+      new ClearCurrentTabCustomIconMessageEventListener(TabRebrandDependencyProvider.getClearTabCustomIconUseCases())
+    ];
+    return this.clearCurrentTabCustomIconMessageEventListener;
   }
 
   //Presentation - Message events - Senders
@@ -265,4 +292,16 @@ export class TabRebrandDependencyProvider {
     return this.getTabCustomIconMessageEventSender;
   }
 
+  private static clearTabCustomIconMessageEventSender: ClearTabCustomIconMessageEventSender;
+  static getClearTabCustomIconMessageEventSender(): ClearTabCustomIconMessageEventSender {
+    if (this.clearTabCustomIconMessageEventSender) {
+      return this.clearTabCustomIconMessageEventSender;
+    }
+
+    this.clearTabCustomIconMessageEventSender = new ClearTabCustomIconMessageEventSender(
+      TabRebrandDependencyProvider.getBrowserMessageService(),
+      TabRebrandDependencyProvider.getClearCurrentTabCustomIconMessageEventListener());
+
+    return this.clearTabCustomIconMessageEventSender;
+  }
 }
