@@ -22,10 +22,10 @@ function PopUp() {
     getTabCustomNameMessageEventSender,
     clearTabCustomNameMessageEventSender,
     setTabCustomIconMessageEventSender,
+    getTabCustomIconMessageEventSender,
   } = useTabRebrandContext();
 
   const [name, setName] = useState("");
-  const [icon, setIcon] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
   const hasCustomIcon = iconUrl !== null;
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -51,17 +51,18 @@ function PopUp() {
 
   useEffect(() => {
     const fetchInitialData = async () => {
-      const [name] = await Promise.all([
+      const [name, iconUrl] = await Promise.all([
         getTabCustomNameMessageEventSender.sendGetCurrentTabCustomNameEventMessage(),
+        getTabCustomIconMessageEventSender.sendGetCurrentTabCustomIconEventMessage(),
       ]);
       setName(name);
+      setIconUrl(iconUrl);
     };
 
     fetchInitialData();
   }, []);
 
   const handleEmojiClick = async (emojiData: EmojiClickData) => {
-    setIcon(emojiData.emoji);
     setIconUrl(emojiData.imageUrl);
     setPickerOpen(false);
     await setTabCustomIconMessageEventSender.sendSetCurrentTabCustomIconEventMessage(emojiData.imageUrl);
@@ -91,7 +92,6 @@ function PopUp() {
 
   const handleClearIcon = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIcon("");
     setIconUrl(null);
     inputRef.current?.focus();
   };
@@ -116,7 +116,6 @@ function PopUp() {
                 {iconUrl ? (
                   <img
                     src={iconUrl}
-                    alt={icon}
                     className="size-5"
                     style={{ imageRendering: "smooth" }}
                   />
