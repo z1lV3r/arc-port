@@ -33,4 +33,16 @@ export class SetTabCustomNameUseCases {
     await this.tabsService.setTabName(currentTab.id, updatedName);
     return updatedName;
   }
+
+  async resetTabCustomName(tabId: string): Promise<void> {
+    const customName: string = await this.customNameRepository.get(tabId);
+    if (!customName) return;
+
+    const originalTabName = await this.tabsService.getTabName(tabId);
+    if (customName === originalTabName) return;
+
+    await this.originalNameRepository.save(tabId, originalTabName);
+
+    await this.tabsService.setTabName(tabId, customName);
+  }
 }

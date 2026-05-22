@@ -19,12 +19,16 @@ export default class ChromeTabEventService implements BrowserTabEventService {
   ) {
     const onPinEventListeners: TabEventListener[] = [];
     const onSetToGroupEventListeners: TabEventListener[] = [];
+    const onTitleUpdateEventListeners: TabEventListener[] = [];
     for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
       if (name.startsWith("on-tab-pin")) {
         onPinEventListeners.push(tabEventListener);
       }
       if (name.startsWith("on-tab-set-to-group")) {
         onSetToGroupEventListeners.push(tabEventListener);
+      }
+      if (name.startsWith("on-tab-title-update")) {
+        onTitleUpdateEventListeners.push(tabEventListener);
       }
     }
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, _) => {
@@ -35,6 +39,11 @@ export default class ChromeTabEventService implements BrowserTabEventService {
       }
       if (changeInfo.groupId && changeInfo.groupId !== -1) {
         for (const tabEventListener of onSetToGroupEventListeners) {
+          await tabEventListener.command(tabId.toString());
+        }
+      }
+      if (changeInfo.title !== undefined) {
+        for (const tabEventListener of onTitleUpdateEventListeners) {
           await tabEventListener.command(tabId.toString());
         }
       }
