@@ -7,9 +7,9 @@ export interface BrowserTabsService {
   createTab(tab: Tab): Promise<Tab>;
   closeTab(id: string): Promise<void>;
 
-  setCustomName(id: string, customName: string): Promise<void>;
-  clearCustomName(id: string): Promise<void>;
+  getTabName(id: string): Promise<string>;
+  setTabName(id: string, customName: string): Promise<void>;
 
-  setCustomIcon(id: string, customIcon: string): Promise<void>;
-  clearCustomIcon(id: string): Promise<void>;
+  getTabIcon(id: string): Promise<string>;
+  setTabIcon(id: string, customIcon: string): Promise<void>;
 }

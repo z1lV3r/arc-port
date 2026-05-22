@@ -19,6 +19,6 @@ export class ClearTabCustomNameUseCases {
             return;
         }
         await this.customNameRepository.delete(currentTab.id);
-        await this.tabsService.clearCustomName(currentTab.id);
+        //await this.tabsService.clearCustomName(currentTab.id);
     }
 }
