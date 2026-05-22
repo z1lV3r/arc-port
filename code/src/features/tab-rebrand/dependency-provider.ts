@@ -31,6 +31,8 @@ import type { OriginalTabInformationService } from "./domain/interfaces/original
 import { ChromeOriginalTabInformationService } from "./infrastructure/chrome-original-tab-information-service";
 import type { OriginalIconRepository } from "./domain/interfaces/original-icon-repository";
 import { ChromeStorageOriginalIconRepository } from "./infrastructure/chrome-storage-original-icon-repository";
+import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
+import { OnTabTitleUpdateRestoreCustomName } from "./presentation/custom-name/background/tab-event-listeners/on-tab-title-update-restore-custom-name";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -172,6 +174,19 @@ export class TabRebrandDependencyProvider {
       TabRebrandDependencyProvider.getTabOriginalIconRepository(),
       TabRebrandDependencyProvider.getOriginalTabInformationService());
     return this.clearTabCustomIconUseCases;
+  }
+
+  //Presentation - Tab event listeners
+  private static onUpdateTabEventListeners: TabEventListener[];
+  static getOnUpdateTabEventListeners(): TabEventListener[] {
+    if (this.onUpdateTabEventListeners) {
+      return this.onUpdateTabEventListeners;
+    }
+
+    this.onUpdateTabEventListeners = [
+      new OnTabTitleUpdateRestoreCustomName(TabRebrandDependencyProvider.getSetTabCustomNameUseCases()),
+    ];
+    return this.onUpdateTabEventListeners;
   }
 
   //Presentation - Message events - Listeners
