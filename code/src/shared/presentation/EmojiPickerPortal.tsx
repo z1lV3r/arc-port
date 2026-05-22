@@ -1,6 +1,6 @@
-
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
+import EmojiPicker, { type EmojiClickData, Theme, EmojiStyle } from "emoji-picker-react";
 
 export interface EmojiPickerPortalProps {
   open: boolean;
@@ -8,13 +8,36 @@ export interface EmojiPickerPortalProps {
   onEmojiClick: (data: EmojiClickData) => void;
 }
 
+export async function imageUrlToDataUrl(url: string): Promise<string> {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error("Failed to convert image URL to data URL:", error);
+    return url;
+  }
+}
+
 export function EmojiPickerPortal({
   open,
   pickerRef,
   onEmojiClick,
 }: EmojiPickerPortalProps) {
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (open) {
+      setHasBeenOpened(true);
+    }
+  }, [open]);
+
+  if (!hasBeenOpened) return null;
 
   return createPortal(
     <div
@@ -27,6 +50,7 @@ export function EmojiPickerPortal({
         right: 0,
         bottom: 0,
         zIndex: 9999,
+        display: open ? "block" : "none",
       }}
     >
       <EmojiPicker
@@ -42,11 +66,11 @@ export function EmojiPickerPortal({
         } as React.CSSProperties}
         theme={Theme.AUTO}
         onEmojiClick={onEmojiClick}
+        emojiStyle={EmojiStyle.APPLE}
         lazyLoadEmojis
         searchDisabled
         skinTonesDisabled
         previewConfig={{showPreview: false}}
-        
       />
     </div>,
     document.body

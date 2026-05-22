@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { type EmojiClickData } from "emoji-picker-react";
-import { EmojiPickerPortal } from "@/shared/presentation/EmojiPickerPortal";
+import { EmojiPickerPortal, imageUrlToDataUrl } from "@/shared/presentation/EmojiPickerPortal";
 import {
   GroupCard,
   GroupCardHeader,
@@ -64,9 +64,10 @@ function PopUp() {
   }, []);
 
   const handleEmojiClick = async (emojiData: EmojiClickData) => {
-    setIconUrl(emojiData.imageUrl);
     setPickerOpen(false);
-    await setTabCustomIconMessageEventSender.sendSetCurrentTabCustomIconEventMessage(emojiData.imageUrl);
+    const emojiDataUrl = await imageUrlToDataUrl(emojiData.imageUrl);
+    setIconUrl(emojiDataUrl);
+    await setTabCustomIconMessageEventSender.sendSetCurrentTabCustomIconEventMessage(emojiDataUrl);
     inputRef.current?.focus();
   };
 
