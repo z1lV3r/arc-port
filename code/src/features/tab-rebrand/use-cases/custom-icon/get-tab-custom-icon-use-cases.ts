@@ -15,9 +15,6 @@ export class GetTabCustomIconUseCases {
 
   async getCurrentTabCustomIcon(): Promise<string> {
     const currentTab = await this.tabsService.getCurrentTab();
-    if (!currentTab.url) {
-      return "";
-    }
     return await this.customIconRepository.get(currentTab.id);
   }
 }
