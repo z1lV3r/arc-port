@@ -2,6 +2,7 @@
   "name": "arc-port",
   "private": true,
   "version": "1.0.3",
+  "license": "FSL-1.1-MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
