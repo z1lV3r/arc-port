@@ -49,7 +49,7 @@ export class MockTabsService implements BrowserTabsService {
     }
   }
 
-  async setCustomName(id: string, customName: string): Promise<void> {
+  async setTabName(id: string, customName: string): Promise<void> {
     const tab = this.tabs.get(id);
     if (!tab) throw new Error(`Tab ${id} not found`);
     tab.customTitle = customName;
@@ -61,7 +61,7 @@ export class MockTabsService implements BrowserTabsService {
     tab.customTitle = "";
   }
 
-  async setCustomIcon(id: string, customIcon: string): Promise<void> {
+  async setTabIcon(id: string, customIcon: string): Promise<void> {
     const tab = this.tabs.get(id);
     if (!tab) throw new Error(`Tab ${id} not found`);
     tab.customIconUrl = customIcon;
@@ -71,5 +71,17 @@ export class MockTabsService implements BrowserTabsService {
     const tab = this.tabs.get(id);
     if (!tab) throw new Error(`Tab ${id} not found`);
     tab.customIconUrl = "";
+  }
+
+  async getTabName(id: string): Promise<string> {
+    const tab = this.tabs.get(id);
+    if (!tab) throw new Error(`Tab ${id} not found`);
+    return "Name" + id;
+  }
+
+  async getTabIcon(id: string): Promise<string> {
+    const tab = this.tabs.get(id);
+    if (!tab) throw new Error(`Tab ${id} not found`);
+    return "Icon" + id;
   }
 }

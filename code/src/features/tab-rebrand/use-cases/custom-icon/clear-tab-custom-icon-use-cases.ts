@@ -19,6 +19,6 @@ export class ClearTabCustomIconUseCases {
             return;
         }
         await this.customIconRepository.delete(currentTab.id);
-        await this.tabsService.clearCustomIcon(currentTab.id);
+        //await this.tabsService.clearCustomIcon(currentTab.id);
     }
 }

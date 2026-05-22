@@ -25,6 +25,8 @@ import { ClearCurrentTabCustomIconMessageEventListener } from "./presentation/cu
 import { GetTabCustomIconUseCases } from "./use-cases/custom-icon/get-tab-custom-icon-use-cases";
 import { ClearTabCustomIconMessageEventSender } from "./presentation/custom-icon/background/message-events/clear-tab-custom-icon-message-event-senders";
 import { ClearTabCustomIconUseCases } from "./use-cases/custom-icon/clear-tab-custom-icon-use-cases";
+import type { OriginalNameRepository } from "./domain/interfaces/original-name-repository";
+import { ChromeStorageOriginalNameRepository } from "./infrastructure/chrome-storage-original-name-repository";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -59,6 +61,15 @@ export class TabRebrandDependencyProvider {
     return this.tabCustomNameRepository;
   }
 
+  private static originalNameRepository: OriginalNameRepository;
+  static getOriginalNameRepository(): OriginalNameRepository {
+    if (this.originalNameRepository) {
+      return this.originalNameRepository;
+    }
+    this.originalNameRepository = new ChromeStorageOriginalNameRepository();
+    return this.originalNameRepository;
+  }
+
   private static tabCustomIconRepository: CustomIconRepository;
   static getTabCustomIconRepository(): CustomIconRepository {
     if (this.tabCustomIconRepository) {
@@ -76,7 +87,8 @@ export class TabRebrandDependencyProvider {
     }
     this.setTabCustomNameUseCases = new SetTabCustomNameUseCases(
       TabRebrandDependencyProvider.getBrowserTabsService(),
-      TabRebrandDependencyProvider.getTabCustomNameRepository());
+      TabRebrandDependencyProvider.getTabCustomNameRepository(),
+      TabRebrandDependencyProvider.getOriginalNameRepository());
     return this.setTabCustomNameUseCases;
   }
 

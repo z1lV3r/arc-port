@@ -21,7 +21,7 @@ export class SetTabCustomIconUseCases {
     }
     await this.customIconRepository.save(currentTab.id, iconUrl);
     const customIcon: string = await this.customIconRepository.get(currentTab.id);
-    await this.tabsService.setCustomIcon(currentTab.id, customIcon);
+    await this.tabsService.setTabIcon(currentTab.id, customIcon);
     return customIcon;
   }
 }
