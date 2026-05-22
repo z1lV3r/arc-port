@@ -15,9 +15,6 @@ export class GetTabCustomNameUseCases {
 
   async getCurrentTabCustomName(): Promise<string> {
     const currentTab = await this.tabsService.getCurrentTab();
-    if (!currentTab.url) {
-      return "";
-    }
     return await this.customNameRepository.get(currentTab.id);
   }
 }
