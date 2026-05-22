@@ -33,6 +33,7 @@ import type { OriginalIconRepository } from "./domain/interfaces/original-icon-r
 import { ChromeStorageOriginalIconRepository } from "./infrastructure/chrome-storage-original-icon-repository";
 import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
 import { OnTabTitleUpdateRestoreCustomName } from "./presentation/custom-name/background/tab-event-listeners/on-tab-title-update-restore-custom-name";
+import { OnTabIconUpdateRestoreCustomIcon } from "./presentation/custom-icon/background/tab-event-listeners/on-tab-icon-update-restore-custom-icon";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -185,6 +186,7 @@ export class TabRebrandDependencyProvider {
 
     this.onUpdateTabEventListeners = [
       new OnTabTitleUpdateRestoreCustomName(TabRebrandDependencyProvider.getSetTabCustomNameUseCases()),
+      new OnTabIconUpdateRestoreCustomIcon(TabRebrandDependencyProvider.getSetTabCustomIconUseCases()),
     ];
     return this.onUpdateTabEventListeners;
   }

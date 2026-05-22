@@ -33,4 +33,16 @@ export class SetTabCustomIconUseCases {
     await this.tabsService.setTabIcon(currentTab.id, customIcon);
     return customIcon;
   }
+
+  async resetTabCustomIcon(tabId: string): Promise<void> {
+    const customIcon: string = await this.customIconRepository.get(tabId);
+    if (!customIcon) return;
+
+    const currentIcon = await this.tabsService.getTabIcon(tabId);
+    if (currentIcon === customIcon) return;
+
+    await this.originalIconRepository.save(tabId, currentIcon);
+
+    await this.tabsService.setTabIcon(tabId, customIcon);
+  }
 }
