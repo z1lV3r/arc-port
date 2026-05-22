@@ -168,8 +168,8 @@ export class TabRebrandDependencyProvider {
     }
     this.clearTabCustomIconUseCases = new ClearTabCustomIconUseCases(
       TabRebrandDependencyProvider.getBrowserTabsService(),
-      TabRebrandDependencyProvider.getTabOriginalIconRepository(),
       TabRebrandDependencyProvider.getTabCustomIconRepository(),
+      TabRebrandDependencyProvider.getTabOriginalIconRepository(),
       TabRebrandDependencyProvider.getOriginalTabInformationService());
     return this.clearTabCustomIconUseCases;
   }
