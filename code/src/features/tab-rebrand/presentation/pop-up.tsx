@@ -63,6 +63,21 @@ function PopUp() {
     fetchInitialData();
   }, []);
 
+  useEffect(() => {
+    // Check if the popup was opened via shortcut with a specific focus target
+    chrome.storage.session.get("focusElementId").then(({ focusElementId }) => {
+      if (focusElementId) {
+        if (focusElementId === "custom-icon") {
+          setPickerOpen(true);
+          sparkleRef.current?.focus();
+        } else if (focusElementId === "custom-name") {
+          inputRef.current?.focus();
+        }
+        chrome.storage.session.remove("focusElementId");
+      }
+    });
+  }, []);
+
   const handleEmojiClick = async (emojiData: EmojiClickData) => {
     setPickerOpen(false);
     const emojiDataUrl = await imageUrlToDataUrl(emojiData.imageUrl);
@@ -109,6 +124,7 @@ function PopUp() {
           <InputGroupAddon>
             <div className="group/icon relative">
               <InputGroupButton
+                id="custom-icon"
                 ref={sparkleRef}
                 size="icon-sm"
                 className="text-base"
@@ -139,8 +155,8 @@ function PopUp() {
             </div>
           </InputGroupAddon>
           <InputGroupInput
+            id="custom-name"
             ref={inputRef}
-            autoFocus
             autoComplete="off"
             maxLength={64}
             placeholder="Custom name"

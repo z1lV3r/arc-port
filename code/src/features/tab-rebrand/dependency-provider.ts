@@ -34,6 +34,15 @@ import { ChromeStorageOriginalIconRepository } from "./infrastructure/chrome-sto
 import type { TabEventListener } from "@/shared/domain/models/tab-event-listener";
 import { OnTabTitleUpdateRestoreCustomName } from "./presentation/custom-name/background/tab-event-listeners/on-tab-title-update-restore-custom-name";
 import { OnTabIconUpdateRestoreCustomIcon } from "./presentation/custom-icon/background/tab-event-listeners/on-tab-icon-update-restore-custom-icon";
+import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
+import { OpenTabRebrandUiFocusCustomNameShortcutListener } from "./presentation/background/shortcut-listeners/open-tab-rebrand-ui-focus-custom-name-shortcut-listener";
+import type { BrowserService } from "@/shared/domain/interfaces/browser-service";
+import { ChromeBrowserService } from "@/shared/infrastructure/chrome-browser-service";
+import { OpenPopUpUseCases } from "./use-cases/open-pop-up-use-cases";
+import { OpenTabRebrandUiFocusCustomIconShortcutListener } from "./presentation/background/shortcut-listeners/open-tab-rebrand-ui-focus-custom-icon-shortcut-listener";
+import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
+import { OpenTabRebrandUiFocusCustomIconContextMenuListener } from "./presentation/background/context-menu-listeners/open-tab-rebrand-ui-focus-custom-icon-context-menu-listener";
+import { OpenTabRebrandUiFocusCustomNameContextMenuListener } from "./presentation/background/context-menu-listeners/open-tab-rebrand-ui-focus-custom-name-context-menu-listener";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -41,6 +50,15 @@ export class TabRebrandDependencyProvider {
   }
 
   //Infrastructure - Browser
+  private static browserService: BrowserService;
+  static getBrowserService(): BrowserService {
+    if (this.browserService) {
+      return this.browserService;
+    }
+    this.browserService = new ChromeBrowserService();
+    return this.browserService;
+  }
+
   private static browserMessageService: BrowserMessageService;
   static getBrowserMessageService(): BrowserMessageService {
     if (this.browserMessageService) {
@@ -177,6 +195,51 @@ export class TabRebrandDependencyProvider {
     return this.clearTabCustomIconUseCases;
   }
 
+  private static openPopUpUseCases: OpenPopUpUseCases;
+  static getOpenPopUpUseCases(): OpenPopUpUseCases {
+    if (this.openPopUpUseCases) {
+      return this.openPopUpUseCases;
+    }
+    this.openPopUpUseCases = new OpenPopUpUseCases(
+      TabRebrandDependencyProvider.getBrowserService()
+    );
+    return this.openPopUpUseCases;
+  }
+
+  //Presentation - Shortcut listeners
+  private static shortcutListeners: ShortcutListener[];
+  static getShortcutListeners(): ShortcutListener[] {
+    if (this.shortcutListeners) {
+      return this.shortcutListeners;
+    }
+
+    this.shortcutListeners = [
+      new OpenTabRebrandUiFocusCustomIconShortcutListener(
+        TabRebrandDependencyProvider.getOpenPopUpUseCases(),
+      ),
+      new OpenTabRebrandUiFocusCustomNameShortcutListener(
+        TabRebrandDependencyProvider.getOpenPopUpUseCases(),
+      ),
+    ];
+
+    return this.shortcutListeners;
+  }
+
+  //Presentation - Context menu listeners
+  private static contextMenuListeners: ContextMenuListener[];
+  static getContextMenuListeners(): ContextMenuListener[] {
+    if(this.contextMenuListeners) {
+      return this.contextMenuListeners;
+    }
+
+    this.contextMenuListeners = [
+      new OpenTabRebrandUiFocusCustomIconContextMenuListener(TabRebrandDependencyProvider.getOpenPopUpUseCases()),
+      new OpenTabRebrandUiFocusCustomNameContextMenuListener(TabRebrandDependencyProvider.getOpenPopUpUseCases()),
+    ];
+
+    return this.contextMenuListeners;
+  }
+    
   //Presentation - Tab event listeners
   private static onUpdateTabEventListeners: TabEventListener[];
   static getOnUpdateTabEventListeners(): TabEventListener[] {
