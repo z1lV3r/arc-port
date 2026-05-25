@@ -192,8 +192,6 @@ export class CheckpointDependencyProvider {
       new ClearCurrentTabCheckpointContextMenuListener(CheckpointDependencyProvider.getClearCheckpointUseCases()),
     ];
 
-    CheckpointDependencyProvider.getSettingsUseCases();
-
     return this.contextMenuListeners;
   }
 
