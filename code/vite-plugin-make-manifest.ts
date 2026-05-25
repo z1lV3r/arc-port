@@ -50,6 +50,13 @@ export function makeManifestPlugin(): PluginOption {
       }
 
       // 3. Process shortcuts
+      let suggestedKeyCount = 0;
+      if (finalManifest.commands) {
+        suggestedKeyCount = Object.values(finalManifest.commands).filter(
+          (c: any) => c.suggested_key,
+        ).length;
+      }
+
       for (const shortcutPath of shortcutFiles) {
         try {
           const content = fs.readFileSync(shortcutPath, "utf-8");
@@ -70,12 +77,16 @@ export function makeManifestPlugin(): PluginOption {
             if (defaultKeyMatch) suggested_key.default = defaultKeyMatch[1];
             if (macKeyMatch) suggested_key.mac = macKeyMatch[1];
 
-            const commandEntry = {
+            const commandEntry: any = {
               [name]: {
-                suggested_key,
                 description,
               },
             };
+
+            if (Object.keys(suggested_key).length > 0 && suggestedKeyCount < 4) {
+              commandEntry[name].suggested_key = suggested_key;
+              suggestedKeyCount++;
+            }
 
             mergeManifests(finalManifest, { commands: commandEntry });
           }
