@@ -2,6 +2,12 @@ import type { BrowserMessageService } from "@/shared/domain/interfaces/browser-m
 import { ChromeMessageService } from "@/shared/infrastructure/chrome-message-service";
 import type { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
 import { ChromeTabsService } from "@/shared/infrastructure/chrome-tabs-service";
+import type { BrowserShortcutSettingsService } from "@/shared/domain/interfaces/browser-shortcut-settings-service";
+import { ChromeShortcutSettingsService } from "@/shared/infrastructure/chrome-shortcut-settings-service";
+import type { BrowserContextMenuService } from "@/shared/domain/interfaces/browser-context-menu-service";
+import { ChromeContextMenuService } from "@/shared/infrastructure/chrome-context-menu-service";
+import type { SettingsRepository } from "@/shared/domain/interfaces/settings-repository";
+import { ChromeStorageSettingsRepository } from "@/shared/infrastructure/chrome-storage-settings-repository";
 import type { CustomNameRepository } from "./domain/interfaces/custom-name-repository";
 import { ChromeStorageCustomNameRepository } from "./infrastructure/chrome-storage-custom-name-respository";
 import { SetTabCustomNameMessageEventSender } from "./presentation/custom-name/background/message-events/set-tab-custom-name-message-event-senders";
@@ -43,6 +49,9 @@ import { OpenTabRebrandUiFocusCustomIconShortcutListener } from "./presentation/
 import type { ContextMenuListener } from "@/shared/domain/models/context-menu-listener";
 import { OpenTabRebrandUiFocusCustomIconContextMenuListener } from "./presentation/background/context-menu-listeners/open-tab-rebrand-ui-focus-custom-icon-context-menu-listener";
 import { OpenTabRebrandUiFocusCustomNameContextMenuListener } from "./presentation/background/context-menu-listeners/open-tab-rebrand-ui-focus-custom-name-context-menu-listener";
+import { SettingsUseCases } from "./use-cases/settings-use-cases";
+import type { ExtensionListener } from "@/shared/domain/models/extension-listener";
+import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/background/extension-listeners/on-extension-installed-load-default-settings";
 
 export class TabRebrandDependencyProvider {
   private constructor() {
@@ -75,6 +84,25 @@ export class TabRebrandDependencyProvider {
     }
     this.browserTabsService = new ChromeTabsService();
     return this.browserTabsService;
+  }
+
+  private static browserShortcutSettingsService: BrowserShortcutSettingsService;
+  static getBrowserShortcutSettingsService(): BrowserShortcutSettingsService {
+    if (this.browserShortcutSettingsService) {
+      return this.browserShortcutSettingsService;
+    }
+    this.browserShortcutSettingsService = new ChromeShortcutSettingsService();
+    return this.browserShortcutSettingsService;
+  }
+
+  private static browserContextMenuService: BrowserContextMenuService;
+  static getBrowserContextMenuService(): BrowserContextMenuService {
+    if(this.browserContextMenuService) {
+      return this.browserContextMenuService;
+    }
+
+    this.browserContextMenuService = new ChromeContextMenuService();
+    return this.browserContextMenuService;
   }
 
   private static originalTabInformationService: OriginalTabInformationService;
@@ -120,6 +148,16 @@ export class TabRebrandDependencyProvider {
     }
     this.tabOriginalIconRepository = new ChromeStorageOriginalIconRepository();
     return this.tabOriginalIconRepository;
+  }
+
+  private static settingsRepository: SettingsRepository;
+  static getSettingsRepository(): SettingsRepository {
+    if(this.settingsRepository) {
+      return this.settingsRepository;
+    }
+
+    this.settingsRepository = new ChromeStorageSettingsRepository();
+    return this.settingsRepository;
   }
 
   //Use cases
@@ -206,6 +244,21 @@ export class TabRebrandDependencyProvider {
     return this.openPopUpUseCases;
   }
 
+  private static settingsUseCases: SettingsUseCases;
+  static getSettingsUseCases(): SettingsUseCases {
+    if(this.settingsUseCases) {
+      return this.settingsUseCases;
+    }
+
+    this.settingsUseCases = new SettingsUseCases(
+      TabRebrandDependencyProvider.getSettingsRepository(),
+      TabRebrandDependencyProvider.getBrowserContextMenuService(),
+      TabRebrandDependencyProvider.getContextMenuListeners(),
+    );
+
+    return this.settingsUseCases;
+  }
+
   //Presentation - Shortcut listeners
   private static shortcutListeners: ShortcutListener[];
   static getShortcutListeners(): ShortcutListener[] {
@@ -238,6 +291,20 @@ export class TabRebrandDependencyProvider {
     ];
 
     return this.contextMenuListeners;
+  }
+
+  //Presentation - Extension event listeners
+  private static onExtensionInstalledListeners: ExtensionListener[];
+  static getOnExtensionInstalledListeners(): ExtensionListener[] {
+    if(this.onExtensionInstalledListeners) {
+      return this.onExtensionInstalledListeners;
+    }
+
+    this.onExtensionInstalledListeners = [
+      new OnExtensionInstalledLoadDefaultSettings(TabRebrandDependencyProvider.getSettingsUseCases()),
+    ];
+
+    return this.onExtensionInstalledListeners;
   }
     
   //Presentation - Tab event listeners
