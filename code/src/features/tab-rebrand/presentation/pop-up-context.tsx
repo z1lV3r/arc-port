@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { TabRebrandDependencyProvider } from "../dependency-provider";
 import type { SetTabCustomNameMessageEventSender } from "./custom-name/background/message-events/set-tab-custom-name-message-event-senders";
@@ -6,6 +7,7 @@ import type { ClearTabCustomNameMessageEventSender } from "./custom-name/backgro
 import type { SetTabCustomIconMessageEventSender } from "./custom-icon/background/message-events/set-tab-custom-icon-message-event-senders";
 import type { GetTabCustomIconMessageEventSender } from "./custom-icon/background/message-events/get-tab-custom-icon-message-event-senders";
 import type { ClearTabCustomIconMessageEventSender } from "./custom-icon/background/message-events/clear-tab-custom-icon-message-event-senders";
+import type { SettingsUseCases } from "../use-cases/settings-use-cases";
 
 interface TabRebrandContextType {
   setTabCustomNameMessageEventSender: SetTabCustomNameMessageEventSender;
@@ -14,6 +16,7 @@ interface TabRebrandContextType {
   setTabCustomIconMessageEventSender: SetTabCustomIconMessageEventSender;
   getTabCustomIconMessageEventSender: GetTabCustomIconMessageEventSender;
   clearTabCustomIconMessageEventSender: ClearTabCustomIconMessageEventSender;
+  settingsUseCases: SettingsUseCases;
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
@@ -47,6 +50,11 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const settingsUseCases = useMemo(
+    () => TabRebrandDependencyProvider.getSettingsUseCases(),
+    [],
+  );
+
   return (
     <TabRebrandContext.Provider
       value={{
@@ -56,6 +64,7 @@ export function ContextProvider({ children }: { children: ReactNode }) {
         setTabCustomIconMessageEventSender: setTabCustomIconMessageEventSender,
         getTabCustomIconMessageEventSender: getTabCustomIconMessageEventSender,
         clearTabCustomIconMessageEventSender: clearTabCustomIconMessageEventSender,
+        settingsUseCases,
       }}
     >
       {children}

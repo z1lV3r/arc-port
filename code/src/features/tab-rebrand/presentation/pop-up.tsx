@@ -23,11 +23,13 @@ function PopUp() {
     clearTabCustomNameMessageEventSender,
     setTabCustomIconMessageEventSender,
     getTabCustomIconMessageEventSender,
-    clearTabCustomIconMessageEventSender
+    clearTabCustomIconMessageEventSender,
+    settingsUseCases,
   } = useTabRebrandContext();
 
   const [name, setName] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
+  const [showPopUp, setShowPopUp] = useState(false);
   const hasCustomIcon = iconUrl !== null;
   const [pickerOpen, setPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,16 +54,22 @@ function PopUp() {
 
   useEffect(() => {
     const fetchInitialData = async () => {
-      const [name, iconUrl] = await Promise.all([
+      const [name, iconUrl, popUpVisible] = await Promise.all([
         getTabCustomNameMessageEventSender.sendGetCurrentTabCustomNameEventMessage(),
         getTabCustomIconMessageEventSender.sendGetCurrentTabCustomIconEventMessage(),
+        settingsUseCases.getShowPopUp(),
       ]);
       setName(name);
       setIconUrl(iconUrl);
+      setShowPopUp(popUpVisible);
     };
 
     fetchInitialData();
-  }, []);
+  }, [
+    getTabCustomIconMessageEventSender,
+    getTabCustomNameMessageEventSender,
+    settingsUseCases,
+  ]);
 
   useEffect(() => {
     // Check if the popup was opened via shortcut with a specific focus target
@@ -113,6 +121,10 @@ function PopUp() {
     inputRef.current?.focus();
     await clearTabCustomIconMessageEventSender.sendClearCurrentTabCustomIconEventMessage();
   };
+
+  if (!showPopUp) {
+    return null;
+  }
 
   return (
     <GroupCard>
