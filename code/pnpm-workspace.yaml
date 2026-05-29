@@ -1,3 +1,7 @@
 packages:
   - "extensions/*"
   - "shared/*"
+
+pnpm:
+  overrides:
+    node-notifier>uuid: 11.1.0

@@ -14,11 +14,6 @@
     "typescript": "5.9.2"
   },
   "packageManager": "pnpm@9.0.0",
-  "pnpm": {
-    "overrides": {
-      "node-notifier>uuid": "11.1.0"
-    }
-  },
   "engines": {
     "node": ">=18"
   }
