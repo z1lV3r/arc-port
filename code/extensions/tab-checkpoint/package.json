@@ -1,5 +1,5 @@
 {
-  "name": "ArcPort-Tab checkpoint",
+  "name": "ArcPort - Checkpoint",
   "description": "Set a navigation checkpoint, allowing you to return to a specific page instantly whenever you need a fresh restart.",
   "private": true,
   "version": "1.1.0",
@@ -14,7 +14,7 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@repo/ui": "workspace:*"
+    "@repo/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.280",
