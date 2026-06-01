@@ -40,22 +40,24 @@ pnpm install
 
 You can run these scripts from the root of the `code` directory:
 
-| Script | Command | Description |
-| :--- | :--- | :--- |
-| **`dev`** | `pnpm dev` | Starts the development server for WXT (tab-checkpoint) with hot reloading |
-| **`build`** | `pnpm build` | Builds all packages and compile the WXT extension for production |
-| **`lint`** | `pnpm lint` | Runs ESLint across all projects in the workspace |
-| **`format`** | `pnpm format` | Formats all TS, TSX, and MD files using Prettier |
-| **`check-types`** | `pnpm check-types` | Performs static TypeScript type checking across all packages |
+| Script            | Command            | Description                                                               |
+| :---------------- | :----------------- | :------------------------------------------------------------------------ |
+| **`dev`**         | `pnpm dev`         | Starts the development server for WXT (tab-checkpoint) with hot reloading |
+| **`build`**       | `pnpm build`       | Builds all packages and compile the WXT extension for production          |
+| **`lint`**        | `pnpm lint`        | Runs ESLint across all projects in the workspace                          |
+| **`format`**      | `pnpm format`      | Formats all TS, TSX, and MD files using Prettier                          |
+| **`check-types`** | `pnpm check-types` | Performs static TypeScript type checking across all packages              |
 
 ---
 
 ## 🚀 Running the Extension Locally
 
 1. **Start the dev server**:
+
    ```sh
    pnpm dev
    ```
+
    This will start the WXT dev server, which compiles the extension and places the output in `code/extensions/tab-checkpoint/.output/chrome-mv3`.
 
 2. **Load in Chrome**:
@@ -79,4 +81,3 @@ pnpm check-types --filter=@repo/ui
 ```
 
 For more information, refer to the [Turborepo Filtering Documentation](https://turbo.build/repo/docs/core-concepts/monorepos/filtering).
-

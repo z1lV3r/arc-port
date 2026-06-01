@@ -1,8 +1,8 @@
 {
-  "name": "ext-1",
-  "description": "manifest.json description",
+  "name": "ArcPort-Tab checkpoint",
+  "description": "Set a navigation checkpoint, allowing you to return to a specific page instantly whenever you need a fresh restart.",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

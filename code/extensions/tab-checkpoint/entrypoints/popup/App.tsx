@@ -1,11 +1,8 @@
 import Demo from "@repo/ui/demo";
-import './App.css';
+import "./App.css";
 
 function App() {
-
-  return (
-    <Demo />
-  );
+  return <Demo />;
 }
 
 export default App;
