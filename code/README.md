@@ -1,159 +1,82 @@
-# Turborepo starter
+# Arc Port Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+This directory contains the codebase for **Arc Port**, a Google Chrome extension that brings the best Arc browser features to Chrome. The repository is structured as a monorepo powered by [Turborepo](https://turbo.build/) and [pnpm workspaces](https://pnpm.io/workspaces).
 
-## Using this example
+## 📁 Monorepo Structure
 
-Run the following command:
-
-```sh
-npx create-turbo@latest
+```text
+code/
+├── extensions/
+│   └── tab-checkpoint/      # The WXT + React Chrome extension (named "ext-1")
+└── shared/
+    ├── ui/                  # Shared React component library ("@repo/ui")
+    ├── eslint-config/       # Shared ESLint configuration ("@repo/eslint-config")
+    └── typescript-config/   # Shared TypeScript configuration ("@repo/typescript-config")
 ```
 
-## What's inside?
+### Packages & Apps
 
-This Turborepo includes the following packages/apps:
+- **[tab-checkpoint](file:///c:/Users/hvill/Proyectos/arc-port/code/extensions/tab-checkpoint)** (`ext-1`): A browser extension built using [WXT](https://wxt.dev/) and [React](https://react.dev/).
+- **[ui](file:///c:/Users/hvill/Proyectos/arc-port/code/shared/ui)** (`@repo/ui`): A shared React component library containing UI primitives used by the extension.
+- **[eslint-config](file:///c:/Users/hvill/Proyectos/arc-port/code/shared/eslint-config)** (`@repo/eslint-config`): Shared ESLint configurations.
+- **[typescript-config](file:///c:/Users/hvill/Proyectos/arc-port/code/shared/typescript-config)** (`@repo/typescript-config`): Shared TypeScript config profiles.
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 🛠️ Development
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+> [!NOTE]
+> This project uses `pnpm` as its package manager. Please ensure you have [pnpm](https://pnpm.io/) installed.
 
-### Utilities
+### Setup
 
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Install all dependencies from the `code` directory:
 
 ```sh
-cd my-turborepo
-turbo build
+pnpm install
 ```
 
-Without global `turbo`, use your package manager:
+### Available Scripts
+
+You can run these scripts from the root of the `code` directory:
+
+| Script | Command | Description |
+| :--- | :--- | :--- |
+| **`dev`** | `pnpm dev` | Starts the development server for WXT (tab-checkpoint) with hot reloading |
+| **`build`** | `pnpm build` | Builds all packages and compile the WXT extension for production |
+| **`lint`** | `pnpm lint` | Runs ESLint across all projects in the workspace |
+| **`format`** | `pnpm format` | Formats all TS, TSX, and MD files using Prettier |
+| **`check-types`** | `pnpm check-types` | Performs static TypeScript type checking across all packages |
+
+---
+
+## 🚀 Running the Extension Locally
+
+1. **Start the dev server**:
+   ```sh
+   pnpm dev
+   ```
+   This will start the WXT dev server, which compiles the extension and places the output in `code/extensions/tab-checkpoint/.output/chrome-mv3`.
+
+2. **Load in Chrome**:
+   - Open Google Chrome and go to `chrome://extensions`.
+   - Enable **Developer mode** (toggle in the top-right corner).
+   - Click **Load unpacked** (top-left).
+   - Select the `code/extensions/tab-checkpoint/.output/chrome-mv3` folder.
+
+---
+
+## 🎯 Filtering Tasks
+
+With Turborepo, you can run tasks for specific packages using the `--filter` flag. For example:
 
 ```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+# Only build the tab-checkpoint extension
+pnpm build --filter=ext-1
+
+# Run type check only on the shared UI library
+pnpm check-types --filter=@repo/ui
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+For more information, refer to the [Turborepo Filtering Documentation](https://turbo.build/repo/docs/core-concepts/monorepos/filtering).
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
