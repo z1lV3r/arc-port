@@ -1,7 +1,14 @@
 packages:
   - "extensions/*"
-  - "shared/*"
+  - "packages/*"
 
 pnpm:
   overrides:
     node-notifier>uuid: 11.1.0
+
+# Only build if the dependency was published at least 3 days (4320 minutes) ago.
+minimumReleaseAge: 4320
+
+onlyBuiltDependencies:
+  - wxt
+  
