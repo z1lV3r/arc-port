@@ -7,4 +7,10 @@ export default defineConfig({
     name: "ArcPort - Checkpoint",
     default_locale: 'en',
   },
+  // `pnpm wxt prepare` to generate .wxt/types/imports.d.ts
+  imports: {
+    dirs: [
+      'app/**'
+    ],
+  },
 });

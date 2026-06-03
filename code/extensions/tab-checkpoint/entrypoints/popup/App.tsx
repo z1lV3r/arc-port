@@ -1,10 +1,9 @@
 import Demo from "@repo/shared/presentation/demo";
 import "./App.css";
-import { createI18n } from "@wxt-dev/i18n";
+import { PopUp } from "@/app/presentation/pop-up";
 
 function App() {
-  const i18n = createI18n();
-  return <Demo t={i18n.t("helloWorld")} />;
+  return <PopUp />;
 }
 
 export default App;
