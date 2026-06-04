@@ -15,10 +15,20 @@ import { Button } from "@repo/shared/presentation/button";
 import { Separator } from "@repo/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
-//import { useCheckpointContext } from "./pop-up-context";
+import type { SetCheckpointMessageEventSender } from "./background/message-events/set-checkpoint-message-event-sender";
+import { DependencyProvider } from "#imports";
 
-function PopUp() {
-  //const { getCheckpointMessageEventSender, setCheckpointMessageEventSender, resetTabToCheckpointMessageEventSender, clearCheckpointMessageEventSender, settingsUseCases } = useCheckpointContext();
+function PopUp(dependencies: [SetCheckpointMessageEventSender] = [
+  DependencyProvider.getS
+]) {
+  const {
+    // getCheckpointMessageEventSender,
+    setCheckpointMessageEventSender,
+    // resetTabToCheckpointMessageEventSender,
+    // clearCheckpointMessageEventSender,
+    // settingsUseCases
+  } = dependencies;
+
   const [url, setUrl] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
 

@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import { PopUp } from "../../app/presentation/pop-up.tsx";
 import "./style.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <PopUp />
   </React.StrictMode>,
 );
