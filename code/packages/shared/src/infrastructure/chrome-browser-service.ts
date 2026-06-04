@@ -1,4 +1,4 @@
-import type { BrowserService } from "../../shared/domain/interfaces/browser-service";
+import type { BrowserService } from "../domain/interfaces/browser-service";
 
 export class ChromeBrowserService implements BrowserService {
   async openPopup(focusElementId?: string): Promise<void> {

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export default function Demo(): React.JSX.Element {
+export default function Demo({ t }: { t: string }): React.JSX.Element {
   return (
     <div
       style={{
@@ -20,9 +20,7 @@ export default function Demo(): React.JSX.Element {
       <h1 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 700 }}>
         arc-port
       </h1>
-      <p style={{ margin: 0, fontSize: "0.875rem", opacity: 0.7 }}>
-        Browser extension ready
-      </p>
+      <p style={{ margin: 0, fontSize: "0.875rem", opacity: 0.7 }}>{t}</p>
     </div>
   );
 }
