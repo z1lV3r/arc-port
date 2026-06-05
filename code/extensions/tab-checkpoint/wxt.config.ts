@@ -6,6 +6,8 @@ export default defineConfig({
   manifest: {
     name: "ArcPort - Checkpoint",
     default_locale: 'en',
+    permissions: ["activeTab", "tabs", "storage", "scripting", "contextMenus", "tabGroups"],
+    host_permissions: ["<all_urls>"],
   },
   // `pnpm wxt prepare` to generate .wxt/types/imports.d.ts
   imports: {

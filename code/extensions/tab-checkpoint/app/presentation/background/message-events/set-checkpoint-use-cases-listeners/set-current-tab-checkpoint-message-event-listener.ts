@@ -12,6 +12,7 @@ export class SetCurrentTabCheckpointMessageEventListener implements MessageEvent
   description = "Set current tab checkpoint message event listener";
 
   async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+    console.log("si")
     const url = await this.setCheckpointUseCases.setCurrentTabCheckpoint();
     sendResponse({ success: true, data: url });
   }

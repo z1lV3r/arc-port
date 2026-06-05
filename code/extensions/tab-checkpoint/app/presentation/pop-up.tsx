@@ -16,19 +16,9 @@ import { Separator } from "@repo/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { SetCheckpointMessageEventSender } from "./background/message-events/set-checkpoint-message-event-sender";
-import { DependencyProvider } from "#imports";
 
-function PopUp(dependencies: [SetCheckpointMessageEventSender] = [
-  DependencyProvider.getS
-]) {
-  const {
-    // getCheckpointMessageEventSender,
-    setCheckpointMessageEventSender,
-    // resetTabToCheckpointMessageEventSender,
-    // clearCheckpointMessageEventSender,
-    // settingsUseCases
-  } = dependencies;
-
+function PopUp() {
+  const setCheckpointMessageEventSender: SetCheckpointMessageEventSender = DependencyProvider.getSetCheckpointMessageEventSender()
   const [url, setUrl] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
 
@@ -45,11 +35,12 @@ function PopUp(dependencies: [SetCheckpointMessageEventSender] = [
   //   fetchInitialData();
   // }, []);
 
-  // const handleSetCurrentTabCheckpoint = async () => {
-  //   const url: string =
-  //     await setCheckpointMessageEventSender.sendSetCurrentTabCheckpointEventMessage();
-  //   setUrl(url);
-  // };
+  const handleSetCurrentTabCheckpoint = async () => {
+     
+     const url: string =
+       await setCheckpointMessageEventSender.sendSetCurrentTabCheckpointEventMessage();
+     setUrl(url);
+   };
 
   // const handleResetCurrentTabToCheckpoint = async () => {
   //   await resetTabToCheckpointMessageEventSender.sendResetCurrentTabToCheckpointEventMessage();
@@ -86,7 +77,7 @@ function PopUp(dependencies: [SetCheckpointMessageEventSender] = [
             <Button
               variant="outline"
               className="hover:text-blue-500"
-              // onClick={handleSetCurrentTabCheckpoint}
+              onClick={handleSetCurrentTabCheckpoint}
             >
               <SquarePen className="text-blue-500" />
               Set current URL
