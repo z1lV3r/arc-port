@@ -1,5 +1,5 @@
-import type { BrowserTabsService } from "@/shared/domain/interfaces/browser-tabs-service";
-import { Tab } from "@/shared/domain/models/tab";
+import type { BrowserTabsService } from "../domain/interfaces/browser-tabs-service";
+import { Tab } from "../domain/models/tab";
 
 export class ChromeTabsService implements BrowserTabsService {
   async getCurrentTab(): Promise<Tab> {

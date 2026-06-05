@@ -1,5 +1,5 @@
-import type { Shortcut } from "@/shared/domain/models/shortcut-setting";
-import type { ShortcutListener } from "@/shared/domain/models/shortcut-listener";
+import type { Shortcut } from "../domain/models/shortcut-setting";
+import type { ShortcutListener } from "../domain/models/shortcut-listener";
 
 export class ChromeShortcutSettingsService {
   async getShortcuts(shortcuts: ShortcutListener[]): Promise<Shortcut[]> {

@@ -1,4 +1,4 @@
-import type { BrowserContextMenuService } from "@/shared/domain/interfaces/browser-context-menu-service";
+import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 import type { ContextMenuListener } from "../domain/models/context-menu-listener";
 
 export class ChromeContextMenuService implements BrowserContextMenuService {
