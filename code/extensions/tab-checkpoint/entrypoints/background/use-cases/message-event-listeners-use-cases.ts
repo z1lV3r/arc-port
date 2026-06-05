@@ -1,5 +1,5 @@
 import type { BrowserMessageEventService } from "../domain/interfaces/browser-message-event-service";
-import type { Listener } from "@/shared/domain/models/listener";
+import type { Listener } from "@repo/shared/domain/models/listener";
 import { DependencyProvider } from "../dependency-provider";
 import { ListenersStore } from "../domain/models/listeners-store";
 

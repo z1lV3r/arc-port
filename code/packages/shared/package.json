@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": [
-      "./src/*.tsx",
-      "./src/*.ts"
-    ],
+    "./domain/*": "./src/domain/*.ts",
+    "./infrastructure/*": "./src/infrastructure/*.ts",
+    "./lib/*": "./src/lib/*.ts",
+    "./presentation/*": "./src/presentation/*.tsx",
     "./styles.css": "./src/styles.css"
   },
   "scripts": {
