@@ -16,7 +16,9 @@ export class SetCheckpointUseCases {
   }
 
   async setCurrentTabCheckpoint(): Promise<string> {
+    console.log("sisi")
     const currentTab: Tab = await this.tabsService.getCurrentTab();
+    console.log("sisisi")
     return await this.setTabCheckpoint(currentTab);
   }
 

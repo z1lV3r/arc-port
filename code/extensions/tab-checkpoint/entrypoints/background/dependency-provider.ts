@@ -71,7 +71,7 @@ export class DependencyProvider {
     if(this.contextMenuListenerUseCase) {
       return this.contextMenuListenerUseCase;
     }
-    this.contextMenuListenerUseCase = new ContextMenuListenerUseCases(DependencyProvider.getBrowserContextMenuService());
+    this.contextMenuListenerUseCase = new ContextMenuListenerUseCases(EntriesDependencyProvider.getBrowserContextMenuService());
     return this.contextMenuListenerUseCase;
   }
 
@@ -80,7 +80,7 @@ export class DependencyProvider {
     if(this.shortcutListenerUseCase) {
       return this.shortcutListenerUseCase;
     }
-    this.shortcutListenerUseCase = new ShortcutListenerUseCases(DependencyProvider.getBrowserShortcutService());
+    this.shortcutListenerUseCase = new ShortcutListenerUseCases(EntriesDependencyProvider.getBrowserShortcutService());
     return this.shortcutListenerUseCase;
   }
 
@@ -89,7 +89,7 @@ export class DependencyProvider {
     if(this.tabEventListenerUseCase) {
       return this.tabEventListenerUseCase;
     }
-    this.tabEventListenerUseCase = new TabEventListenerUseCases(DependencyProvider.getBrowserTabEventService());
+    this.tabEventListenerUseCase = new TabEventListenerUseCases(EntriesDependencyProvider.getBrowserTabEventService());
     return this.tabEventListenerUseCase;
   }
 
@@ -98,7 +98,7 @@ export class DependencyProvider {
     if(this.extensionListenerUseCase) {
       return this.extensionListenerUseCase;
     }
-    this.extensionListenerUseCase = new ExtensionListenerUseCases(DependencyProvider.getBrowserExtensionService());
+    this.extensionListenerUseCase = new ExtensionListenerUseCases(EntriesDependencyProvider.getBrowserExtensionService());
     return this.extensionListenerUseCase;
   }
 
