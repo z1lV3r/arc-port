@@ -8,6 +8,7 @@ import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-
 import { ChromeTabsService } from "@repo/shared/infrastructure/chrome-tabs-service";
 import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository";
 import { ChromeStorageCheckpointRepository } from "./infrastructure/chrome-storage-checkpoint-repository";
+import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
 
 export class DependencyProvider {
 
@@ -61,6 +62,22 @@ export class DependencyProvider {
   //Presentation - Shortcut listeners
   //Presentation - Tab event listeners
   //Presentation - Message events - Listeners
+  private static messageEventListeners: MessageEventListener[];
+  static getMessageEventListeners(): MessageEventListener[] {
+    if(this.messageEventListeners) {
+      return this.messageEventListeners;
+    }
+
+    this.messageEventListeners = [
+      //...DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
+      ...DependencyProvider.getSetCheckpointUseCaseMessageEventListeners(),
+      //...DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
+      //...DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
+    ];
+
+    return this.messageEventListeners;
+  }
+
   private static setCheckpointUseCaseListeners: [SetCurrentTabCheckpointMessageEventListener, SetTabCheckpointIfUnsetMessageEventListener];
   static getSetCheckpointUseCaseMessageEventListeners(): [SetCurrentTabCheckpointMessageEventListener, SetTabCheckpointIfUnsetMessageEventListener] {
     if(this.setCheckpointUseCaseListeners) {

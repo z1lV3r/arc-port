@@ -11,4 +11,7 @@ minimumReleaseAge: 4320
 
 onlyBuiltDependencies:
   - wxt
-  
+
+allowBuilds:
+  esbuild: false
+  spawn-sync: false
