@@ -1,4 +1,4 @@
-import type { Listener } from "@/shared/domain/models/listener";
+import type { Listener } from "./listener";
 
 export class ListenersStore {
   private listeners: Map<string, Listener>;
