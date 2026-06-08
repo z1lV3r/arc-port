@@ -1,5 +1,5 @@
 import type { BrowserShortcutService } from "../domain/interfaces/browser-shortcut-service";
-import { ListenersStore } from "../domain/models/listeners-store";
+import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 import type { Listener } from "@repo/shared/domain/models/listener";
 
 export class ShortcutListenerUseCases {

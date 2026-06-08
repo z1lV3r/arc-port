@@ -1,7 +1,8 @@
 import type { BrowserMessageEventService } from "../domain/interfaces/browser-message-event-service";
 import type { Listener } from "@repo/shared/domain/models/listener";
 import { DependencyProvider } from "../dependency-provider";
-import { ListenersStore } from "../domain/models/listeners-store";
+import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+
 
 export class MessageEventListenerUseCases {
     private browserMessageService: BrowserMessageEventService
