@@ -18,11 +18,13 @@ import { useState, useEffect } from "react";
 import { DependencyProvider } from "../dependency-provider";
 import type { ClearCheckpointMessageEventSender } from "./background/message-events/clear-checkpoint-message-event-sender";
 import type { GetCheckpointMessageEventSender } from "./background/message-events/get-checkpoint-message-event-sender";
+import type { ResetTabToCheckpointMessageEventSender } from "./background/message-events/reset-tab-to-checkpoint-message-event-sender";
 import type { SetCheckpointMessageEventSender } from "./background/message-events/set-checkpoint-message-event-sender";
 
 function PopUp() {
   const clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender = DependencyProvider.getClearCheckpointMessageEventSender();
   const getCheckpointMessageEventSender: GetCheckpointMessageEventSender = DependencyProvider.getGetCheckpointMessageEventSender();
+  const resetTabToCheckpointMessageEventSender: ResetTabToCheckpointMessageEventSender = DependencyProvider.getResetTabToCheckpointMessageEventSender();
   const setCheckpointMessageEventSender: SetCheckpointMessageEventSender = DependencyProvider.getSetCheckpointMessageEventSender();
   const [url, setUrl] = useState("");
 
@@ -41,9 +43,9 @@ function PopUp() {
     setUrl(url);
   };
 
-  // const handleResetCurrentTabToCheckpoint = async () => {
-  //   await resetTabToCheckpointMessageEventSender.sendResetCurrentTabToCheckpointEventMessage();
-  // };
+  const handleResetCurrentTabToCheckpoint = async () => {
+    await resetTabToCheckpointMessageEventSender.sendResetCurrentTabToCheckpointEventMessage();
+  };
 
   const handleClearCurrentTabCheckpoint = async () => {
     await clearCheckpointMessageEventSender.sendClearCurrentTabCheckpointEventMessage();
@@ -63,7 +65,7 @@ function PopUp() {
               <CopyClipboardButton value={url} disabled={!url} />
               <Separator orientation="vertical" />
               <InputGroupButton
-                // onClick={handleResetCurrentTabToCheckpoint}
+                onClick={handleResetCurrentTabToCheckpoint}
                 disabled={!url}
               >
                 <RotateCcw />
