@@ -1,6 +1,6 @@
 import type { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
-import type { ResetCurrentTabToCheckpointMessageEventListener } from "./reset-tab-to-checkpoint-use-cases-listeners/reset-current-tab-to-checkpoint-message-event-listener";
-import type { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./reset-tab-to-checkpoint-use-cases-listeners/reset-or-close-current-tab-to-checkpoint-message-event-listener";
+import type { ResetCurrentTabToCheckpointMessageEventListener } from "./reset-tab-to-checkpoint-use-cases-listeners/reset-current-tab-to-checkpoint-message-event-listener.ts";
+import type { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./reset-tab-to-checkpoint-use-cases-listeners/reset-or-close-current-tab-to-checkpoint-message-event-listener.ts";
 
 export class ResetTabToCheckpointMessageEventSender {
   private browserMessageService: BrowserMessageService;

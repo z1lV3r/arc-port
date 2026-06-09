@@ -80,7 +80,7 @@ export class DependencyProvider {
     if(this.shortcutListenerUseCase) {
       return this.shortcutListenerUseCase;
     }
-    this.shortcutListenerUseCase = new ShortcutListenerUseCases(EntriesDependencyProvider.getBrowserShortcutService());
+    this.shortcutListenerUseCase = new ShortcutListenerUseCases(DependencyProvider.getBrowserShortcutService());
     return this.shortcutListenerUseCase;
   }
 
@@ -89,7 +89,7 @@ export class DependencyProvider {
     if(this.tabEventListenerUseCase) {
       return this.tabEventListenerUseCase;
     }
-    this.tabEventListenerUseCase = new TabEventListenerUseCases(EntriesDependencyProvider.getBrowserTabEventService());
+    this.tabEventListenerUseCase = new TabEventListenerUseCases(DependencyProvider.getBrowserTabEventService());
     return this.tabEventListenerUseCase;
   }
 
@@ -98,7 +98,7 @@ export class DependencyProvider {
     if(this.extensionListenerUseCase) {
       return this.extensionListenerUseCase;
     }
-    this.extensionListenerUseCase = new ExtensionListenerUseCases(EntriesDependencyProvider.getBrowserExtensionService());
+    this.extensionListenerUseCase = new ExtensionListenerUseCases(DependencyProvider.getBrowserExtensionService());
     return this.extensionListenerUseCase;
   }
 
