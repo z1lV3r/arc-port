@@ -11,7 +11,11 @@ export class ClearTabCheckpointMessageEventListener implements MessageEventListe
   name = "clear-tab-checkpoint-message-event-listener";
   description = "Clear tab checkpoint message event listener";
 
-  async command(request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+  async command(
+    request: any,
+    _sender: any,
+    sendResponse: (response: any) => void,
+  ): Promise<void> {
     await this.clearCheckpointUseCases.clearTabCheckpoint(request.tabId);
     sendResponse({ success: true });
   }

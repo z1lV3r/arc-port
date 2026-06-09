@@ -9,17 +9,29 @@ export class ClearCheckpointMessageEventSender {
 
   constructor(
     browserMessageService: BrowserMessageService,
-    listeners: [ClearCurrentTabCheckpointMessageEventListener, ClearTabCheckpointMessageEventListener],
+    listeners: [
+      ClearCurrentTabCheckpointMessageEventListener,
+      ClearTabCheckpointMessageEventListener,
+    ],
   ) {
     this.browserMessageService = browserMessageService;
-    [this.clearCurrentTabCheckpointMessageEventListener, this.clearTabCheckpointMessageEventListener] = listeners;
+    [
+      this.clearCurrentTabCheckpointMessageEventListener,
+      this.clearTabCheckpointMessageEventListener,
+    ] = listeners;
   }
 
   async sendClearCurrentTabCheckpointEventMessage(): Promise<void> {
-    await this.browserMessageService.sendEventMessage(this.clearCurrentTabCheckpointMessageEventListener.name, {});
+    await this.browserMessageService.sendEventMessage(
+      this.clearCurrentTabCheckpointMessageEventListener.name,
+      {},
+    );
   }
 
   async sendClearTabCheckpointEventMessage(tabId: string): Promise<void> {
-    await this.browserMessageService.sendEventMessage(this.clearTabCheckpointMessageEventListener.name, { tabId });
+    await this.browserMessageService.sendEventMessage(
+      this.clearTabCheckpointMessageEventListener.name,
+      { tabId },
+    );
   }
 }

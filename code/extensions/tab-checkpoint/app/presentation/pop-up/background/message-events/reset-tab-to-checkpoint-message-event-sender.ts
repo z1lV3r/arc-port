@@ -9,17 +9,29 @@ export class ResetTabToCheckpointMessageEventSender {
 
   constructor(
     browserMessageService: BrowserMessageService,
-    listeners: [ResetCurrentTabToCheckpointMessageEventListener, ResetOrCloseCurrentTabToCheckpointMessageEventListener],
+    listeners: [
+      ResetCurrentTabToCheckpointMessageEventListener,
+      ResetOrCloseCurrentTabToCheckpointMessageEventListener,
+    ],
   ) {
     this.browserMessageService = browserMessageService;
-    [this.resetCurrentTabToCheckpointMessageEventListener, this.resetOrCloseCurrentTabToCheckpointMessageEventListener] = listeners;
+    [
+      this.resetCurrentTabToCheckpointMessageEventListener,
+      this.resetOrCloseCurrentTabToCheckpointMessageEventListener,
+    ] = listeners;
   }
 
   async sendResetCurrentTabToCheckpointEventMessage(): Promise<void> {
-    await this.browserMessageService.sendEventMessage(this.resetCurrentTabToCheckpointMessageEventListener.name, {});
+    await this.browserMessageService.sendEventMessage(
+      this.resetCurrentTabToCheckpointMessageEventListener.name,
+      {},
+    );
   }
 
   async sendResetOrCloseCurrentTabToCheckpointEventMessage(): Promise<void> {
-    await this.browserMessageService.sendEventMessage(this.resetOrCloseCurrentTabToCheckpointMessageEventListener.name, {});
+    await this.browserMessageService.sendEventMessage(
+      this.resetOrCloseCurrentTabToCheckpointMessageEventListener.name,
+      {},
+    );
   }
 }

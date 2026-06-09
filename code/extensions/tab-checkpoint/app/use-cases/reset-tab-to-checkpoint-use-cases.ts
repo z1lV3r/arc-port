@@ -35,7 +35,10 @@ export class ResetTabToCheckpointUseCases {
     }
   }
 
-  private async resetTabToCheckpoint(tab: Tab, checkpoint: string): Promise<void> {
+  private async resetTabToCheckpoint(
+    tab: Tab,
+    checkpoint: string,
+  ): Promise<void> {
     if (checkpoint) {
       tab.url = checkpoint;
       const newTab: Tab = await this.tabsService.createTab(tab);

@@ -22,15 +22,20 @@ import type { ResetTabToCheckpointMessageEventSender } from "@/app/presentation/
 import type { SetCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/set-checkpoint-message-event-sender";
 
 function PopUp() {
-  const clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender = DependencyProvider.getClearCheckpointMessageEventSender();
-  const getCheckpointMessageEventSender: GetCheckpointMessageEventSender = DependencyProvider.getGetCheckpointMessageEventSender();
-  const resetTabToCheckpointMessageEventSender: ResetTabToCheckpointMessageEventSender = DependencyProvider.getResetTabToCheckpointMessageEventSender();
-  const setCheckpointMessageEventSender: SetCheckpointMessageEventSender = DependencyProvider.getSetCheckpointMessageEventSender();
+  const clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender =
+    DependencyProvider.getClearCheckpointMessageEventSender();
+  const getCheckpointMessageEventSender: GetCheckpointMessageEventSender =
+    DependencyProvider.getGetCheckpointMessageEventSender();
+  const resetTabToCheckpointMessageEventSender: ResetTabToCheckpointMessageEventSender =
+    DependencyProvider.getResetTabToCheckpointMessageEventSender();
+  const setCheckpointMessageEventSender: SetCheckpointMessageEventSender =
+    DependencyProvider.getSetCheckpointMessageEventSender();
   const [url, setUrl] = useState("");
 
   useEffect(() => {
     const fetchInitialData = async () => {
-      const url = await getCheckpointMessageEventSender.sendGetCurrentTabCheckpointEventMessage();
+      const url =
+        await getCheckpointMessageEventSender.sendGetCurrentTabCheckpointEventMessage();
       setUrl(url);
     };
 

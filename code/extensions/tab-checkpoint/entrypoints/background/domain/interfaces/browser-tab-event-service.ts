@@ -1,4 +1,4 @@
-import type { ListenersStore } from "../models/listeners-store";
+import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 
 export interface BrowserTabEventService {
   registerOnCloseTabEventListeners(

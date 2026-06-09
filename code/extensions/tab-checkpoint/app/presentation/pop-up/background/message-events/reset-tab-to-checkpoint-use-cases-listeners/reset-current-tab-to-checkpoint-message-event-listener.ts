@@ -11,7 +11,11 @@ export class ResetCurrentTabToCheckpointMessageEventListener implements MessageE
   name = "reset-current-tab-to-checkpoint-message-event-listener";
   description = "Reset current tab to checkpoint message event listener";
 
-  async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+  async command(
+    _request: any,
+    _sender: any,
+    sendResponse: (response: any) => void,
+  ): Promise<void> {
     await this.resetTabToCheckpointUseCases.resetCurrentTabToCheckpoint();
     sendResponse({ success: true });
   }

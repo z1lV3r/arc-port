@@ -1,12 +1,9 @@
 import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
-import type { ListenersStore } from "../domain/models/listeners-store";
-import type { TabEventListener } from "../../shared/domain/models/tab-event-listener";
+import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
 
 export default class ChromeTabEventService implements BrowserTabEventService {
-
-  async registerOnCloseTabEventListeners(
-    listenersStore: ListenersStore,
-  ) {
+  async registerOnCloseTabEventListeners(listenersStore: ListenersStore) {
     chrome.tabs.onRemoved.addListener(async (tabId) => {
       for (const [_, tabEventListener] of listenersStore.getAllListeners()) {
         await tabEventListener.command(tabId.toString());
@@ -14,9 +11,7 @@ export default class ChromeTabEventService implements BrowserTabEventService {
     });
   }
 
-  async registerOnUpdateTabEventListeners(
-    listenersStore: ListenersStore,
-  ) {
+  async registerOnUpdateTabEventListeners(listenersStore: ListenersStore) {
     const onPinEventListeners: TabEventListener[] = [];
     const onSetToGroupEventListeners: TabEventListener[] = [];
     const onTitleUpdateEventListeners: TabEventListener[] = [];
@@ -59,9 +54,7 @@ export default class ChromeTabEventService implements BrowserTabEventService {
     });
   }
 
-  async registerOnCreateTabEventListeners(
-    listenersStore: ListenersStore,
-  ) {
+  async registerOnCreateTabEventListeners(listenersStore: ListenersStore) {
     const onCreatePinnedTabEventListeners: TabEventListener[] = [];
     for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
       if (name.startsWith("on-tab-create-pinned")) {
@@ -76,5 +69,4 @@ export default class ChromeTabEventService implements BrowserTabEventService {
       }
     });
   }
-
 }
