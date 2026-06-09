@@ -6,6 +6,7 @@ import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/back
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
 import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
 import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases";
+import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases";
 import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import { ChromeTabsService } from "@repo/shared/infrastructure/chrome-tabs-service";
 import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository";
@@ -16,6 +17,9 @@ import { GetCheckpointMessageEventSender } from "./presentation/background/messa
 import { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/background/message-events/clear-checkpoint-use-cases-listeners/clear-current-tab-checkpoint-message-event-listener";
 import { ClearTabCheckpointMessageEventListener } from "./presentation/background/message-events/clear-checkpoint-use-cases-listeners/clear-tab-checkpoint-message-event-listener";
 import { ClearCheckpointMessageEventSender } from "./presentation/background/message-events/clear-checkpoint-message-event-sender";
+import { ResetCurrentTabToCheckpointMessageEventListener } from "./presentation/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-current-tab-to-checkpoint-message-event-listener";
+import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./presentation/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-or-close-current-tab-to-checkpoint-message-event-listener";
+import { ResetTabToCheckpointMessageEventSender } from "./presentation/background/message-events/reset-tab-to-checkpoint-message-event-sender";
 
 export class DependencyProvider {
 
@@ -92,6 +96,20 @@ export class DependencyProvider {
 
     return this.clearCheckpointUseCases;
   }
+
+  private static resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases;
+  static getResetTabToCheckpointUseCases(): ResetTabToCheckpointUseCases {
+    if(this.resetTabToCheckpointUseCases) {
+      return this.resetTabToCheckpointUseCases;
+    }
+
+    this.resetTabToCheckpointUseCases = new ResetTabToCheckpointUseCases(
+      DependencyProvider.getBrowserTabsService(),
+      DependencyProvider.getCheckpointRepository(),
+    );
+
+    return this.resetTabToCheckpointUseCases;
+  }
   //Presentation - Context menu listeners
   //Presentation - Extension event listeners
   //Presentation - Shortcut listeners
@@ -106,7 +124,7 @@ export class DependencyProvider {
     this.messageEventListeners = [
       ...DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
       ...DependencyProvider.getSetCheckpointUseCaseMessageEventListeners(),
-      //...DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
+      ...DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
       ...DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
     ];
 
@@ -153,7 +171,35 @@ export class DependencyProvider {
 
     return this.clearCheckpointUseCaseListeners;
   }
+
+  private static resetTabToCheckpointUseCaseListeners: [ResetCurrentTabToCheckpointMessageEventListener, ResetOrCloseCurrentTabToCheckpointMessageEventListener];
+  static getResetTabToCheckpointUseCaseMessageEventListeners(): [ResetCurrentTabToCheckpointMessageEventListener, ResetOrCloseCurrentTabToCheckpointMessageEventListener] {
+    if(this.resetTabToCheckpointUseCaseListeners) {
+      return this.resetTabToCheckpointUseCaseListeners;
+    }
+
+    this.resetTabToCheckpointUseCaseListeners = [
+      new ResetCurrentTabToCheckpointMessageEventListener(DependencyProvider.getResetTabToCheckpointUseCases()),
+      new ResetOrCloseCurrentTabToCheckpointMessageEventListener(DependencyProvider.getResetTabToCheckpointUseCases()),
+    ];
+
+    return this.resetTabToCheckpointUseCaseListeners;
+  }
   //Presentation - Message events - Senders
+  private static resetTabToCheckpointMessageEventSender: ResetTabToCheckpointMessageEventSender;
+  static getResetTabToCheckpointMessageEventSender(): ResetTabToCheckpointMessageEventSender {
+    if(this.resetTabToCheckpointMessageEventSender) {
+      return this.resetTabToCheckpointMessageEventSender;
+    }
+
+    this.resetTabToCheckpointMessageEventSender = new ResetTabToCheckpointMessageEventSender(
+      DependencyProvider.getBrowserMessageService(),
+      DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
+    );
+
+    return this.resetTabToCheckpointMessageEventSender;
+  }
+
   private static clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender;
   static getClearCheckpointMessageEventSender(): ClearCheckpointMessageEventSender {
     if(this.clearCheckpointMessageEventSender) {
