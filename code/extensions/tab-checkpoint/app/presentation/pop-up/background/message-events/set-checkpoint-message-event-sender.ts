@@ -1,5 +1,5 @@
 import type { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
-import type { SetCurrentTabCheckpointMessageEventListener } from "./set-checkpoint-use-cases-listeners/set-current-tab-checkpoint-message-event-listener";
+import type { SetCurrentTabCheckpointMessageEventListener } from "./set-checkpoint-use-cases-listeners/set-current-tab-checkpoint-message-event-listener.ts";
 import type { SetTabCheckpointIfUnsetMessageEventListener } from "./set-checkpoint-use-cases-listeners/set-tab-checkpoint-if-unset-message-event-listener.ts";
 
 export class SetCheckpointMessageEventSender {

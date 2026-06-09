@@ -1,5 +1,5 @@
 import type { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
-import type { GetCurrentTabCheckpointMessageEventListener } from "./get-checkpoint-use-cases-listeners/get-current-tab-checkpoint-message-event-listener";
+import type { GetCurrentTabCheckpointMessageEventListener } from "./get-checkpoint-use-cases-listeners/get-current-tab-checkpoint-message-event-listener.ts";
 
 export class GetCheckpointMessageEventSender {
   private browserMessageService: BrowserMessageService;

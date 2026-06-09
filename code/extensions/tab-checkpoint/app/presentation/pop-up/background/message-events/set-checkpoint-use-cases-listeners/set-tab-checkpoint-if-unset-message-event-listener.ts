@@ -1,5 +1,5 @@
 import type { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
-import type { SetCheckpointUseCases } from "../../../../use-cases/set-checkpoint-use-cases";
+import type { SetCheckpointUseCases } from "../../../../../use-cases/set-checkpoint-use-cases.ts";
 
 export class SetTabCheckpointIfUnsetMessageEventListener implements MessageEventListener {
   private readonly setCheckpointUseCases: SetCheckpointUseCases;

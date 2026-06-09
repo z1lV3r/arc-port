@@ -1,5 +1,5 @@
 import type { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
-import type { ClearCheckpointUseCases } from "../../../../use-cases/clear-checkpoint-use-cases";
+import type { ClearCheckpointUseCases } from "../../../../../use-cases/clear-checkpoint-use-cases.ts";
 
 export class ClearTabCheckpointMessageEventListener implements MessageEventListener {
   private readonly clearCheckpointUseCases: ClearCheckpointUseCases;
