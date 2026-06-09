@@ -1,5 +1,5 @@
 import type { BrowserShortcutService } from "../domain/interfaces/browser-shortcut-service";
-import type { ListenersStore } from "../domain/models/listeners-store";
+import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 
 export default class ChromeShortcutService implements BrowserShortcutService {
   async registerShortcutListeners(listenersStore: ListenersStore) {

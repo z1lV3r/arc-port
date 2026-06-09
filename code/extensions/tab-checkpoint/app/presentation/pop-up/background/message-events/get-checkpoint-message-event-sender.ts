@@ -14,7 +14,10 @@ export class GetCheckpointMessageEventSender {
   }
 
   async sendGetCurrentTabCheckpointEventMessage(): Promise<string> {
-    const response = await this.browserMessageService.sendEventMessage(this.getCurrentTabCheckpointMessageEventListener.name, {});
+    const response = await this.browserMessageService.sendEventMessage(
+      this.getCurrentTabCheckpointMessageEventListener.name,
+      {},
+    );
     return response?.data ?? "";
   }
 }

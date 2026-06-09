@@ -3,7 +3,6 @@ import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 import type { Listener } from "@repo/shared/domain/models/listener";
 
 export class ShortcutListenerUseCases {
-
   private browserShortcutService: BrowserShortcutService;
 
   constructor(browserShortcutService: BrowserShortcutService) {

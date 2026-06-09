@@ -1,11 +1,8 @@
-import type { ListenersStore } from "../domain/models/listeners-store";
+import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 
 export default class ChromeContextMenuService implements BrowserContextMenuService {
-
-  async registerContextMenuListeners(
-    listenersStore: ListenersStore,
-  ) {
+  async registerContextMenuListeners(listenersStore: ListenersStore) {
     chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const listener = listenersStore.getListener(info.menuItemId.toString());
       if (listener && tab?.id) {

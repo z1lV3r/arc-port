@@ -3,19 +3,17 @@ import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-pr
 import { DependencyProvider } from "../dependency-provider";
 
 export class MessageEventListenerProvider {
+  private useCaseEventListenersUseCases: MessageEventListenerUseCases;
 
-    private useCaseEventListenersUseCases: MessageEventListenerUseCases;
+  constructor(
+    useCaseEventListenersUseCases: MessageEventListenerUseCases = DependencyProvider.getUseCaseEventListenersUseCases(),
+  ) {
+    this.useCaseEventListenersUseCases = useCaseEventListenersUseCases;
+  }
 
-    constructor(
-        useCaseEventListenersUseCases: MessageEventListenerUseCases = DependencyProvider.getUseCaseEventListenersUseCases(),
-    ) {
-        this.useCaseEventListenersUseCases = useCaseEventListenersUseCases;
-    }
-
-    registerFeaturesMessageEventListeners() {
-        this.useCaseEventListenersUseCases.registerMessageEventListeners([
-            AppDependencyProvider.getMessageEventListeners(),
-        ]);
-    }
-
+  registerFeaturesMessageEventListeners() {
+    this.useCaseEventListenersUseCases.registerMessageEventListeners([
+      AppDependencyProvider.getMessageEventListeners(),
+    ]);
+  }
 }

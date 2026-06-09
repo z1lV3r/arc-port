@@ -11,7 +11,11 @@ export class GetCurrentTabCheckpointMessageEventListener implements MessageEvent
   name = "get-current-tab-checkpoint-message-event-listener";
   description = "Get current tab checkpoint message event listener";
 
-  async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+  async command(
+    _request: any,
+    _sender: any,
+    sendResponse: (response: any) => void,
+  ): Promise<void> {
     const url = await this.getCheckpointUseCases.getCurrentTabCheckpoint();
     sendResponse({ success: true, data: url });
   }

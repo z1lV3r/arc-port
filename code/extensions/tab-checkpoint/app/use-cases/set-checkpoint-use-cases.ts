@@ -3,7 +3,6 @@ import type { CheckpointRepository } from "../domain/interfaces/checkpoint-repos
 import { Tab } from "@repo/shared/domain/models/tab";
 
 export class SetCheckpointUseCases {
-
   private tabsService: BrowserTabsService;
   private checkpointRepository: CheckpointRepository;
 
@@ -37,5 +36,4 @@ export class SetCheckpointUseCases {
     const checkpoint: string = await this.checkpointRepository.get(tab.id);
     return checkpoint;
   }
-
 }

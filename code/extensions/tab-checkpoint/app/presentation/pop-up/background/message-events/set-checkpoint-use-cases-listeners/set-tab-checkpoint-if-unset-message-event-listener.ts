@@ -11,8 +11,14 @@ export class SetTabCheckpointIfUnsetMessageEventListener implements MessageEvent
   name = "set-tab-checkpoint-if-unset-message-event-listener";
   description = "Set tab checkpoint if unset message event listener";
 
-  async command(request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
-    const url = await this.setCheckpointUseCases.setTabCheckpointIfUnset(request.tabId);
+  async command(
+    request: any,
+    _sender: any,
+    sendResponse: (response: any) => void,
+  ): Promise<void> {
+    const url = await this.setCheckpointUseCases.setTabCheckpointIfUnset(
+      request.tabId,
+    );
     sendResponse({ success: true, data: url });
   }
 }

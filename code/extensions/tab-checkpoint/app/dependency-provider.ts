@@ -22,11 +22,10 @@ import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "@/app/pr
 import { ResetTabToCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/reset-tab-to-checkpoint-message-event-sender";
 
 export class DependencyProvider {
-
   //Infrastructure - Data
   private static checkpointRepository: CheckpointRepository;
   static getCheckpointRepository(): CheckpointRepository {
-    if(this.checkpointRepository) {
+    if (this.checkpointRepository) {
       return this.checkpointRepository;
     }
 
@@ -37,7 +36,7 @@ export class DependencyProvider {
   //Infrastructure - Browser
   private static browserMessageService: BrowserMessageService;
   static getBrowserMessageService(): BrowserMessageService {
-    if(this.browserMessageService) {
+    if (this.browserMessageService) {
       return this.browserMessageService;
     }
 
@@ -47,7 +46,7 @@ export class DependencyProvider {
 
   private static browserTabsService: BrowserTabsService;
   static getBrowserTabsService(): BrowserTabsService {
-    if(this.browserTabsService) {
+    if (this.browserTabsService) {
       return this.browserTabsService;
     }
 
@@ -57,7 +56,7 @@ export class DependencyProvider {
   //Use cases
   private static setCheckpointUseCases: SetCheckpointUseCases;
   static getSetCheckpointUseCases(): SetCheckpointUseCases {
-    if(this.setCheckpointUseCases) {
+    if (this.setCheckpointUseCases) {
       return this.setCheckpointUseCases;
     }
 
@@ -71,7 +70,7 @@ export class DependencyProvider {
 
   private static getCheckpointUseCases: GetCheckpointUseCases;
   static getGetCheckpointUseCases(): GetCheckpointUseCases {
-    if(this.getCheckpointUseCases) {
+    if (this.getCheckpointUseCases) {
       return this.getCheckpointUseCases;
     }
 
@@ -85,7 +84,7 @@ export class DependencyProvider {
 
   private static clearCheckpointUseCases: ClearCheckpointUseCases;
   static getClearCheckpointUseCases(): ClearCheckpointUseCases {
-    if(this.clearCheckpointUseCases) {
+    if (this.clearCheckpointUseCases) {
       return this.clearCheckpointUseCases;
     }
 
@@ -99,7 +98,7 @@ export class DependencyProvider {
 
   private static resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases;
   static getResetTabToCheckpointUseCases(): ResetTabToCheckpointUseCases {
-    if(this.resetTabToCheckpointUseCases) {
+    if (this.resetTabToCheckpointUseCases) {
       return this.resetTabToCheckpointUseCases;
     }
 
@@ -117,7 +116,7 @@ export class DependencyProvider {
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
-    if(this.messageEventListeners) {
+    if (this.messageEventListeners) {
       return this.messageEventListeners;
     }
 
@@ -131,56 +130,92 @@ export class DependencyProvider {
     return this.messageEventListeners;
   }
 
-  private static setCheckpointUseCaseListeners: [SetCurrentTabCheckpointMessageEventListener, SetTabCheckpointIfUnsetMessageEventListener];
-  static getSetCheckpointUseCaseMessageEventListeners(): [SetCurrentTabCheckpointMessageEventListener, SetTabCheckpointIfUnsetMessageEventListener] {
-    if(this.setCheckpointUseCaseListeners) {
+  private static setCheckpointUseCaseListeners: [
+    SetCurrentTabCheckpointMessageEventListener,
+    SetTabCheckpointIfUnsetMessageEventListener,
+  ];
+  static getSetCheckpointUseCaseMessageEventListeners(): [
+    SetCurrentTabCheckpointMessageEventListener,
+    SetTabCheckpointIfUnsetMessageEventListener,
+  ] {
+    if (this.setCheckpointUseCaseListeners) {
       return this.setCheckpointUseCaseListeners;
     }
 
     this.setCheckpointUseCaseListeners = [
-      new SetCurrentTabCheckpointMessageEventListener(DependencyProvider.getSetCheckpointUseCases()),
-      new SetTabCheckpointIfUnsetMessageEventListener(DependencyProvider.getSetCheckpointUseCases()),
+      new SetCurrentTabCheckpointMessageEventListener(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
+      new SetTabCheckpointIfUnsetMessageEventListener(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
     ];
 
     return this.setCheckpointUseCaseListeners;
   }
 
-  private static getCheckpointUseCaseListeners: [GetCurrentTabCheckpointMessageEventListener];
-  static getGetCheckpointUseCaseMessageEventListeners(): [GetCurrentTabCheckpointMessageEventListener] {
-    if(this.getCheckpointUseCaseListeners) {
+  private static getCheckpointUseCaseListeners: [
+    GetCurrentTabCheckpointMessageEventListener,
+  ];
+  static getGetCheckpointUseCaseMessageEventListeners(): [
+    GetCurrentTabCheckpointMessageEventListener,
+  ] {
+    if (this.getCheckpointUseCaseListeners) {
       return this.getCheckpointUseCaseListeners;
     }
 
     this.getCheckpointUseCaseListeners = [
-      new GetCurrentTabCheckpointMessageEventListener(DependencyProvider.getGetCheckpointUseCases()),
+      new GetCurrentTabCheckpointMessageEventListener(
+        DependencyProvider.getGetCheckpointUseCases(),
+      ),
     ];
 
     return this.getCheckpointUseCaseListeners;
   }
 
-  private static clearCheckpointUseCaseListeners: [ClearCurrentTabCheckpointMessageEventListener, ClearTabCheckpointMessageEventListener];
-  static getClearCheckpointUseCaseMessageEventListeners(): [ClearCurrentTabCheckpointMessageEventListener, ClearTabCheckpointMessageEventListener] {
-    if(this.clearCheckpointUseCaseListeners) {
+  private static clearCheckpointUseCaseListeners: [
+    ClearCurrentTabCheckpointMessageEventListener,
+    ClearTabCheckpointMessageEventListener,
+  ];
+  static getClearCheckpointUseCaseMessageEventListeners(): [
+    ClearCurrentTabCheckpointMessageEventListener,
+    ClearTabCheckpointMessageEventListener,
+  ] {
+    if (this.clearCheckpointUseCaseListeners) {
       return this.clearCheckpointUseCaseListeners;
     }
 
     this.clearCheckpointUseCaseListeners = [
-      new ClearCurrentTabCheckpointMessageEventListener(DependencyProvider.getClearCheckpointUseCases()),
-      new ClearTabCheckpointMessageEventListener(DependencyProvider.getClearCheckpointUseCases()),
+      new ClearCurrentTabCheckpointMessageEventListener(
+        DependencyProvider.getClearCheckpointUseCases(),
+      ),
+      new ClearTabCheckpointMessageEventListener(
+        DependencyProvider.getClearCheckpointUseCases(),
+      ),
     ];
 
     return this.clearCheckpointUseCaseListeners;
   }
 
-  private static resetTabToCheckpointUseCaseListeners: [ResetCurrentTabToCheckpointMessageEventListener, ResetOrCloseCurrentTabToCheckpointMessageEventListener];
-  static getResetTabToCheckpointUseCaseMessageEventListeners(): [ResetCurrentTabToCheckpointMessageEventListener, ResetOrCloseCurrentTabToCheckpointMessageEventListener] {
-    if(this.resetTabToCheckpointUseCaseListeners) {
+  private static resetTabToCheckpointUseCaseListeners: [
+    ResetCurrentTabToCheckpointMessageEventListener,
+    ResetOrCloseCurrentTabToCheckpointMessageEventListener,
+  ];
+  static getResetTabToCheckpointUseCaseMessageEventListeners(): [
+    ResetCurrentTabToCheckpointMessageEventListener,
+    ResetOrCloseCurrentTabToCheckpointMessageEventListener,
+  ] {
+    if (this.resetTabToCheckpointUseCaseListeners) {
       return this.resetTabToCheckpointUseCaseListeners;
     }
 
     this.resetTabToCheckpointUseCaseListeners = [
-      new ResetCurrentTabToCheckpointMessageEventListener(DependencyProvider.getResetTabToCheckpointUseCases()),
-      new ResetOrCloseCurrentTabToCheckpointMessageEventListener(DependencyProvider.getResetTabToCheckpointUseCases()),
+      new ResetCurrentTabToCheckpointMessageEventListener(
+        DependencyProvider.getResetTabToCheckpointUseCases(),
+      ),
+      new ResetOrCloseCurrentTabToCheckpointMessageEventListener(
+        DependencyProvider.getResetTabToCheckpointUseCases(),
+      ),
     ];
 
     return this.resetTabToCheckpointUseCaseListeners;
@@ -188,35 +223,37 @@ export class DependencyProvider {
   //Presentation - Message events - Senders
   private static resetTabToCheckpointMessageEventSender: ResetTabToCheckpointMessageEventSender;
   static getResetTabToCheckpointMessageEventSender(): ResetTabToCheckpointMessageEventSender {
-    if(this.resetTabToCheckpointMessageEventSender) {
+    if (this.resetTabToCheckpointMessageEventSender) {
       return this.resetTabToCheckpointMessageEventSender;
     }
 
-    this.resetTabToCheckpointMessageEventSender = new ResetTabToCheckpointMessageEventSender(
-      DependencyProvider.getBrowserMessageService(),
-      DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
-    );
+    this.resetTabToCheckpointMessageEventSender =
+      new ResetTabToCheckpointMessageEventSender(
+        DependencyProvider.getBrowserMessageService(),
+        DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
+      );
 
     return this.resetTabToCheckpointMessageEventSender;
   }
 
   private static clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender;
   static getClearCheckpointMessageEventSender(): ClearCheckpointMessageEventSender {
-    if(this.clearCheckpointMessageEventSender) {
+    if (this.clearCheckpointMessageEventSender) {
       return this.clearCheckpointMessageEventSender;
     }
 
-    this.clearCheckpointMessageEventSender = new ClearCheckpointMessageEventSender(
-      DependencyProvider.getBrowserMessageService(),
-      DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
-    );
+    this.clearCheckpointMessageEventSender =
+      new ClearCheckpointMessageEventSender(
+        DependencyProvider.getBrowserMessageService(),
+        DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
+      );
 
     return this.clearCheckpointMessageEventSender;
   }
 
   private static getCheckpointMessageEventSender: GetCheckpointMessageEventSender;
   static getGetCheckpointMessageEventSender(): GetCheckpointMessageEventSender {
-    if(this.getCheckpointMessageEventSender) {
+    if (this.getCheckpointMessageEventSender) {
       return this.getCheckpointMessageEventSender;
     }
 
@@ -230,7 +267,7 @@ export class DependencyProvider {
 
   private static setCheckpointMessageEventSender: SetCheckpointMessageEventSender;
   static getSetCheckpointMessageEventSender(): SetCheckpointMessageEventSender {
-    if(this.setCheckpointMessageEventSender) {
+    if (this.setCheckpointMessageEventSender) {
       return this.setCheckpointMessageEventSender;
     }
 
@@ -240,5 +277,5 @@ export class DependencyProvider {
     );
 
     return this.setCheckpointMessageEventSender;
-  }  
+  }
 }
