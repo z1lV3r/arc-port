@@ -1,8 +1,8 @@
-import { SetCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/set-checkpoint-message-event-sender";
+import { SetCheckpointMessageEventSender } from "./presentation/pop-up/background/message-events/set-checkpoint-message-event-sender";
 import { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
 import { ChromeMessageService } from "@repo/shared/infrastructure/chrome-message-service";
-import { SetCurrentTabCheckpointMessageEventListener } from "@/app/presentation/pop-up/background/message-events/set-checkpoint-use-cases-listeners/set-current-tab-checkpoint-message-event-listener";
-import { SetTabCheckpointIfUnsetMessageEventListener } from "@/app/presentation/pop-up/background/message-events/set-checkpoint-use-cases-listeners/set-tab-checkpoint-if-unset-message-event-listener";
+import { SetCurrentTabCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/set-checkpoint-use-cases-listeners/set-current-tab-checkpoint-message-event-listener";
+import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/pop-up/background/message-events/set-checkpoint-use-cases-listeners/set-tab-checkpoint-if-unset-message-event-listener";
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
 import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
 import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases";
@@ -12,14 +12,19 @@ import { ChromeTabsService } from "@repo/shared/infrastructure/chrome-tabs-servi
 import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository";
 import { ChromeStorageCheckpointRepository } from "./infrastructure/chrome-storage-checkpoint-repository";
 import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
-import { GetCurrentTabCheckpointMessageEventListener } from "@/app/presentation/pop-up/background/message-events/get-checkpoint-use-cases-listeners/get-current-tab-checkpoint-message-event-listener";
-import { GetCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/get-checkpoint-message-event-sender";
-import { ClearCurrentTabCheckpointMessageEventListener } from "@/app/presentation/pop-up/background/message-events/clear-checkpoint-use-cases-listeners/clear-current-tab-checkpoint-message-event-listener";
-import { ClearTabCheckpointMessageEventListener } from "@/app/presentation/pop-up/background/message-events/clear-checkpoint-use-cases-listeners/clear-tab-checkpoint-message-event-listener";
-import { ClearCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/clear-checkpoint-message-event-sender";
-import { ResetCurrentTabToCheckpointMessageEventListener } from "@/app/presentation/pop-up/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-current-tab-to-checkpoint-message-event-listener";
-import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "@/app/presentation/pop-up/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-or-close-current-tab-to-checkpoint-message-event-listener";
-import { ResetTabToCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/reset-tab-to-checkpoint-message-event-sender";
+import { GetCurrentTabCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/get-checkpoint-use-cases-listeners/get-current-tab-checkpoint-message-event-listener";
+import { GetCheckpointMessageEventSender } from "./presentation/pop-up/background/message-events/get-checkpoint-message-event-sender";
+import { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/clear-checkpoint-use-cases-listeners/clear-current-tab-checkpoint-message-event-listener";
+import { ClearTabCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/clear-checkpoint-use-cases-listeners/clear-tab-checkpoint-message-event-listener";
+import { ClearCheckpointMessageEventSender } from "./presentation/pop-up/background/message-events/clear-checkpoint-message-event-sender";
+import { ResetCurrentTabToCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-current-tab-to-checkpoint-message-event-listener";
+import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-or-close-current-tab-to-checkpoint-message-event-listener";
+import { ResetTabToCheckpointMessageEventSender } from "./presentation/pop-up/background/message-events/reset-tab-to-checkpoint-message-event-sender";
+import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
+import { SetCurrentTabCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/set-current-tab-checkpoint-shortcut-listener";
+import { ClearCurrentTabCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/clear-current-tab-checkpoint-shortcut-listener";
+import { ResetCurrentTabToCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/reset-current-tab-to-checkpoint-shortcut-listener";
+import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/reset-or-close-current-tab-to-checkpoint-shortcut-listener";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -112,6 +117,30 @@ export class DependencyProvider {
   //Presentation - Context menu listeners
   //Presentation - Extension event listeners
   //Presentation - Shortcut listeners
+  private static shortcutListeners: ShortcutListener[];
+  static getShortcutListeners(): ShortcutListener[] {
+    if (this.shortcutListeners) {
+      return this.shortcutListeners;
+    }
+
+    this.shortcutListeners = [
+      new SetCurrentTabCheckpointShortcutListener(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
+      new ClearCurrentTabCheckpointShortcutListener(
+        DependencyProvider.getClearCheckpointUseCases(),
+      ),
+      new ResetCurrentTabToCheckpointShortcutListener(
+        DependencyProvider.getResetTabToCheckpointUseCases(),
+      ),
+      new ResetOrCloseCurrentTabToCheckpointShortcutListener(
+        DependencyProvider.getResetTabToCheckpointUseCases(),
+      ),
+    ];
+
+    return this.shortcutListeners;
+  }
+
   //Presentation - Tab event listeners
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
