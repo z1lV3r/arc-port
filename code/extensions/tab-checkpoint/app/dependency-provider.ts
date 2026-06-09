@@ -4,11 +4,14 @@ import { ChromeMessageService } from "@repo/shared/infrastructure/chrome-message
 import { SetCurrentTabCheckpointMessageEventListener } from "./presentation/background/message-events/set-checkpoint-use-cases-listeners/set-current-tab-checkpoint-message-event-listener";
 import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/background/message-events/set-checkpoint-use-cases-listeners/set-tab-checkpoint-if-unset-message-event-listener";
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
+import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
 import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import { ChromeTabsService } from "@repo/shared/infrastructure/chrome-tabs-service";
 import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository";
 import { ChromeStorageCheckpointRepository } from "./infrastructure/chrome-storage-checkpoint-repository";
 import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
+import { GetCurrentTabCheckpointMessageEventListener } from "./presentation/background/message-events/get-checkpoint-use-cases-listeners/get-current-tab-checkpoint-message-event-listener";
+import { GetCheckpointMessageEventSender } from "./presentation/background/message-events/get-checkpoint-message-event-sender";
 
 export class DependencyProvider {
 
@@ -57,6 +60,20 @@ export class DependencyProvider {
 
     return this.setCheckpointUseCases;
   }
+
+  private static getCheckpointUseCases: GetCheckpointUseCases;
+  static getGetCheckpointUseCases(): GetCheckpointUseCases {
+    if(this.getCheckpointUseCases) {
+      return this.getCheckpointUseCases;
+    }
+
+    this.getCheckpointUseCases = new GetCheckpointUseCases(
+      DependencyProvider.getBrowserTabsService(),
+      DependencyProvider.getCheckpointRepository(),
+    );
+
+    return this.getCheckpointUseCases;
+  }
   //Presentation - Context menu listeners
   //Presentation - Extension event listeners
   //Presentation - Shortcut listeners
@@ -72,7 +89,7 @@ export class DependencyProvider {
       //...DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
       ...DependencyProvider.getSetCheckpointUseCaseMessageEventListeners(),
       //...DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
-      //...DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
+      ...DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
     ];
 
     return this.messageEventListeners;
@@ -91,7 +108,34 @@ export class DependencyProvider {
 
     return this.setCheckpointUseCaseListeners;
   }
+
+  private static getCheckpointUseCaseListeners: [GetCurrentTabCheckpointMessageEventListener];
+  static getGetCheckpointUseCaseMessageEventListeners(): [GetCurrentTabCheckpointMessageEventListener] {
+    if(this.getCheckpointUseCaseListeners) {
+      return this.getCheckpointUseCaseListeners;
+    }
+
+    this.getCheckpointUseCaseListeners = [
+      new GetCurrentTabCheckpointMessageEventListener(DependencyProvider.getGetCheckpointUseCases()),
+    ];
+
+    return this.getCheckpointUseCaseListeners;
+  }
   //Presentation - Message events - Senders
+  private static getCheckpointMessageEventSender: GetCheckpointMessageEventSender;
+  static getGetCheckpointMessageEventSender(): GetCheckpointMessageEventSender {
+    if(this.getCheckpointMessageEventSender) {
+      return this.getCheckpointMessageEventSender;
+    }
+
+    this.getCheckpointMessageEventSender = new GetCheckpointMessageEventSender(
+      DependencyProvider.getBrowserMessageService(),
+      DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
+    );
+
+    return this.getCheckpointMessageEventSender;
+  }
+
   private static setCheckpointMessageEventSender: SetCheckpointMessageEventSender;
   static getSetCheckpointMessageEventSender(): SetCheckpointMessageEventSender {
     if(this.setCheckpointMessageEventSender) {

@@ -15,32 +15,29 @@ import { Button } from "@repo/shared/presentation/button";
 import { Separator } from "@repo/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
+import { DependencyProvider } from "../dependency-provider";
+import type { GetCheckpointMessageEventSender } from "./background/message-events/get-checkpoint-message-event-sender";
 import type { SetCheckpointMessageEventSender } from "./background/message-events/set-checkpoint-message-event-sender";
 
 function PopUp() {
-  const setCheckpointMessageEventSender: SetCheckpointMessageEventSender = DependencyProvider.getSetCheckpointMessageEventSender()
+  const getCheckpointMessageEventSender: GetCheckpointMessageEventSender = DependencyProvider.getGetCheckpointMessageEventSender();
+  const setCheckpointMessageEventSender: SetCheckpointMessageEventSender = DependencyProvider.getSetCheckpointMessageEventSender();
   const [url, setUrl] = useState("");
-  const [showPopUp, setShowPopUp] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchInitialData = async () => {
-  //     const [url, popUpVisible] = await Promise.all([
-  //       getCheckpointMessageEventSender.sendGetCurrentTabCheckpointEventMessage(),
-  //       settingsUseCases.getShowPopUp(),
-  //     ]);
-  //     setUrl(url);
-  //     setShowPopUp(popUpVisible);
-  //   };
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      const url = await getCheckpointMessageEventSender.sendGetCurrentTabCheckpointEventMessage();
+      setUrl(url);
+    };
 
-  //   fetchInitialData();
-  // }, []);
+    fetchInitialData();
+  }, [getCheckpointMessageEventSender]);
 
   const handleSetCurrentTabCheckpoint = async () => {
-     
-     const url: string =
-       await setCheckpointMessageEventSender.sendSetCurrentTabCheckpointEventMessage();
-     setUrl(url);
-   };
+    const url: string =
+      await setCheckpointMessageEventSender.sendSetCurrentTabCheckpointEventMessage();
+    setUrl(url);
+  };
 
   // const handleResetCurrentTabToCheckpoint = async () => {
   //   await resetTabToCheckpointMessageEventSender.sendResetCurrentTabToCheckpointEventMessage();
@@ -50,8 +47,6 @@ function PopUp() {
   //   await clearCheckpointMessageEventSender.sendClearCurrentTabCheckpointEventMessage();
   //   setUrl("");
   // };
-
-  // if (!showPopUp) return null;
 
   return (
     <GroupCard>
