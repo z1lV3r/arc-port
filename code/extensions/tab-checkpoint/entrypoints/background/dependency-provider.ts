@@ -70,7 +70,7 @@ export class DependencyProvider {
       return this.contextMenuListenerUseCase;
     }
     this.contextMenuListenerUseCase = new ContextMenuListenerUseCases(
-      EntriesDependencyProvider.getBrowserContextMenuService(),
+      DependencyProvider.getBrowserContextMenuService(),
     );
     return this.contextMenuListenerUseCase;
   }
