@@ -16,10 +16,12 @@ import { Separator } from "@repo/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { DependencyProvider } from "../dependency-provider";
+import type { ClearCheckpointMessageEventSender } from "./background/message-events/clear-checkpoint-message-event-sender";
 import type { GetCheckpointMessageEventSender } from "./background/message-events/get-checkpoint-message-event-sender";
 import type { SetCheckpointMessageEventSender } from "./background/message-events/set-checkpoint-message-event-sender";
 
 function PopUp() {
+  const clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender = DependencyProvider.getClearCheckpointMessageEventSender();
   const getCheckpointMessageEventSender: GetCheckpointMessageEventSender = DependencyProvider.getGetCheckpointMessageEventSender();
   const setCheckpointMessageEventSender: SetCheckpointMessageEventSender = DependencyProvider.getSetCheckpointMessageEventSender();
   const [url, setUrl] = useState("");
@@ -43,10 +45,10 @@ function PopUp() {
   //   await resetTabToCheckpointMessageEventSender.sendResetCurrentTabToCheckpointEventMessage();
   // };
 
-  // const handleClearCurrentTabCheckpoint = async () => {
-  //   await clearCheckpointMessageEventSender.sendClearCurrentTabCheckpointEventMessage();
-  //   setUrl("");
-  // };
+  const handleClearCurrentTabCheckpoint = async () => {
+    await clearCheckpointMessageEventSender.sendClearCurrentTabCheckpointEventMessage();
+    setUrl("");
+  };
 
   return (
     <GroupCard>
@@ -80,7 +82,7 @@ function PopUp() {
             <Button
               variant="outline"
               className="hover:text-destructive"
-              // onClick={handleClearCurrentTabCheckpoint}
+              onClick={handleClearCurrentTabCheckpoint}
             >
               <Eraser className="text-destructive" />
               Clear
