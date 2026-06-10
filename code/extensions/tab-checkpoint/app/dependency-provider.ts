@@ -21,10 +21,14 @@ import { ResetCurrentTabToCheckpointMessageEventListener } from "./presentation/
 import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./presentation/pop-up/background/message-events/reset-tab-to-checkpoint-use-cases-listeners/reset-or-close-current-tab-to-checkpoint-message-event-listener";
 import { ResetTabToCheckpointMessageEventSender } from "./presentation/pop-up/background/message-events/reset-tab-to-checkpoint-message-event-sender";
 import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
+import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
 import { SetCurrentTabCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/set-current-tab-checkpoint-shortcut-listener";
 import { ClearCurrentTabCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/clear-current-tab-checkpoint-shortcut-listener";
 import { ResetCurrentTabToCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/reset-current-tab-to-checkpoint-shortcut-listener";
 import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentation/background/shortcut-listeners/reset-or-close-current-tab-to-checkpoint-shortcut-listener";
+import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/background/context-menu-listeners/set-current-tab-checkpoint-context-menu-listener";
+import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/background/context-menu-listeners/reset-current-tab-to-checkpoint-context-menu-listener";
+import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/background/context-menu-listeners/clear-current-tab-checkpoint-context-menu-listener";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -115,6 +119,27 @@ export class DependencyProvider {
     return this.resetTabToCheckpointUseCases;
   }
   //Presentation - Context menu listeners
+  private static contextMenuListeners: ContextMenuListener[];
+  static getContextMenuListeners(): ContextMenuListener[] {
+    if (this.contextMenuListeners) {
+      return this.contextMenuListeners;
+    }
+
+    this.contextMenuListeners = [
+      new SetCurrentTabCheckpointContextMenuListener(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
+      new ResetCurrentTabToCheckpointContextMenuListener(
+        DependencyProvider.getResetTabToCheckpointUseCases(),
+      ),
+      new ClearCurrentTabCheckpointContextMenuListener(
+        DependencyProvider.getClearCheckpointUseCases(),
+      ),
+    ];
+
+    return this.contextMenuListeners;
+  }
+
   //Presentation - Extension event listeners
   //Presentation - Shortcut listeners
   private static shortcutListeners: ShortcutListener[];

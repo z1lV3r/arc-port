@@ -1,5 +1,6 @@
 import { MessageEventListenerProvider } from "./presentation/message-event-listener-provider";
 import { ShortcutListenerProvider } from "./presentation/shortcut-listener-provider";
+import { ContextMenuListenerProvider } from "./presentation/context-menu-listener-provider";
 
 export default defineBackground(() => {
   //     const extensionListenerProvider = new ExtensionListenerProvider();
@@ -8,8 +9,8 @@ export default defineBackground(() => {
   const messageEventListenerProvider = new MessageEventListenerProvider();
   messageEventListenerProvider.registerFeaturesMessageEventListeners();
 
-  // const contextMenuListenerProvider = new ContextMenuListenerProvider();
-  // contextMenuListenerProvider.registerFeaturesContextMenuListeners();
+  const contextMenuListenerProvider = new ContextMenuListenerProvider();
+  contextMenuListenerProvider.registerFeaturesContextMenuListeners();
 
   const shortcutListenerProvider = new ShortcutListenerProvider();
   shortcutListenerProvider.registerFeaturesShortcutListeners();
