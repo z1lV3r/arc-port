@@ -20,9 +20,9 @@ export default defineConfig({
     commands: getCommands(),
   },
   // `pnpm wxt prepare` to generate .wxt/types/imports.d.ts
-  imports: {
+  /*imports: {
     dirs: ["app/**"],
-  },
+  },*/
 });
 
 function getCommands() {
