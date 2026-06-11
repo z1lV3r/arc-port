@@ -1,6 +1,7 @@
 import { MessageEventListenerProvider } from "./presentation/message-event-listener-provider";
 import { ShortcutListenerProvider } from "./presentation/shortcut-listener-provider";
 import { ContextMenuListenerProvider } from "./presentation/context-menu-listener-provider";
+import { TabEventListenerProvider } from "./presentation/tab-event-listener-provider";
 
 export default defineBackground(() => {
   //     const extensionListenerProvider = new ExtensionListenerProvider();
@@ -15,8 +16,8 @@ export default defineBackground(() => {
   const shortcutListenerProvider = new ShortcutListenerProvider();
   shortcutListenerProvider.registerFeaturesShortcutListeners();
 
-  // const tabEventListenerProvider = new TabEventListenerProvider();
-  // tabEventListenerProvider.registerFeaturesOnCloseTabEventListeners();
-  // tabEventListenerProvider.registerFeaturesOnUpdateTabEventListeners();
-  // tabEventListenerProvider.registerFeaturesOnCreateTabEventListeners();
+  const tabEventListenerProvider = new TabEventListenerProvider();
+  tabEventListenerProvider.registerFeaturesOnCloseTabEventListeners();
+  tabEventListenerProvider.registerFeaturesOnUpdateTabEventListeners();
+  tabEventListenerProvider.registerFeaturesOnCreateTabEventListeners();
 });
