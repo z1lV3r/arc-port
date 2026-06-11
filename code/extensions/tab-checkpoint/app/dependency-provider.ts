@@ -29,6 +29,11 @@ import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentati
 import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/background/context-menu-listeners/set-current-tab-checkpoint-context-menu-listener";
 import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/background/context-menu-listeners/reset-current-tab-to-checkpoint-context-menu-listener";
 import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/background/context-menu-listeners/clear-current-tab-checkpoint-context-menu-listener";
+import { OnTabCloseRemoveCheckpoint } from "./presentation/background/tab-event-listeners/on-tab-close-delete-checkpoint";
+import { OnTabPinSetCheckpoint } from "./presentation/background/tab-event-listeners/on-tab-pin-set-checkpoint";
+import { OnTabSetToGroupSetCheckpoint } from "./presentation/background/tab-event-listeners/on-tab-set-to-group-set-checkpoint";
+import { OnTabCreatePinnedSetCheckpoint } from "./presentation/background/tab-event-listeners/on-tab-create-pinned-checkpoint";
+import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -167,6 +172,45 @@ export class DependencyProvider {
   }
 
   //Presentation - Tab event listeners
+  private static onCloseTabEventListeners: TabEventListener[];
+  static getOnCloseTabEventListeners(): TabEventListener[] {
+    if (this.onCloseTabEventListeners) {
+      return this.onCloseTabEventListeners;
+    }
+
+    this.onCloseTabEventListeners = [
+      new OnTabCloseRemoveCheckpoint(DependencyProvider.getClearCheckpointUseCases()),
+    ];
+
+    return this.onCloseTabEventListeners;
+  }
+
+  private static onUpdateTabEventListeners: TabEventListener[];
+  static getOnUpdateTabEventListeners(): TabEventListener[] {
+    if (this.onUpdateTabEventListeners) {
+      return this.onUpdateTabEventListeners;
+    }
+
+    this.onUpdateTabEventListeners = [
+      new OnTabPinSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
+      new OnTabSetToGroupSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
+    ];
+
+    return this.onUpdateTabEventListeners;
+  }
+
+  private static onCreateTabEventListeners: TabEventListener[];
+  static getOnCreateTabEventListeners(): TabEventListener[] {
+    if (this.onCreateTabEventListeners) {
+      return this.onCreateTabEventListeners;
+    }
+
+    this.onCreateTabEventListeners = [
+      new OnTabCreatePinnedSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
+    ];
+
+    return this.onCreateTabEventListeners;
+  }
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
