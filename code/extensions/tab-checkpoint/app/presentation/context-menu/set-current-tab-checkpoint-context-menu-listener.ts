@@ -1,5 +1,5 @@
 import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
-import type { SetCheckpointUseCases } from "../../../use-cases/set-checkpoint-use-cases";
+import type { SetCheckpointUseCases } from "../../use-cases/set-checkpoint-use-cases";
 
 export class SetCurrentTabCheckpointContextMenuListener
   implements ContextMenuListener

@@ -1,5 +1,5 @@
 import type { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
-import type { GetCheckpointUseCases } from "../../../../../use-cases/get-checkpoint-use-cases.ts";
+import type { GetCheckpointUseCases } from "../../../use-cases/get-checkpoint-use-cases.js";
 
 export class GetCurrentTabCheckpointMessageEventListener implements MessageEventListener {
   private readonly getCheckpointUseCases: GetCheckpointUseCases;
