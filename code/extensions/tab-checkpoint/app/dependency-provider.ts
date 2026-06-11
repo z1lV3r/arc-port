@@ -34,6 +34,13 @@ import { OnTabPinSetCheckpoint } from "./presentation/background/tab-event-liste
 import { OnTabSetToGroupSetCheckpoint } from "./presentation/background/tab-event-listeners/on-tab-set-to-group-set-checkpoint";
 import { OnTabCreatePinnedSetCheckpoint } from "./presentation/background/tab-event-listeners/on-tab-create-pinned-checkpoint";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+import type { BrowserShortcutSettingsService } from "@repo/shared/domain/interfaces/browser-shortcut-settings-service";
+import { ChromeShortcutSettingsService } from "@repo/shared/infrastructure/chrome-shortcut-settings-service";
+import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
+import { ChromeStorageSettingsRepository } from "@repo/shared/infrastructure/chrome-storage-settings-repository";
+import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
+import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
+import { SettingsUseCases } from "./use-cases/settings-use-cases";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -66,6 +73,36 @@ export class DependencyProvider {
 
     this.browserTabsService = new ChromeTabsService();
     return this.browserTabsService;
+  }
+
+  private static browserShortcutSettingsService: BrowserShortcutSettingsService;
+  static getShortcutSettingsService(): BrowserShortcutSettingsService {
+    if (this.browserShortcutSettingsService) {
+      return this.browserShortcutSettingsService;
+    }
+
+    this.browserShortcutSettingsService = new ChromeShortcutSettingsService();
+    return this.browserShortcutSettingsService;
+  }
+
+  private static settingsRepository: SettingsRepository;
+  static getSettingsRepository(): SettingsRepository {
+    if (this.settingsRepository) {
+      return this.settingsRepository;
+    }
+
+    this.settingsRepository = new ChromeStorageSettingsRepository();
+    return this.settingsRepository;
+  }
+
+  private static browserContextMenuService: BrowserContextMenuService;
+  static getBrowserContextMenuService(): BrowserContextMenuService {
+    if (this.browserContextMenuService) {
+      return this.browserContextMenuService;
+    }
+
+    this.browserContextMenuService = new ChromeContextMenuService();
+    return this.browserContextMenuService;
   }
   //Use cases
   private static setCheckpointUseCases: SetCheckpointUseCases;
@@ -123,6 +160,21 @@ export class DependencyProvider {
 
     return this.resetTabToCheckpointUseCases;
   }
+  private static settingsUseCases: SettingsUseCases;
+  static getSettingsUseCases(): SettingsUseCases {
+    if (this.settingsUseCases) {
+      return this.settingsUseCases;
+    }
+
+    this.settingsUseCases = new SettingsUseCases(
+      DependencyProvider.getSettingsRepository(),
+      DependencyProvider.getBrowserContextMenuService(),
+      DependencyProvider.getContextMenuListeners(),
+    );
+
+    return this.settingsUseCases;
+  }
+
   //Presentation - Context menu listeners
   private static contextMenuListeners: ContextMenuListener[];
   static getContextMenuListeners(): ContextMenuListener[] {
