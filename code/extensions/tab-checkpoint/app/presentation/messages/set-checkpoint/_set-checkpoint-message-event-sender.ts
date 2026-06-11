@@ -1,7 +1,7 @@
 import type { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
 
-import type { SetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/set-checkpoint-use-cases-listeners/set-current-tab-checkpoint-message-event-listener.js";
-import type { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/messages/set-checkpoint-use-cases-listeners/set-tab-checkpoint-if-unset-message-event-listener.js";
+import type { SetCurrentTabCheckpointMessageEventListener } from "./set-current-tab-checkpoint-message-event-listener.js";
+import type { SetTabCheckpointIfUnsetMessageEventListener } from "./set-tab-checkpoint-if-unset-message-event-listener.js";
 
 export class SetCheckpointMessageEventSender {
   private browserMessageService: BrowserMessageService;
