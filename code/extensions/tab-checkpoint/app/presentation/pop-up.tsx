@@ -15,11 +15,11 @@ import { Button } from "@repo/shared/presentation/button";
 import { Separator } from "@repo/shared/presentation/separator";
 import { RotateCcw, Eraser, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
-import { DependencyProvider } from "../../dependency-provider";
-import type { ClearCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/clear-checkpoint-message-event-sender";
-import type { GetCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/get-checkpoint-message-event-sender";
-import type { ResetTabToCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/reset-tab-to-checkpoint-message-event-sender";
-import type { SetCheckpointMessageEventSender } from "@/app/presentation/pop-up/background/message-events/set-checkpoint-message-event-sender";
+import { DependencyProvider } from "../dependency-provider";
+import type { ClearCheckpointMessageEventSender } from "./presentation/background/message-events/clear-checkpoint-message-event-sender.ts";
+import type { GetCheckpointMessageEventSender } from "./presentation/background/message-events/get-checkpoint-message-event-sender.ts";
+import type { ResetTabToCheckpointMessageEventSender } from "./presentation/background/message-events/reset-tab-to-checkpoint-message-event-sender.ts";
+import type { SetCheckpointMessageEventSender } from "./presentation/background/message-events/set-checkpoint-message-event-sender.ts";
 
 function PopUp() {
   const clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender =
