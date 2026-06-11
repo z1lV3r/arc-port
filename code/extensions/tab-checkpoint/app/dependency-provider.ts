@@ -41,6 +41,8 @@ import { ChromeStorageSettingsRepository } from "@repo/shared/infrastructure/chr
 import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
 import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
 import { SettingsUseCases } from "./use-cases/settings-use-cases";
+import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
+import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/background/extension-listeners/on-extension-installed-load-default-settings";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -198,6 +200,21 @@ export class DependencyProvider {
   }
 
   //Presentation - Extension event listeners
+  private static onExtensionInstalledListeners: ExtensionListener[];
+  static getOnExtensionInstalledListeners(): ExtensionListener[] {
+    if (this.onExtensionInstalledListeners) {
+      return this.onExtensionInstalledListeners;
+    }
+
+    this.onExtensionInstalledListeners = [
+      new OnExtensionInstalledLoadDefaultSettings(
+        DependencyProvider.getSettingsUseCases(),
+      ),
+    ];
+
+    return this.onExtensionInstalledListeners;
+  }
+
   //Presentation - Shortcut listeners
   private static shortcutListeners: ShortcutListener[];
   static getShortcutListeners(): ShortcutListener[] {
