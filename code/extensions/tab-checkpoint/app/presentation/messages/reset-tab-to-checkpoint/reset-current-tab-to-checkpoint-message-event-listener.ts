@@ -1,4 +1,5 @@
 import type { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
+
 import type { ResetTabToCheckpointUseCases } from "../../../use-cases/reset-tab-to-checkpoint-use-cases.js";
 
 export class ResetCurrentTabToCheckpointMessageEventListener implements MessageEventListener {

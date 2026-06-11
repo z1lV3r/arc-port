@@ -1,6 +1,7 @@
-import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
-import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 import type { Listener } from "@repo/shared/domain/models/listener";
+import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+
+import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 
 export class ContextMenuListenerUseCases {
   private browserContextMenuService: BrowserContextMenuService;

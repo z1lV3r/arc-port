@@ -1,9 +1,8 @@
 import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
+
 import type { ResetTabToCheckpointUseCases } from "../../use-cases/reset-tab-to-checkpoint-use-cases";
 
-export class ResetCurrentTabToCheckpointContextMenuListener
-  implements ContextMenuListener
-{
+export class ResetCurrentTabToCheckpointContextMenuListener implements ContextMenuListener {
   private readonly resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases;
 
   constructor(resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases) {

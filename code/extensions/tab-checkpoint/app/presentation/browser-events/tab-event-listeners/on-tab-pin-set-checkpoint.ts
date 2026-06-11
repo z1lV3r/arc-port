@@ -1,4 +1,5 @@
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+
 import type { SetCheckpointUseCases } from "../../../use-cases/set-checkpoint-use-cases";
 
 export class OnTabPinSetCheckpoint implements TabEventListener {

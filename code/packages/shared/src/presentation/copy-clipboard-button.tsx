@@ -1,5 +1,6 @@
-import { Link, Check } from "lucide-react";
+import { Check, Link } from "lucide-react";
 import { useState } from "react";
+
 import { InputGroupButton } from "./input-group";
 
 interface CopyClipboardButtonProps {

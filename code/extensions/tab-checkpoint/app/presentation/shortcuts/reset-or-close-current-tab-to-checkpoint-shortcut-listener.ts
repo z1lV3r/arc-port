@@ -1,9 +1,8 @@
 import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
+
 import type { ResetTabToCheckpointUseCases } from "../../use-cases/reset-tab-to-checkpoint-use-cases";
 
-export class ResetOrCloseCurrentTabToCheckpointShortcutListener
-  implements ShortcutListener
-{
+export class ResetOrCloseCurrentTabToCheckpointShortcutListener implements ShortcutListener {
   private readonly resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases;
 
   constructor(resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases) {

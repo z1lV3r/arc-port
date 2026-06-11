@@ -1,8 +1,8 @@
+import { ContextMenuListenerProvider } from "./presentation/context-menu-listener-provider";
+import { ExtensionListenerProvider } from "./presentation/extension-listener-provider";
 import { MessageEventListenerProvider } from "./presentation/message-event-listener-provider";
 import { ShortcutListenerProvider } from "./presentation/shortcut-listener-provider";
-import { ContextMenuListenerProvider } from "./presentation/context-menu-listener-provider";
 import { TabEventListenerProvider } from "./presentation/tab-event-listener-provider";
-import { ExtensionListenerProvider } from "./presentation/extension-listener-provider";
 
 export default defineBackground(() => {
   const extensionListenerProvider = new ExtensionListenerProvider();

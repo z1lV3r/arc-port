@@ -1,22 +1,24 @@
-import {
-  GroupCard,
-  GroupCardHeader,
-  GroupCardTitle,
-  GroupCardContent,
-} from "@repo/shared/presentation/group-card";
+import { useEffect, useState } from "react";
+
+import type { Shortcut } from "@repo/shared/domain/models/shortcut-setting";
 import { Button } from "@repo/shared/presentation/button";
 import {
-  ItemGroup,
+  GroupCard,
+  GroupCardContent,
+  GroupCardHeader,
+  GroupCardTitle,
+} from "@repo/shared/presentation/group-card";
+import {
   Item,
-  ItemContent,
-  ItemTitle,
-  ItemDescription,
   ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
 } from "@repo/shared/presentation/item";
-import { useState, useEffect } from "react";
-import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts";
 import { Separator } from "@repo/shared/presentation/separator";
-import type { Shortcut } from "@repo/shared/domain/models/shortcut-setting";
+import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts";
+
 import { DependencyProvider } from "../dependency-provider";
 
 type SettingProps = {
@@ -26,7 +28,12 @@ type SettingProps = {
   onToggle: () => void;
 };
 
-export function Setting({ title, description, isActive, onToggle }: SettingProps) {
+export function Setting({
+  title,
+  description,
+  isActive,
+  onToggle,
+}: SettingProps) {
   return (
     <Item className="col-span-2">
       <ItemContent>
@@ -52,7 +59,8 @@ export function Settings() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
   const tabsService = DependencyProvider.getBrowserTabsService();
-  const shortcutSettingsService = DependencyProvider.getShortcutSettingsService();
+  const shortcutSettingsService =
+    DependencyProvider.getShortcutSettingsService();
   const shortcutListeners = DependencyProvider.getShortcutListeners();
   const settingsUseCases = DependencyProvider.getSettingsUseCases();
 
@@ -63,7 +71,8 @@ export function Settings() {
       setShowContextMenu(await settingsUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
-      const currentShortcuts = await shortcutSettingsService.getShortcuts(shortcutListeners);
+      const currentShortcuts =
+        await shortcutSettingsService.getShortcuts(shortcutListeners);
       setShortcuts(currentShortcuts);
     };
 
@@ -90,7 +99,6 @@ export function Settings() {
     setShowContextMenu(await settingsUseCases.getShowContextMenu());
   };
 
-
   return (
     <GroupCard className="w-fit">
       <GroupCardHeader>
@@ -99,38 +107,41 @@ export function Settings() {
       <GroupCardContent>
         <div className="flex flex-col gap-4 min-w-[300px]">
           {/* Settings Options */}
-            <ItemGroup className="grid grid-cols-4 gap-4">
-              {/* Auto Redirect Setting */}
-              <Setting
-                title="Pop Up UI"
-                description="Show UI in extension pop up"
-                isActive={showPopUp}
-                onToggle={handleToggleShowPopUp}
-              />
+          <ItemGroup className="grid grid-cols-4 gap-4">
+            {/* Auto Redirect Setting */}
+            <Setting
+              title="Pop Up UI"
+              description="Show UI in extension pop up"
+              isActive={showPopUp}
+              onToggle={handleToggleShowPopUp}
+            />
 
-              {/* Notifications Setting */}
-              <Setting
-                title="Context Menu"
-                description="Show item on right click context menu"
-                isActive={showContextMenu}
-                onToggle={handleToggleShowContextMenu}
-              />
+            {/* Notifications Setting */}
+            <Setting
+              title="Context Menu"
+              description="Show item on right click context menu"
+              isActive={showContextMenu}
+              onToggle={handleToggleShowContextMenu}
+            />
 
-              <Separator className="col-span-4" />
+            <Separator className="col-span-4" />
 
-              {/* Shortcuts */}
-              <SettingsShortcuts tabsService={tabsService} shortcuts={shortcuts} />
+            {/* Shortcuts */}
+            <SettingsShortcuts
+              tabsService={tabsService}
+              shortcuts={shortcuts}
+            />
 
-              <Separator className="col-span-4" />
-              
-              <Button
-                variant="outline"
-                className="hover:text-destructive col-span-4"
-                onClick={handleResetSettings}
-              >
-                Reset to Default
-              </Button>
-            </ItemGroup>
+            <Separator className="col-span-4" />
+
+            <Button
+              variant="outline"
+              className="hover:text-destructive col-span-4"
+              onClick={handleResetSettings}
+            >
+              Reset to Default
+            </Button>
+          </ItemGroup>
         </div>
       </GroupCardContent>
     </GroupCard>

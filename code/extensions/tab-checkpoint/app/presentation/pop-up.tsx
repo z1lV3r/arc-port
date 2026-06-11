@@ -1,25 +1,27 @@
+import { Eraser, RotateCcw, SquarePen } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Button } from "@repo/shared/presentation/button";
+import { CopyClipboardButton } from "@repo/shared/presentation/copy-clipboard-button";
+import {
+  GroupCard,
+  GroupCardContent,
+  GroupCardHeader,
+  GroupCardTitle,
+} from "@repo/shared/presentation/group-card";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from "@repo/shared/presentation/input-group";
-import { CopyClipboardButton } from "@repo/shared/presentation/copy-clipboard-button";
-import {
-  GroupCard,
-  GroupCardHeader,
-  GroupCardTitle,
-  GroupCardContent,
-} from "@repo/shared/presentation/group-card";
-import { Button } from "@repo/shared/presentation/button";
 import { Separator } from "@repo/shared/presentation/separator";
-import { RotateCcw, Eraser, SquarePen } from "lucide-react";
-import { useState, useEffect } from "react";
+
 import { DependencyProvider } from "../dependency-provider";
-import type { ClearCheckpointMessageEventSender } from "./presentation/background/message-events/clear-checkpoint-message-event-sender.ts";
-import type { GetCheckpointMessageEventSender } from "./presentation/background/message-events/get-checkpoint-message-event-sender.ts";
-import type { ResetTabToCheckpointMessageEventSender } from "./presentation/background/message-events/reset-tab-to-checkpoint-message-event-sender.ts";
-import type { SetCheckpointMessageEventSender } from "./presentation/background/message-events/set-checkpoint-message-event-sender.ts";
+import type { ClearCheckpointMessageEventSender } from "./messages/clear-checkpoint/_clear-checkpoint-message-event-sender";
+import type { GetCheckpointMessageEventSender } from "./messages/get-checkpoint/_get-checkpoint-message-event-sender";
+import type { ResetTabToCheckpointMessageEventSender } from "./messages/reset-tab-to-checkpoint/_reset-tab-to-checkpoint-message-event-sender";
+import type { SetCheckpointMessageEventSender } from "./messages/set-checkpoint/_set-checkpoint-message-event-sender";
 
 function PopUp() {
   const clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender =

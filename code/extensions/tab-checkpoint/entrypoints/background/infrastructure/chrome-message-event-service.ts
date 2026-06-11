@@ -1,5 +1,6 @@
-import type { BrowserMessageEventService } from "../domain/interfaces/browser-message-event-service";
 import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+
+import type { BrowserMessageEventService } from "../domain/interfaces/browser-message-event-service";
 
 export class ChromeMessageEventService implements BrowserMessageEventService {
   async registerMessageEventListeners(listenersStore: ListenersStore) {

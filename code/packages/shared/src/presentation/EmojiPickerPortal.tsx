@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import EmojiPicker, {
   type EmojiClickData,
-  Theme,
   EmojiStyle,
+  Theme,
 } from "emoji-picker-react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export interface EmojiPickerPortalProps {
   open: boolean;

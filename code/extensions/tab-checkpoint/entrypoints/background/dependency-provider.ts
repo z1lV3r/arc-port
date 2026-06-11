@@ -1,18 +1,19 @@
-import type { BrowserContextMenuService } from "./domain/interfaces/browser-context-menu-service";
-import type { BrowserTabEventService } from "./domain/interfaces/browser-tab-event-service";
-import type { BrowserShortcutService } from "./domain/interfaces/browser-shortcut-service";
-import ChromeTabEventService from "./infrastructure/chrome-tab-event-service";
-import ChromeContextMenuService from "./infrastructure/chrome-context-menu-service";
-import ChromeShortcutService from "./infrastructure/chrome-shortcut-service";
-import { ContextMenuListenerUseCases } from "./use-cases/context-menu-listener-use-cases";
-import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
-import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
-import { ExtensionListenerUseCases } from "./use-cases/extension-listener-use-cases";
 import type { BrowserExtensionService } from "@repo/shared/domain/interfaces/browser-extension-service";
 import { ChromeExtensionService } from "@repo/shared/infrastructure/chrome-extension-service";
-import { MessageEventListenerUseCases } from "./use-cases/message-event-listeners-use-cases";
+
+import type { BrowserContextMenuService } from "./domain/interfaces/browser-context-menu-service";
 import type { BrowserMessageEventService } from "./domain/interfaces/browser-message-event-service";
+import type { BrowserShortcutService } from "./domain/interfaces/browser-shortcut-service";
+import type { BrowserTabEventService } from "./domain/interfaces/browser-tab-event-service";
+import ChromeContextMenuService from "./infrastructure/chrome-context-menu-service";
 import { ChromeMessageEventService } from "./infrastructure/chrome-message-event-service";
+import ChromeShortcutService from "./infrastructure/chrome-shortcut-service";
+import ChromeTabEventService from "./infrastructure/chrome-tab-event-service";
+import { ContextMenuListenerUseCases } from "./use-cases/context-menu-listener-use-cases";
+import { ExtensionListenerUseCases } from "./use-cases/extension-listener-use-cases";
+import { MessageEventListenerUseCases } from "./use-cases/message-event-listeners-use-cases";
+import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
+import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
 
 export class DependencyProvider {
   private constructor() {}

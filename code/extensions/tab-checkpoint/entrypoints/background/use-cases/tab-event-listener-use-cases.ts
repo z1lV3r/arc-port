@@ -1,6 +1,7 @@
-import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
-import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 import type { Listener } from "@repo/shared/domain/models/listener";
+import { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+
+import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
 
 export class TabEventListenerUseCases {
   private browserTabEventService: BrowserTabEventService;

@@ -1,6 +1,7 @@
-import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
 import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+
+import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
 
 export default class ChromeTabEventService implements BrowserTabEventService {
   async registerOnCloseTabEventListeners(listenersStore: ListenersStore) {

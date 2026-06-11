@@ -1,9 +1,8 @@
-import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
 import type { SettingsUseCases } from "@/app/use-cases/settings-use-cases";
 
-export class OnExtensionInstalledLoadDefaultSettings
-  implements ExtensionListener
-{
+import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
+
+export class OnExtensionInstalledLoadDefaultSettings implements ExtensionListener {
   private readonly settingsUseCases: SettingsUseCases;
 
   constructor(settingsUseCases: SettingsUseCases) {
