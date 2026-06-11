@@ -1,6 +1,7 @@
 import type { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
-import type { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/background/message-events/clear-checkpoint-use-cases-listeners/clear-current-tab-checkpoint-message-event-listener.js";
-import type { ClearTabCheckpointMessageEventListener } from "./presentation/background/message-events/clear-checkpoint-use-cases-listeners/clear-tab-checkpoint-message-event-listener.js";
+
+import type { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint-use-cases-listeners/clear-current-tab-checkpoint-message-event-listener.js";
+import type { ClearTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint-use-cases-listeners/clear-tab-checkpoint-message-event-listener.js";
 
 export class ClearCheckpointMessageEventSender {
   private browserMessageService: BrowserMessageService;

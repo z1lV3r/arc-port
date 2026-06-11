@@ -1,4 +1,5 @@
 import { defineConfig } from "wxt";
+
 import { DependencyProvider } from "./app/dependency-provider";
 
 // See https://wxt.dev/api/config.html

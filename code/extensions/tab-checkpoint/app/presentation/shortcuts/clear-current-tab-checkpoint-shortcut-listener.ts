@@ -1,9 +1,8 @@
 import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
+
 import type { ClearCheckpointUseCases } from "../../use-cases/clear-checkpoint-use-cases";
 
-export class ClearCurrentTabCheckpointShortcutListener
-  implements ShortcutListener
-{
+export class ClearCurrentTabCheckpointShortcutListener implements ShortcutListener {
   private readonly clearCheckpointUseCases: ClearCheckpointUseCases;
 
   constructor(clearCheckpointUseCases: ClearCheckpointUseCases) {

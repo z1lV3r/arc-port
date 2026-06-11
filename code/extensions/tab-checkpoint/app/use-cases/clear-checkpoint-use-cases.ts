@@ -1,5 +1,6 @@
 import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import { Tab } from "@repo/shared/domain/models/tab";
+
 import type { CheckpointRepository } from "../domain/interfaces/checkpoint-repository";
 
 export class ClearCheckpointUseCases {

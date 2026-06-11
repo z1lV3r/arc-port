@@ -10,7 +10,8 @@ export class SettingsUseCases {
   private readonly settingsPrefix: string = "settings-checkpoint-";
   private readonly showPopUpKey: string = this.settingsPrefix + "show-pop-up";
   private readonly showPopUpDefaultValue: boolean = true;
-  private readonly showContextMenuKey: string = this.settingsPrefix + "show-context-menu";
+  private readonly showContextMenuKey: string =
+    this.settingsPrefix + "show-context-menu";
   private readonly showContextMenuDefaultValue: boolean = true;
 
   constructor(
@@ -24,7 +25,10 @@ export class SettingsUseCases {
   }
 
   async getShowPopUp(): Promise<boolean> {
-    return this.settingsRepository.getOrDefault(this.showPopUpKey, this.showPopUpDefaultValue);
+    return this.settingsRepository.getOrDefault(
+      this.showPopUpKey,
+      this.showPopUpDefaultValue,
+    );
   }
 
   async setShowPopUp(showPopUp: boolean): Promise<void> {
@@ -36,14 +40,23 @@ export class SettingsUseCases {
   }
 
   async getShowContextMenu(): Promise<boolean> {
-    return this.settingsRepository.getOrDefault(this.showContextMenuKey, this.showContextMenuDefaultValue);
+    return this.settingsRepository.getOrDefault(
+      this.showContextMenuKey,
+      this.showContextMenuDefaultValue,
+    );
   }
 
   async setShowContextMenu(showContextMenu: boolean): Promise<void> {
     if (showContextMenu) {
-      this.browserContextMenuService.createFeatureContextMenus("Checkpoint", this.contextMenuListeners);
+      this.browserContextMenuService.createFeatureContextMenus(
+        "Checkpoint",
+        this.contextMenuListeners,
+      );
     } else {
-      this.browserContextMenuService.removeFeatureContextMenus("Checkpoint", this.contextMenuListeners);
+      this.browserContextMenuService.removeFeatureContextMenus(
+        "Checkpoint",
+        this.contextMenuListeners,
+      );
     }
     await this.settingsRepository.set(this.showContextMenuKey, showContextMenu);
   }

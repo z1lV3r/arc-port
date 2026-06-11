@@ -1,4 +1,5 @@
 import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-provider";
+
 import { DependencyProvider } from "../dependency-provider";
 import { ShortcutListenerUseCases } from "../use-cases/shortcut-listener-use-cases";
 

@@ -1,4 +1,5 @@
 import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+
 import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 
 export default class ChromeContextMenuService implements BrowserContextMenuService {

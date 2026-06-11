@@ -1,6 +1,7 @@
 import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
-import type { CheckpointRepository } from "../domain/interfaces/checkpoint-repository";
 import { Tab } from "@repo/shared/domain/models/tab";
+
+import type { CheckpointRepository } from "../domain/interfaces/checkpoint-repository";
 
 export class SetCheckpointUseCases {
   private tabsService: BrowserTabsService;

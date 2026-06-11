@@ -1,4 +1,5 @@
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+
 import type { ClearCheckpointUseCases } from "../../../use-cases/clear-checkpoint-use-cases";
 
 export class OnTabCloseRemoveCheckpoint implements TabEventListener {

@@ -1,5 +1,5 @@
-import type { ListenersStore } from "../domain/models/listeners-store";
 import type { BrowserExtensionService } from "../domain/interfaces/browser-extension-service";
+import type { ListenersStore } from "../domain/models/listeners-store";
 
 export class ChromeExtensionService implements BrowserExtensionService {
   registerOnExtensionInstalledListeners(listenersStore: ListenersStore): void {

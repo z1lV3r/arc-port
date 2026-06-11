@@ -1,48 +1,49 @@
-import { SetCheckpointMessageEventSender } from "./presentation/messages/set-checkpoint/_set-checkpoint-message-event-sender.ts";
+import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
 import { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
-import { ChromeMessageService } from "@repo/shared/infrastructure/chrome-message-service";
-import { SetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/set-checkpoint/set-current-tab-checkpoint-message-event-listener.ts";
-import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/messages/set-checkpoint/set-tab-checkpoint-if-unset-message-event-listener.ts";
-import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
-import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
-import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases";
-import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases";
+import type { BrowserShortcutSettingsService } from "@repo/shared/domain/interfaces/browser-shortcut-settings-service";
 import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
+import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
+import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
+import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
+import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
+import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
+import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
+import { ChromeMessageService } from "@repo/shared/infrastructure/chrome-message-service";
+import { ChromeShortcutSettingsService } from "@repo/shared/infrastructure/chrome-shortcut-settings-service";
+import { ChromeStorageSettingsRepository } from "@repo/shared/infrastructure/chrome-storage-settings-repository";
 import { ChromeTabsService } from "@repo/shared/infrastructure/chrome-tabs-service";
+
 import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository";
 import { ChromeStorageCheckpointRepository } from "./infrastructure/chrome-storage-checkpoint-repository";
-import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
-import { GetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/get-checkpoint/get-current-tab-checkpoint-message-event-listener.ts";
-import { GetCheckpointMessageEventSender } from "./presentation/messages/get-checkpoint/_get-checkpoint-message-event-sender.ts";
+import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/browser-events/extension-event-listeners/on-extension-installed-load-default-settings.ts";
+import { OnTabCloseRemoveCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-close-delete-checkpoint.ts";
+import { OnTabCreatePinnedSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-create-pinned-checkpoint.ts";
+import { OnTabPinSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-pin-set-checkpoint.ts";
+import { OnTabSetToGroupSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-set-to-group-set-checkpoint.ts";
+import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/clear-current-tab-checkpoint-context-menu-listener.ts";
+import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/context-menu/reset-current-tab-to-checkpoint-context-menu-listener.ts";
+import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/set-current-tab-checkpoint-context-menu-listener.ts";
+import { ClearCheckpointMessageEventSender } from "./presentation/messages/clear-checkpoint/_clear-checkpoint-message-event-sender.ts";
 import { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint/clear-current-tab-checkpoint-message-event-listener.ts";
 import { ClearTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint/clear-tab-checkpoint-message-event-listener.ts";
-import { ClearCheckpointMessageEventSender } from "./presentation/messages/clear-checkpoint/_clear-checkpoint-message-event-sender.ts";
+import { GetCheckpointMessageEventSender } from "./presentation/messages/get-checkpoint/_get-checkpoint-message-event-sender.ts";
+import { GetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/get-checkpoint/get-current-tab-checkpoint-message-event-listener.ts";
+import { ResetTabToCheckpointMessageEventSender } from "./presentation/messages/reset-tab-to-checkpoint/_reset-tab-to-checkpoint-message-event-sender.ts";
 import { ResetCurrentTabToCheckpointMessageEventListener } from "./presentation/messages/reset-tab-to-checkpoint/reset-current-tab-to-checkpoint-message-event-listener.ts";
 import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./presentation/messages/reset-tab-to-checkpoint/reset-or-close-current-tab-to-checkpoint-message-event-listener.ts";
-import { ResetTabToCheckpointMessageEventSender } from "./presentation/messages/reset-tab-to-checkpoint/_reset-tab-to-checkpoint-message-event-sender.ts";
-import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
-import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
-import { SetCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/set-current-tab-checkpoint-shortcut-listener.ts";
+import { SetCheckpointMessageEventSender } from "./presentation/messages/set-checkpoint/_set-checkpoint-message-event-sender.ts";
+import { SetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/set-checkpoint/set-current-tab-checkpoint-message-event-listener.ts";
+import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/messages/set-checkpoint/set-tab-checkpoint-if-unset-message-event-listener.ts";
 import { ClearCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/clear-current-tab-checkpoint-shortcut-listener.ts";
 import { ResetCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-current-tab-to-checkpoint-shortcut-listener.ts";
 import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-or-close-current-tab-to-checkpoint-shortcut-listener.ts";
-import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/set-current-tab-checkpoint-context-menu-listener.ts";
-import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/context-menu/reset-current-tab-to-checkpoint-context-menu-listener.ts";
-import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/clear-current-tab-checkpoint-context-menu-listener.ts";
-import { OnTabCloseRemoveCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-close-delete-checkpoint.ts";
-import { OnTabPinSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-pin-set-checkpoint.ts";
-import { OnTabSetToGroupSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-set-to-group-set-checkpoint.ts";
-import { OnTabCreatePinnedSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-create-pinned-checkpoint.ts";
-import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
-import type { BrowserShortcutSettingsService } from "@repo/shared/domain/interfaces/browser-shortcut-settings-service";
-import { ChromeShortcutSettingsService } from "@repo/shared/infrastructure/chrome-shortcut-settings-service";
-import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
-import { ChromeStorageSettingsRepository } from "@repo/shared/infrastructure/chrome-storage-settings-repository";
-import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
-import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
+import { SetCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/set-current-tab-checkpoint-shortcut-listener.ts";
+import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases";
+import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
+import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases";
+import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
 import { SettingsUseCases } from "./use-cases/settings-use-cases";
-import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
-import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/browser-events/extension-event-listeners/on-extension-installed-load-default-settings.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -248,7 +249,9 @@ export class DependencyProvider {
     }
 
     this.onCloseTabEventListeners = [
-      new OnTabCloseRemoveCheckpoint(DependencyProvider.getClearCheckpointUseCases()),
+      new OnTabCloseRemoveCheckpoint(
+        DependencyProvider.getClearCheckpointUseCases(),
+      ),
     ];
 
     return this.onCloseTabEventListeners;
@@ -262,7 +265,9 @@ export class DependencyProvider {
 
     this.onUpdateTabEventListeners = [
       new OnTabPinSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
-      new OnTabSetToGroupSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
+      new OnTabSetToGroupSetCheckpoint(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
     ];
 
     return this.onUpdateTabEventListeners;
@@ -275,7 +280,9 @@ export class DependencyProvider {
     }
 
     this.onCreateTabEventListeners = [
-      new OnTabCreatePinnedSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
+      new OnTabCreatePinnedSetCheckpoint(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
     ];
 
     return this.onCreateTabEventListeners;

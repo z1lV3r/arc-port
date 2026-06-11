@@ -1,14 +1,14 @@
+import type { BrowserTabsService } from "../domain/interfaces/browser-tabs-service";
+import type { Shortcut } from "../domain/models/shortcut-setting";
 import { Button } from "./button";
 import { Input } from "./input";
 import {
   Item,
-  ItemContent,
-  ItemTitle,
   ItemActions,
+  ItemContent,
   ItemDescription,
+  ItemTitle,
 } from "./item";
-import type { Shortcut } from "../domain/models/shortcut-setting";
-import type { BrowserTabsService } from "../domain/interfaces/browser-tabs-service";
 
 export function SettingsShortcuts({
   tabsService,

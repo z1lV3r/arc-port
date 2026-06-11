@@ -1,4 +1,5 @@
 import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-provider";
+
 import { DependencyProvider } from "../dependency-provider";
 import { ExtensionListenerUseCases } from "../use-cases/extension-listener-use-cases";
 
