@@ -10,7 +10,7 @@ export class OnTabCloseRemoveCheckpoint implements TabEventListener {
   }
 
   name = "on-tab-close-remove-checkpoint";
-  description = "Remove checkpoint when tab is closed";
+  description = t("browser_events.on_tab_close_remove_checkpoint");
   async command(tabId: string): Promise<void> {
     await this.clearCheckpointUseCases.clearTabCheckpoint(tabId);
   }

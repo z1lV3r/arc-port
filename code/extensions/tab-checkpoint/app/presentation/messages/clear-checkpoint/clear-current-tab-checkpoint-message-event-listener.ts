@@ -10,7 +10,7 @@ export class ClearCurrentTabCheckpointMessageEventListener implements MessageEve
   }
 
   name = "clear-current-tab-checkpoint-message-event-listener";
-  description = "Clear current tab checkpoint message event listener";
+  description = t("messages.clear_current_tab_checkpoint");
 
   async command(
     _request: any,

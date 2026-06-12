@@ -20,7 +20,7 @@ function GroupCardHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="group-card-header"
       className={cn(
-        "bg-card text-card-foreground rounded-xl border absolute -top-2 left-4 px-2",
+        "bg-card text-card-foreground rounded-xl border absolute -top-2 left-4 right-4 px-2 text-center",
         className,
       )}
       {...props}

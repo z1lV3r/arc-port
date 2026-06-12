@@ -13,9 +13,11 @@ import {
 export function SettingsShortcuts({
   tabsService,
   shortcuts,
+  editShortcutsButtonMessage,
 }: {
   tabsService: BrowserTabsService;
   shortcuts: Shortcut[];
+  editShortcutsButtonMessage: string;
 }) {
   return (
     <>
@@ -43,7 +45,7 @@ export function SettingsShortcuts({
           tabsService.createTabByUrl("chrome://extensions/shortcuts")
         }
       >
-        Edit shortcuts
+        {editShortcutsButtonMessage}
       </Button>
     </>
   );

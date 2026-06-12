@@ -6,7 +6,7 @@ import { DependencyProvider } from "./app/dependency-provider";
 export default defineConfig({
   modules: ["@wxt-dev/module-react", "@wxt-dev/i18n/module"],
   manifest: {
-    name: "ArcPort - Checkpoint",
+    name: "__MSG_extension_full_name__",
     default_locale: "en",
     permissions: [
       "activeTab",
@@ -20,9 +20,6 @@ export default defineConfig({
     commands: getCommands(),
   },
   // `pnpm wxt prepare` to generate .wxt/types/imports.d.ts
-  /*imports: {
-    dirs: ["app/**"],
-  },*/
 });
 
 function getCommands() {

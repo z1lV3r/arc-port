@@ -10,7 +10,7 @@ export class SetCurrentTabCheckpointShortcutListener implements ShortcutListener
   }
 
   name = "shortcut-set-current-tab-checkpoint";
-  description = "Set current tab checkpoint";
+  description = "__MSG_shortcuts_set_current_tab_checkpoint__";
   key = {
     default: "Alt+Shift+S",
     mac: "Option+Shift+S",

@@ -10,8 +10,7 @@ export class ResetOrCloseCurrentTabToCheckpointMessageEventListener implements M
   }
 
   name = "reset-or-close-current-tab-to-checkpoint-message-event-listener";
-  description =
-    "Reset or close current tab to checkpoint message event listener";
+  description = t("messages.reset_or_close_current_tab_to_checkpoint");
 
   async command(
     _request: any,

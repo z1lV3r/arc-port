@@ -10,7 +10,7 @@ export class ClearCurrentTabCheckpointShortcutListener implements ShortcutListen
   }
 
   name = "shortcut-clear-current-tab-checkpoint";
-  description = "Clear current tab checkpoint";
+  description = "__MSG_shortcuts_clear_current_tab_checkpoint__";
   key = {
     default: "Alt+Shift+K",
     mac: "Option+Shift+K",

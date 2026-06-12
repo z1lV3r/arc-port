@@ -10,7 +10,7 @@ export class ResetOrCloseCurrentTabToCheckpointShortcutListener implements Short
   }
 
   name = "shortcut-reset-or-close-current-tab-to-checkpoint";
-  description = "Reset or close current tab to checkpoint";
+  description = "__MSG_shortcuts_reset_or_close_current_tab_to_checkpoint__";
   key = {
     default: "Alt+Shift+D",
     mac: "Option+Shift+D",
