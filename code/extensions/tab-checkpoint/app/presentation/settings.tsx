@@ -29,12 +29,7 @@ type SettingProps = {
   onToggle: () => void;
 };
 
-function Setting({
-  title,
-  description,
-  isActive,
-  onToggle,
-}: SettingProps) {
+function Setting({ title, description, isActive, onToggle }: SettingProps) {
   return (
     <Item className="col-span-2">
       <ItemContent>
@@ -100,7 +95,6 @@ export function Settings() {
         <div className="flex flex-col gap-4 min-w-[300px]">
           {/* Settings Options */}
           <ItemGroup className="grid grid-cols-4 gap-4">
-
             {/* Context Menu Setting */}
             <Setting
               title={t("settings.context_menu.title")}
