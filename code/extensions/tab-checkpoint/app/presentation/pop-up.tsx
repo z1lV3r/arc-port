@@ -67,7 +67,13 @@ function PopUp() {
       <GroupCardContent>
         <div className="flex flex-col items-center gap-2">
           <InputGroup>
-            <InputGroupInput placeholder={"<" + t("pop_up.url.placeholder") + ">"} value={url} readOnly title={url} className="cursor-default" />
+            <InputGroupInput
+              placeholder={"<" + t("pop_up.url.placeholder") + ">"}
+              value={url}
+              readOnly
+              title={url}
+              className="cursor-default"
+            />
             <InputGroupAddon align="inline-end">
               <CopyClipboardButton value={url} disabled={!url} />
               <InputGroupButton

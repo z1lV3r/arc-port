@@ -19,22 +19,34 @@ export default defineConfig({
     host_permissions: ["<all_urls>"],
     commands: getCommands(),
   },
+  webExt: {
+    // Open specific URLs automatically when the dev browser launches
+    startUrls: ["https://example.com"],
+  },
   // `pnpm wxt prepare` to generate .wxt/types/imports.d.ts
 });
 
 function getCommands() {
   const shortcuts = DependencyProvider.getShortcutListeners();
+  const commands: Record<string, any> = {};
 
-  return Object.fromEntries(
-    shortcuts.map((shortcut) => [
-      shortcut.name,
-      {
+  for (let i = 0; i < shortcuts.length; i++) {
+    const shortcut = shortcuts[i];
+
+    if (i < 4) {
+      commands[shortcut.name] = {
         suggested_key: {
           default: shortcut.key.default,
           mac: shortcut.key.mac,
         },
         description: shortcut.description,
-      },
-    ]),
-  );
+      };
+    } else {
+      commands[shortcut.name] = {
+        description: shortcut.description,
+      };
+    }
+  }
+
+  return commands;
 }

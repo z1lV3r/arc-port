@@ -10,7 +10,9 @@ export class OnExtensionInstalledLoadDefaultSettings implements ExtensionListene
   }
 
   name = "on-extension-installed-load-default-settings";
-  description = t("browser_events.on_extension_installed_load_default_settings");
+  description = t(
+    "browser_events.on_extension_installed_load_default_settings",
+  );
   command = async () => {
     const showContextMenu = await this.settingsUseCases.getShowContextMenu();
     await this.settingsUseCases.setShowContextMenu(showContextMenu);
