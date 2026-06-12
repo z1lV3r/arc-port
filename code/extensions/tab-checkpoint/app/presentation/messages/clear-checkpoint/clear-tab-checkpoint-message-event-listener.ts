@@ -10,7 +10,7 @@ export class ClearTabCheckpointMessageEventListener implements MessageEventListe
   }
 
   name = "clear-tab-checkpoint-message-event-listener";
-  description = "Clear tab checkpoint message event listener";
+  description = t("messages.clear_tab_checkpoint");
 
   async command(
     request: any,

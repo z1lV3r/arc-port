@@ -10,7 +10,7 @@ export class OnTabSetToGroupSetCheckpoint implements TabEventListener {
   }
 
   name = "on-tab-set-to-group-set-checkpoint";
-  description = "Set tab checkpoint if unset by tab id";
+  description = t("browser_events.on_tab_set_to_group_set_checkpoint");
 
   async command(tabId: string): Promise<void> {
     await this.setCheckpointUseCases.setTabCheckpointIfUnset(tabId);

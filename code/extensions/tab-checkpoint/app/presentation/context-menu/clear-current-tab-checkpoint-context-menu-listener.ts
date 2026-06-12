@@ -10,7 +10,7 @@ export class ClearCurrentTabCheckpointContextMenuListener implements ContextMenu
   }
 
   name = "context-menu-clear-current-tab-checkpoint";
-  description = "Clear current tab checkpoint";
+  description = t("context_menu.clear_current_tab_checkpoint");
 
   command = async () => {
     await this.clearCheckpointUseCases.clearCurrentTabCheckpoint();

@@ -18,6 +18,7 @@ import {
 } from "@repo/shared/presentation/item";
 import { Separator } from "@repo/shared/presentation/separator";
 import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts";
+import { Switch } from "@repo/shared/presentation/switch";
 
 import { DependencyProvider } from "../dependency-provider";
 
@@ -28,7 +29,7 @@ type SettingProps = {
   onToggle: () => void;
 };
 
-export function Setting({
+function Setting({
   title,
   description,
   isActive,
@@ -41,13 +42,7 @@ export function Setting({
         <ItemDescription>{description}</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Button
-          variant={isActive ? "default" : "outline"}
-          size="sm"
-          onClick={onToggle}
-        >
-          {isActive ? "On" : "Off"}
-        </Button>
+        <Switch checked={isActive} onCheckedChange={onToggle} />
       </ItemActions>
     </Item>
   );
@@ -101,25 +96,15 @@ export function Settings() {
 
   return (
     <GroupCard className="w-fit">
-      <GroupCardHeader>
-        <GroupCardTitle>Checkpoint</GroupCardTitle>
-      </GroupCardHeader>
       <GroupCardContent>
         <div className="flex flex-col gap-4 min-w-[300px]">
           {/* Settings Options */}
           <ItemGroup className="grid grid-cols-4 gap-4">
-            {/* Auto Redirect Setting */}
-            <Setting
-              title="Pop Up UI"
-              description="Show UI in extension pop up"
-              isActive={showPopUp}
-              onToggle={handleToggleShowPopUp}
-            />
 
-            {/* Notifications Setting */}
+            {/* Context Menu Setting */}
             <Setting
-              title="Context Menu"
-              description="Show item on right click context menu"
+              title={t("settings.context_menu.title")}
+              description={t("settings.context_menu.description")}
               isActive={showContextMenu}
               onToggle={handleToggleShowContextMenu}
             />
@@ -130,6 +115,7 @@ export function Settings() {
             <SettingsShortcuts
               tabsService={tabsService}
               shortcuts={shortcuts}
+              editShortcutsButtonMessage={t("settings.edit_shortcuts")}
             />
 
             <Separator className="col-span-4" />
@@ -139,7 +125,7 @@ export function Settings() {
               className="hover:text-destructive col-span-4"
               onClick={handleResetSettings}
             >
-              Reset to Default
+              {t("settings.reset_to_default")}
             </Button>
           </ItemGroup>
         </div>

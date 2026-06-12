@@ -10,7 +10,7 @@ export class SetTabCheckpointIfUnsetMessageEventListener implements MessageEvent
   }
 
   name = "set-tab-checkpoint-if-unset-message-event-listener";
-  description = "Set tab checkpoint if unset message event listener";
+  description = t("messages.set_tab_checkpoint_if_unset");
 
   async command(
     request: any,

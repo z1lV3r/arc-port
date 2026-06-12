@@ -10,7 +10,7 @@ export class ResetCurrentTabToCheckpointContextMenuListener implements ContextMe
   }
 
   name = "context-menu-reset-current-tab-to-checkpoint";
-  description = "Reset current tab to checkpoint";
+  description = t("context_menu.reset_current_tab_to_checkpoint");
 
   command = async () => {
     await this.resetTabToCheckpointUseCases.resetCurrentTabToCheckpoint();

@@ -62,18 +62,18 @@ function PopUp() {
   return (
     <GroupCard>
       <GroupCardHeader>
-        <GroupCardTitle>Checkpoint</GroupCardTitle>
+        <GroupCardTitle>{t("extension_name")}</GroupCardTitle>
       </GroupCardHeader>
       <GroupCardContent>
         <div className="flex flex-col items-center gap-2">
           <InputGroup>
-            <InputGroupInput placeholder="<empty>" value={url} disabled />
+            <InputGroupInput placeholder={"<" + t("pop_up.url.placeholder") + ">"} value={url} readOnly title={url} className="cursor-default" />
             <InputGroupAddon align="inline-end">
               <CopyClipboardButton value={url} disabled={!url} />
-              <Separator orientation="vertical" />
               <InputGroupButton
                 onClick={handleResetCurrentTabToCheckpoint}
                 disabled={!url}
+                title={t("pop_up.button.reset")}
               >
                 <RotateCcw />
               </InputGroupButton>
@@ -86,7 +86,7 @@ function PopUp() {
               onClick={handleSetCurrentTabCheckpoint}
             >
               <SquarePen className="text-blue-500" />
-              Set current URL
+              {t("pop_up.button.set_current_url")}
             </Button>
             <Button
               variant="outline"
@@ -94,7 +94,7 @@ function PopUp() {
               onClick={handleClearCurrentTabCheckpoint}
             >
               <Eraser className="text-destructive" />
-              Clear
+              {t("pop_up.button.clear")}
             </Button>
           </div>
         </div>

@@ -10,7 +10,7 @@ export class ResetCurrentTabToCheckpointMessageEventListener implements MessageE
   }
 
   name = "reset-current-tab-to-checkpoint-message-event-listener";
-  description = "Reset current tab to checkpoint message event listener";
+  description = t("messages.reset_current_tab_to_checkpoint");
 
   async command(
     _request: any,

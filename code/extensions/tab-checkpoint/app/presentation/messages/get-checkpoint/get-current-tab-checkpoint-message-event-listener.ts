@@ -10,7 +10,7 @@ export class GetCurrentTabCheckpointMessageEventListener implements MessageEvent
   }
 
   name = "get-current-tab-checkpoint-message-event-listener";
-  description = "Get current tab checkpoint message event listener";
+  description = t("messages.get_current_tab_checkpoint");
 
   async command(
     _request: any,

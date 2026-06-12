@@ -10,7 +10,7 @@ export class OnTabCreatePinnedSetCheckpoint implements TabEventListener {
   }
 
   name = "on-tab-create-pinned-set-checkpoint";
-  description = "Set tab checkpoint if unset by tab id";
+  description = t("browser_events.on_tab_create_pinned_set_checkpoint");
   async command(tabId: string): Promise<void> {
     await this.setCheckpointUseCases.setTabCheckpointIfUnset(tabId);
   }

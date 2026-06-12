@@ -10,7 +10,7 @@ export class SetCurrentTabCheckpointContextMenuListener implements ContextMenuLi
   }
 
   name = "context-menu-set-current-tab-checkpoint";
-  description = "Set current tab checkpoint";
+  description = t("context_menu.set_current_tab_checkpoint");
 
   command = async () => {
     await this.setCheckpointUseCases.setCurrentTabCheckpoint();
