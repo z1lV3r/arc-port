@@ -8,11 +8,11 @@ export class SettingsUseCases {
   private readonly browserContextMenuService: BrowserContextMenuService;
 
   private readonly settingsPrefix: string = "settings-checkpoint-";
-  private readonly showPopUpKey: string = this.settingsPrefix + "show-pop-up";
-  private readonly showPopUpDefaultValue: boolean = true;
   private readonly showContextMenuKey: string =
     this.settingsPrefix + "show-context-menu";
   private readonly showContextMenuDefaultValue: boolean = true;
+  private readonly extensionActionKey: string = this.settingsPrefix + "action";
+  private readonly extensionActionDefaultValue: string = "popup";
 
   constructor(
     settingsRepository: SettingsRepository,
@@ -24,26 +24,11 @@ export class SettingsUseCases {
     this.contextMenuListeners = contextMenuListeners;
   }
 
-  async getShowPopUp(): Promise<boolean> {
-    return this.settingsRepository.getOrDefault(
-      this.showPopUpKey,
-      this.showPopUpDefaultValue,
-    );
-  }
-
-  async setShowPopUp(showPopUp: boolean): Promise<void> {
-    this.settingsRepository.set(this.showPopUpKey, showPopUp);
-  }
-
-  async resetShowPopUp(): Promise<void> {
-    this.setShowPopUp(this.showPopUpDefaultValue);
-  }
-
   async getShowContextMenu(): Promise<boolean> {
-    return this.settingsRepository.getOrDefault(
+    return (await this.settingsRepository.getOrDefault(
       this.showContextMenuKey,
       this.showContextMenuDefaultValue,
-    );
+    )) as boolean;
   }
 
   async setShowContextMenu(showContextMenu: boolean): Promise<void> {
@@ -63,5 +48,25 @@ export class SettingsUseCases {
 
   async resetShowContextMenu(): Promise<void> {
     this.setShowContextMenu(this.showContextMenuDefaultValue);
+  }
+
+  async getExtensionAction(): Promise<string> {
+    return (await this.settingsRepository.getOrDefault(
+      this.extensionActionKey,
+      this.extensionActionDefaultValue,
+    )) as string;
+  }
+
+  async setExtensionAction(extensionAction: string): Promise<void> {
+    this.settingsRepository.set(this.extensionActionKey, extensionAction);
+    if (extensionAction === "reset-current-tab-to-checkpoint") {
+      // Set reset on click
+    } else {
+      // Set show popup on click
+    }
+  }
+
+  async resetExtensionAction(): Promise<void> {
+    this.setExtensionAction(this.extensionActionDefaultValue);
   }
 }

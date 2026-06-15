@@ -21,15 +21,16 @@ import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts"
 import { Switch } from "@repo/shared/presentation/switch";
 
 import { DependencyProvider } from "../dependency-provider";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@repo/shared/presentation/select";
 
-type SettingProps = {
+type ToogleSettingProps = {
   title: string;
   description: string;
   isActive: boolean;
   onToggle: () => void;
 };
 
-function Setting({ title, description, isActive, onToggle }: SettingProps) {
+function ToogleSetting({ title, description, isActive, onToggle }: ToogleSettingProps) {
   return (
     <Item className="col-span-2">
       <ItemContent>
@@ -43,8 +44,43 @@ function Setting({ title, description, isActive, onToggle }: SettingProps) {
   );
 }
 
+type SelectSettingProps = {
+  title: string;
+  description: string;
+  values: string[];
+  onSelect: (value: string) => void;
+  currentValue: string;
+};
+
+function SelectSetting({ title, description, values, onSelect, currentValue }: SelectSettingProps) {
+  return (
+    <Item className="col-span-2">
+      <ItemContent>
+        <ItemTitle>{title}</ItemTitle>
+        <ItemDescription>{description}</ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <Select onValueChange={onSelect} defaultValue={currentValue}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {values.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </ItemActions>
+    </Item>
+  );
+}
+
 export function Settings() {
-  const [showPopUp, setShowPopUp] = useState(true);
+  const [extensionAction, setExtensionAction] = useState<string>("show-popup");
   const [showContextMenu, setShowContextMenu] = useState(true);
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
@@ -57,7 +93,7 @@ export function Settings() {
   // Load settings from storage on mount
   useEffect(() => {
     const loadSettings = async () => {
-      setShowPopUp(await settingsUseCases.getShowPopUp());
+      setExtensionAction(await settingsUseCases.getExtensionAction());
       setShowContextMenu(await settingsUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
@@ -70,9 +106,9 @@ export function Settings() {
     loadShortcuts();
   }, []);
 
-  const handleToggleShowPopUp = async () => {
-    await settingsUseCases.setShowPopUp(!showPopUp);
-    setShowPopUp(await settingsUseCases.getShowPopUp());
+  const handleToggleExtensionAction = async (value: string) => {
+    await settingsUseCases.setExtensionAction(value);
+    setExtensionAction(await settingsUseCases.getExtensionAction());
   };
 
   const handleToggleShowContextMenu = async () => {
@@ -81,11 +117,11 @@ export function Settings() {
   };
 
   const handleResetSettings = async () => {
-    const resetShowPopUp = settingsUseCases.resetShowPopUp();
+    const resetExtensionAction = settingsUseCases.resetExtensionAction();
     const resetShowContextMenu = settingsUseCases.resetShowContextMenu();
-    await resetShowPopUp;
+    await resetExtensionAction;
     await resetShowContextMenu;
-    setShowPopUp(await settingsUseCases.getShowPopUp());
+    setExtensionAction(await settingsUseCases.getExtensionAction());
     setShowContextMenu(await settingsUseCases.getShowContextMenu());
   };
 
@@ -96,7 +132,14 @@ export function Settings() {
           {/* Settings Options */}
           <ItemGroup className="grid grid-cols-4 gap-4">
             {/* Context Menu Setting */}
-            <Setting
+            <SelectSetting
+              title={t("settings.action.title")}
+              description={t("settings.action.description")}
+              currentValue={extensionAction}
+              values={["show-popup", "reset-current-tab-to-checkpoint"]}
+              onSelect={handleToggleExtensionAction}
+            />
+            <ToogleSetting
               title={t("settings.context_menu.title")}
               description={t("settings.context_menu.description")}
               isActive={showContextMenu}
