@@ -17,6 +17,12 @@ settings:
   context_menu:
     title: Context Menu
     description: Show items on right click context menu
+  action:
+    title: Extension click action
+    description: Action executed when clicking on the extension icon
+    options:
+      popup: Show extension popup
+      reset_current_tab_to_checkpoint: Reset current tab to checkpoint
 
 context_menu:
   clear_current_tab_checkpoint: Clear current tab checkpoint
