@@ -22,6 +22,7 @@ import { Switch } from "@repo/shared/presentation/switch";
 
 import { DependencyProvider } from "../dependency-provider";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@repo/shared/presentation/select";
+import { ActionListener } from "@repo/shared/domain/models/action-listener";
 
 type ToogleSettingProps = {
   title: string;
@@ -47,7 +48,7 @@ function ToogleSetting({ title, description, isActive, onToggle }: ToogleSetting
 type SelectSettingProps = {
   title: string;
   description: string;
-  values: string[];
+  values: ActionListener[];
   onSelect: (value: string) => void;
   currentValue: string;
 };
@@ -60,15 +61,15 @@ function SelectSetting({ title, description, values, onSelect, currentValue }: S
         <ItemDescription>{description}</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Select onValueChange={onSelect} defaultValue={currentValue}>
+        <Select onValueChange={onSelect} value={currentValue}>
           <SelectTrigger className="w-[180px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {values.map((value) => (
-                <SelectItem key={value} value={value}>
-                  {value}
+                <SelectItem key={value.name} value={value.name}>
+                  {value.description}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -80,20 +81,22 @@ function SelectSetting({ title, description, values, onSelect, currentValue }: S
 }
 
 export function Settings() {
-  const [extensionAction, setExtensionAction] = useState<string>("show-popup");
-  const [showContextMenu, setShowContextMenu] = useState(true);
-  const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
-
   const tabsService = DependencyProvider.getBrowserTabsService();
   const shortcutSettingsService =
     DependencyProvider.getShortcutSettingsService();
   const shortcutListeners = DependencyProvider.getShortcutListeners();
   const settingsUseCases = DependencyProvider.getSettingsUseCases();
+  const actionListeners = DependencyProvider.getActionListeners();
+
+  const [extensionAction, setExtensionAction] = useState<string>("");
+  const [showContextMenu, setShowContextMenu] = useState(true);
+  const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
   // Load settings from storage on mount
   useEffect(() => {
     const loadSettings = async () => {
-      setExtensionAction(await settingsUseCases.getExtensionAction());
+      const extensionActionValue = await settingsUseCases.getExtensionAction();
+      setExtensionAction(extensionActionValue);
       setShowContextMenu(await settingsUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
@@ -106,7 +109,7 @@ export function Settings() {
     loadShortcuts();
   }, []);
 
-  const handleToggleExtensionAction = async (value: string) => {
+  const handleSelectExtensionAction = async (value: string) => {
     await settingsUseCases.setExtensionAction(value);
     setExtensionAction(await settingsUseCases.getExtensionAction());
   };
@@ -136,8 +139,8 @@ export function Settings() {
               title={t("settings.action.title")}
               description={t("settings.action.description")}
               currentValue={extensionAction}
-              values={["show-popup", "reset-current-tab-to-checkpoint"]}
-              onSelect={handleToggleExtensionAction}
+              values={actionListeners}
+              onSelect={handleSelectExtensionAction}
             />
             <ToogleSetting
               title={t("settings.context_menu.title")}
