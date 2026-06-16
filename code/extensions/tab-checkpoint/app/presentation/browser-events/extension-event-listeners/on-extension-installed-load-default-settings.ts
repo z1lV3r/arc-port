@@ -16,5 +16,8 @@ export class OnExtensionInstalledLoadDefaultSettings implements ExtensionListene
   command = async () => {
     const showContextMenu = await this.settingsUseCases.getShowContextMenu();
     await this.settingsUseCases.setShowContextMenu(showContextMenu);
+
+    const extensionAction = await this.settingsUseCases.getExtensionAction();
+    await this.settingsUseCases.setExtensionAction(extensionAction);
   };
 }

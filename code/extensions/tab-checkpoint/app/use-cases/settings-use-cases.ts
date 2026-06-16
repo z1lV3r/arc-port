@@ -1,27 +1,19 @@
-import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
 import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
-import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
 
 export class SettingsUseCases {
   private readonly settingsRepository: SettingsRepository;
-  private readonly contextMenuListeners: ContextMenuListener[];
-  private readonly browserContextMenuService: BrowserContextMenuService;
 
-  private readonly settingsPrefix: string = "settings-checkpoint-";
+  private readonly settingsPrefix: string = "setting-";
   private readonly showContextMenuKey: string =
     this.settingsPrefix + "show-context-menu";
   private readonly showContextMenuDefaultValue: boolean = true;
   private readonly extensionActionKey: string = this.settingsPrefix + "action";
-  private readonly extensionActionDefaultValue: string = "popup";
+  private readonly extensionActionDefaultValue: string = "on-click-show-pop-up";
 
   constructor(
     settingsRepository: SettingsRepository,
-    browserContextMenuService: BrowserContextMenuService,
-    contextMenuListeners: ContextMenuListener[] = [],
   ) {
     this.settingsRepository = settingsRepository;
-    this.browserContextMenuService = browserContextMenuService;
-    this.contextMenuListeners = contextMenuListeners;
   }
 
   async getShowContextMenu(): Promise<boolean> {
@@ -32,17 +24,6 @@ export class SettingsUseCases {
   }
 
   async setShowContextMenu(showContextMenu: boolean): Promise<void> {
-    if (showContextMenu) {
-      this.browserContextMenuService.createFeatureContextMenus(
-        "Checkpoint",
-        this.contextMenuListeners,
-      );
-    } else {
-      this.browserContextMenuService.removeFeatureContextMenus(
-        "Checkpoint",
-        this.contextMenuListeners,
-      );
-    }
     await this.settingsRepository.set(this.showContextMenuKey, showContextMenu);
   }
 
@@ -57,13 +38,8 @@ export class SettingsUseCases {
     )) as string;
   }
 
-  async setExtensionAction(extensionAction: string): Promise<void> {
-    this.settingsRepository.set(this.extensionActionKey, extensionAction);
-    if (extensionAction === "reset-current-tab-to-checkpoint") {
-      // Set reset on click
-    } else {
-      // Set show popup on click
-    }
+  async setExtensionAction(extensionActionName: string): Promise<void> {
+    await this.settingsRepository.set(this.extensionActionKey, extensionActionName);
   }
 
   async resetExtensionAction(): Promise<void> {

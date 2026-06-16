@@ -1,5 +1,7 @@
 import type { BrowserExtensionService } from "@repo/shared/domain/interfaces/browser-extension-service";
+import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
 import { ChromeExtensionService } from "@repo/shared/infrastructure/chrome-extension-service";
+import { ChromeStorageSettingsRepository } from "@repo/shared/infrastructure/chrome-storage-settings-repository";
 
 import type { BrowserContextMenuService } from "./domain/interfaces/browser-context-menu-service";
 import type { BrowserMessageEventService } from "./domain/interfaces/browser-message-event-service";
@@ -14,6 +16,9 @@ import { ExtensionListenerUseCases } from "./use-cases/extension-listener-use-ca
 import { MessageEventListenerUseCases } from "./use-cases/message-event-listeners-use-cases";
 import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
 import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
+import { SettingChangeEventListenerUseCases } from "./use-cases/settings-listener-use-cases";
+import { BrowserStorageEventService } from "./domain/interfaces/browser-storage-event-service";
+import { ChromeStorageEventService } from "./infrastructure/chrome-storage-event-service";
 
 export class DependencyProvider {
   private constructor() {}
@@ -26,6 +31,15 @@ export class DependencyProvider {
     }
     this.browserTabEventService = new ChromeTabEventService();
     return this.browserTabEventService;
+  }
+
+  private static browserStorageEventService: BrowserStorageEventService;
+  static getBrowserStorageEventService(): BrowserStorageEventService {
+    if (this.browserStorageEventService) {
+      return this.browserStorageEventService;
+    }
+    this.browserStorageEventService = new ChromeStorageEventService();
+    return this.browserStorageEventService;
   }
 
   private static browserExtensionService: BrowserExtensionService;
@@ -62,6 +76,16 @@ export class DependencyProvider {
     }
     this.browserMessageEventService = new ChromeMessageEventService();
     return this.browserMessageEventService;
+  }
+
+  //Infrastructure - Data
+  private static settingsRepository: SettingsRepository;
+  static getSettingsRepository(): SettingsRepository {
+    if (this.settingsRepository) {
+      return this.settingsRepository;
+    }
+    this.settingsRepository = new ChromeStorageSettingsRepository();
+    return this.settingsRepository;
   }
 
   //Use Cases
@@ -116,5 +140,14 @@ export class DependencyProvider {
     }
     this.useCaseEventListenersUseCases = new MessageEventListenerUseCases();
     return this.useCaseEventListenersUseCases;
+  }
+
+  private static settingChangeEventListenersUseCases: SettingChangeEventListenerUseCases;
+  static getSettingChangeEventListenersUseCases(): SettingChangeEventListenerUseCases {
+    if (this.settingChangeEventListenersUseCases) {
+      return this.settingChangeEventListenersUseCases;
+    }
+    this.settingChangeEventListenersUseCases = new SettingChangeEventListenerUseCases(DependencyProvider.getBrowserStorageEventService());
+    return this.settingChangeEventListenersUseCases;
   }
 }
