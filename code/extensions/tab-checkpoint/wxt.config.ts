@@ -18,6 +18,12 @@ export default defineConfig({
     ],
     host_permissions: ["<all_urls>"],
     commands: getCommands(),
+    web_accessible_resources: [
+      {
+        resources: ["icon/*"],
+        matches: ["<all_urls>"],
+      },
+    ],
   },
   webExt: {
     // Open specific URLs automatically when the dev browser launches
