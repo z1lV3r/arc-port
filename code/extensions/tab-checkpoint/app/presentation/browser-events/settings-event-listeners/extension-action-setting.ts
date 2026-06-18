@@ -14,7 +14,7 @@ export class ExtensionActionSetting implements SettingChangeListener {
         this.actionListeners = actionListeners;
     }
     name = "setting-action";
-    description = "On action setting change";
+    description = t("browser_events.on_extension_action_setting_change");
     defaultValue = "on-click-show-pop-up";
 
     command = async (oldValue: string, newValue: string) => {
