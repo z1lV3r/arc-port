@@ -16,17 +16,18 @@ export default class ChromeContextMenuService implements BrowserContextMenuServi
 
 function showToast(tab: chrome.tabs.Tab, command: string) {
   if (tab?.id && tab.url && !tab.url.startsWith("chrome://")) {
+    const iconUrl = chrome.runtime.getURL("icon/48.png");
     chrome.scripting
       .executeScript({
         target: { tabId: tab.id },
         func: createToast,
-        args: [`${command} executed`],
+        args: [`${command} executed`, iconUrl],
       })
       .catch((e) => console.error("Failed to execute toast script:", e));
   }
 }
 
-function createToast(message: string) {
+function createToast(message: string, iconUrl: string) {
   // Remove existing toasts
   const existing = document.getElementById("arc-port-toast");
   if (existing) existing.remove();
@@ -35,8 +36,6 @@ function createToast(message: string) {
   toast.id = "arc-port-toast";
 
   // Icon
-  // Icon
-  const iconUrl = chrome.runtime.getURL("app/assets/icon/arc-port-48.png");
   const icon = `<img src="${iconUrl}" width="20" height="20" style="margin-right:8px; display:inline-block; vertical-align:middle; border-radius: 4px;" />`;
 
   toast.innerHTML = `<div style="display:flex; align-items:center;">${icon}<span>${message}</span></div>`;
