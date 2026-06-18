@@ -189,15 +189,16 @@ export class DependencyProvider {
     }
 
     this.settingsUseCases = new SettingsUseCases(
-      DependencyProvider.getSettingsRepository()
+      DependencyProvider.getSettingsRepository(),
+      DependencyProvider.getSettingChangeEventListeners()
     );
 
     return this.settingsUseCases;
   }
 
   //Presentation - Settings event listeners
-  private static settingChangeEventListeners: SettingChangeListener[];
-  static getSettingChangeEventListeners(): SettingChangeListener[] {
+  private static settingChangeEventListeners: [ShowContextMenuSetting, ExtensionActionSetting];
+  static getSettingChangeEventListeners(): [ShowContextMenuSetting, ExtensionActionSetting] {
     if (this.settingChangeEventListeners) {
       return this.settingChangeEventListeners;
     }

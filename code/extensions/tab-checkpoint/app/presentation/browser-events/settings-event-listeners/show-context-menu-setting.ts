@@ -14,7 +14,7 @@ export class ShowContextMenuSetting implements SettingChangeListener {
         this.contextMenuListeners = contextMenuListeners;
     }
     name = "setting-show-context-menu";
-    description = "On show context menu setting change";
+    description = t("browser_events.on_context_menu_setting_change");
     defaultValue = true;
 
     command = async (oldValue: boolean, newValue: boolean) => {

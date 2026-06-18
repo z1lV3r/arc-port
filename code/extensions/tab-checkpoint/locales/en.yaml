@@ -43,6 +43,8 @@ browser_events:
   on_tab_set_to_group_set_checkpoint: Set tab checkpoint if tab was set to group
   on_click_show_pop_up: Show extension pop up
   on_click_reset_current_tab_to_checkpoint: Reset current tab to checkpoint
+  on_extension_action_setting_change: On action setting change
+  on_context_menu_setting_change: On context menu setting change
 
 messages:
   clear_current_tab_checkpoint: Clear current tab checkpoint message event listener
