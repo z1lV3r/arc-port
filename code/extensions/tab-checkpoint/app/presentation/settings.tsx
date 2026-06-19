@@ -5,80 +5,15 @@ import { Button } from "@repo/shared/presentation/button";
 import {
   GroupCard,
   GroupCardContent,
-  GroupCardHeader,
-  GroupCardTitle,
 } from "@repo/shared/presentation/group-card";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemTitle,
-} from "@repo/shared/presentation/item";
+import { ItemGroup } from "@repo/shared/presentation/item";
 import { Separator } from "@repo/shared/presentation/separator";
+import { SelectSetting } from "@repo/shared/presentation/select-setting";
 import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts";
-import { Switch } from "@repo/shared/presentation/switch";
+import { ToggleSetting } from "@repo/shared/presentation/toggle-setting";
 
 import { DependencyProvider } from "../dependency-provider";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@repo/shared/presentation/select";
-import { ActionListener } from "@repo/shared/domain/models/action-listener";
 
-type ToogleSettingProps = {
-  title: string;
-  description: string;
-  isActive: boolean;
-  onToggle: () => void;
-};
-
-function ToogleSetting({ title, description, isActive, onToggle }: ToogleSettingProps) {
-  return (
-    <Item className="col-span-2">
-      <ItemContent>
-        <ItemTitle>{title}</ItemTitle>
-        <ItemDescription>{description}</ItemDescription>
-      </ItemContent>
-      <ItemActions>
-        <Switch checked={isActive} onCheckedChange={onToggle} />
-      </ItemActions>
-    </Item>
-  );
-}
-
-type SelectSettingProps = {
-  title: string;
-  description: string;
-  values: ActionListener[];
-  onSelect: (value: string) => void;
-  currentValue: string;
-};
-
-function SelectSetting({ title, description, values, onSelect, currentValue }: SelectSettingProps) {
-  return (
-    <Item className="col-span-2">
-      <ItemContent>
-        <ItemTitle>{title}</ItemTitle>
-        <ItemDescription>{description}</ItemDescription>
-      </ItemContent>
-      <ItemActions>
-        <Select onValueChange={onSelect} value={currentValue}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {values.map((value) => (
-                <SelectItem key={value.name} value={value.name}>
-                  {value.description}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </ItemActions>
-    </Item>
-  );
-}
 
 export function Settings() {
   const tabsService = DependencyProvider.getBrowserTabsService();
@@ -142,7 +77,7 @@ export function Settings() {
               values={actionListeners}
               onSelect={handleSelectExtensionAction}
             />
-            <ToogleSetting
+            <ToggleSetting
               title={t("settings.context_menu.title")}
               description={t("settings.context_menu.description")}
               isActive={showContextMenu}
