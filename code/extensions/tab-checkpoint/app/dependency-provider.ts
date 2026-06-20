@@ -52,6 +52,9 @@ import { OnClickResetCurrentTabToCheckpoint } from "./presentation/browser-event
 import { SettingChangeListener } from "@repo/shared/domain/models/setting-listener";
 import { ShowContextMenuSetting } from "./presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
 import { ExtensionActionSetting } from "./presentation/browser-events/settings-event-listeners/extension-action-setting.ts";
+import { OnTabActivatedSetIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-activated-set-icon.ts";
+import { StorageListener } from "@repo/shared/domain/models/storage-listener";
+import { OnCheckpointChanged } from "./presentation/browser-events/storage-event-listeners/on-checkpoint-changed.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -217,6 +220,22 @@ export class DependencyProvider {
     return this.settingChangeEventListeners;
   }
 
+  //Presentation - storage listeners
+  private static storageListeners: StorageListener[];
+  static getStorageListeners(): StorageListener[] {
+    if (this.storageListeners) {
+      return this.storageListeners;
+    }
+
+    this.storageListeners = [
+      new OnCheckpointChanged(
+        DependencyProvider.getBrowserExtensionActionService(),
+      ),
+    ];
+
+    return this.storageListeners;
+  }
+
   //Presentation - Context menu listeners
   private static contextMenuListeners: ContextMenuListener[];
   static getContextMenuListeners(): ContextMenuListener[] {
@@ -298,6 +317,22 @@ export class DependencyProvider {
   }
 
   //Presentation - Tab event listeners
+  private static onTabActivatedEventListeners: TabEventListener[];
+  static getOnTabActivatedEventListeners(): TabEventListener[] {
+    if (this.onTabActivatedEventListeners) {
+      return this.onTabActivatedEventListeners;
+    }
+
+    this.onTabActivatedEventListeners = [
+      new OnTabActivatedSetIcon(
+        DependencyProvider.getBrowserExtensionActionService(),
+        DependencyProvider.getGetCheckpointUseCases(),
+      ),
+    ];
+
+    return this.onTabActivatedEventListeners;
+  }
+
   private static onCloseTabEventListeners: TabEventListener[];
   static getOnCloseTabEventListeners(): TabEventListener[] {
     if (this.onCloseTabEventListeners) {
