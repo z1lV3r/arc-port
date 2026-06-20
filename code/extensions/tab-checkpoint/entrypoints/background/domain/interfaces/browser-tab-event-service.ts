@@ -1,6 +1,9 @@
 import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
 
 export interface BrowserTabEventService {
+  registerOnTabActivatedEventListeners(
+    listenersStore: ListenersStore,
+  ): Promise<void>;
   registerOnCloseTabEventListeners(
     listenersStore: ListenersStore,
   ): Promise<void>;

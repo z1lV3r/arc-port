@@ -19,6 +19,7 @@ import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cas
 import { SettingChangeEventListenerUseCases } from "./use-cases/settings-listener-use-cases";
 import { BrowserStorageEventService } from "./domain/interfaces/browser-storage-event-service";
 import { ChromeStorageEventService } from "./infrastructure/chrome-storage-event-service";
+import { StorageListenerUseCases } from "./use-cases/storage-listener-use-cases";
 
 export class DependencyProvider {
   private constructor() {}
@@ -89,6 +90,17 @@ export class DependencyProvider {
   }
 
   //Use Cases
+  private static storageListenerUseCase: StorageListenerUseCases;
+  static getStorageListenerUseCase(): StorageListenerUseCases {
+    if (this.storageListenerUseCase) {
+      return this.storageListenerUseCase;
+    }
+    this.storageListenerUseCase = new StorageListenerUseCases(
+      DependencyProvider.getBrowserStorageEventService(),
+    );
+    return this.storageListenerUseCase;
+  }
+
   private static contextMenuListenerUseCase: ContextMenuListenerUseCases;
   static getContextMenuListenerUseCase(): ContextMenuListenerUseCases {
     if (this.contextMenuListenerUseCase) {

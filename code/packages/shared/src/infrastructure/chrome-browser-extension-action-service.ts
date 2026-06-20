@@ -13,4 +13,8 @@ export class ChromeBrowserExtensionActionService
   removeExtensionAction(action: ActionListener): void {
     chrome.action.onClicked.removeListener(() => action.command());
   }
+
+  setIcon(iconPath: string): void {
+    chrome.action.setIcon({ path: iconPath });
+  }
 }

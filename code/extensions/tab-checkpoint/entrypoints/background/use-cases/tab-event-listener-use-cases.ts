@@ -10,6 +10,14 @@ export class TabEventListenerUseCases {
     this.browserTabEventService = browserTabEventService;
   }
 
+  registerOnTabActivatedEventListeners(listeners: Listener[][]) {
+    const listenersStore = new ListenersStore();
+    listenersStore.addListeners(listeners);
+    this.browserTabEventService.registerOnTabActivatedEventListeners(
+      listenersStore,
+    );
+  }
+
   registerOnCloseTabEventListeners(listeners: Listener[][]) {
     const listenersStore = new ListenersStore();
     listenersStore.addListeners(listeners);

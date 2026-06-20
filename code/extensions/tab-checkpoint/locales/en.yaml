@@ -37,6 +37,7 @@ shortcuts_set_current_tab_checkpoint: Set current tab checkpoint
 # Not used in UI
 browser_events:
   on_extension_installed_load_default_settings: On extension installed load default settings
+  on_tab_activated_set_icon: On tab activated set icon
   on_tab_close_remove_checkpoint: Remove checkpoint when tab is closed
   on_tab_create_pinned_set_checkpoint: Set tab checkpoint if tab pinned was created
   on_tab_pin_set_checkpoint: Set tab checkpoint if unset by tab id
@@ -45,6 +46,7 @@ browser_events:
   on_click_reset_current_tab_to_checkpoint: Reset current tab to checkpoint
   on_extension_action_setting_change: On action setting change
   on_context_menu_setting_change: On context menu setting change
+  on_checkpoint_changed: On checkpoint changed
 
 messages:
   clear_current_tab_checkpoint: Clear current tab checkpoint message event listener
