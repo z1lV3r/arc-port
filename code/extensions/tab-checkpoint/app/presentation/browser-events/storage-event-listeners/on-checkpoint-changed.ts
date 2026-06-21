@@ -22,20 +22,13 @@ export class OnCheckpointChanged implements StorageListener {
     }
 
     command = async (key: string, [oldValue, newValue]: [string, string]) => {
-        console.log("on-checkpoint-changed", oldValue, newValue);
-        console.log(key);
         if (newValue === oldValue) return;
 
         const currentTab = await this.browserTabsService.getCurrentTab();
-        console.log("currentTab", currentTab);
-        console.log(key.substring(0, key.length - "-checkpoint".length));
-        console.log(currentTab?.id?.toString());
-        if(key.substring(0, key.length - "-checkpoint".length) === currentTab?.id?.toString()) {
+        if (key.substring(0, key.length - "-checkpoint".length) === currentTab?.id?.toString()) {
             if (newValue) {
-                console.log("setting color")
                 this.browserExtensionActionService.setIcon(this.colorIconPath);
             } else {
-                console.log("setting bw")
                 this.browserExtensionActionService.setIcon(this.bwIconPath);
             }
         }
