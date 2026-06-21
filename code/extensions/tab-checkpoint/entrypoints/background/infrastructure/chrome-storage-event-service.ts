@@ -20,9 +20,9 @@ export class ChromeStorageEventService implements BrowserStorageEventService {
       for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
         for (const [, listener] of listenersStore.getAllListeners()) {
             console.log(listener);
-            const applicableKeys = (listener as unknown as StorageListener).applicableKeys.split(",");
-            if (applicableKeys.includes(key)) {
-              await listener.command(oldValue, newValue);
+            const applicableKeys = (listener as unknown as StorageListener).applicableKeys;
+            if (new RegExp(applicableKeys).test(key)) {
+              await listener.command(key, [oldValue, newValue]);
             }
           
         }
