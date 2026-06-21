@@ -247,6 +247,7 @@ export class DependencyProvider {
     this.storageListeners = [
       new OnCheckpointChanged(
         DependencyProvider.getBrowserExtensionActionService(),
+        DependencyProvider.getBrowserTabsService(),
       ),
     ];
 
