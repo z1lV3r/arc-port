@@ -7,7 +7,6 @@ export class OnCheckpointChanged implements StorageListener {
     applicableKeys = ".*-checkpoint";
     name = "on-checkpoint-changed";
     description = t("browser_events.on_checkpoint_changed");
-    defaultValue = [];
 
     private readonly bwIconPath: string = "icon/bw/128.png"
     private readonly colorIconPath: string = "icon/128.png"

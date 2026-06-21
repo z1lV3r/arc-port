@@ -26,6 +26,7 @@ import { OnTabSetToGroupSetCheckpoint } from "./presentation/browser-events/tab-
 import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/clear-current-tab-checkpoint-context-menu-listener.ts";
 import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/context-menu/reset-current-tab-to-checkpoint-context-menu-listener.ts";
 import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/set-current-tab-checkpoint-context-menu-listener.ts";
+import { ShowCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/show-current-tab-checkpoint-context-menu-listener.ts";
 import { ClearCheckpointMessageEventSender } from "./presentation/messages/clear-checkpoint/_clear-checkpoint-message-event-sender.ts";
 import { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint/clear-current-tab-checkpoint-message-event-listener.ts";
 import { ClearTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint/clear-tab-checkpoint-message-event-listener.ts";
@@ -46,6 +47,7 @@ import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
 import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases";
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
 import { SettingsUseCases } from "./use-cases/settings-use-cases";
+import { ShowCheckpointUseCases } from "./use-cases/show-checkpoint-use-cases";
 import { ActionListener } from "@repo/shared/domain/models/action-listener";
 import { OnClickShowPopUp } from "./presentation/browser-events/action-event-listeners/on-click-show-pop-up.ts";
 import { OnClickResetCurrentTabToCheckpoint } from "./presentation/browser-events/action-event-listeners/on-click-reset-current-tab-to-checkpoint.ts";
@@ -199,6 +201,21 @@ export class DependencyProvider {
     return this.settingsUseCases;
   }
 
+  private static showCheckpointUseCases: ShowCheckpointUseCases;
+  static getShowCheckpointUseCases(): ShowCheckpointUseCases {
+    if (this.showCheckpointUseCases) {
+      return this.showCheckpointUseCases;
+    }
+
+    this.showCheckpointUseCases = new ShowCheckpointUseCases(
+      DependencyProvider.getBrowserExtensionActionService(),
+      DependencyProvider.getActionListeners(),
+      () => DependencyProvider.getSettingsUseCases(),
+    );
+
+    return this.showCheckpointUseCases;
+  }
+
   //Presentation - Settings event listeners
   private static settingChangeEventListeners: [ShowContextMenuSetting, ExtensionActionSetting];
   static getSettingChangeEventListeners(): [ShowContextMenuSetting, ExtensionActionSetting] {
@@ -252,6 +269,9 @@ export class DependencyProvider {
       ),
       new ClearCurrentTabCheckpointContextMenuListener(
         DependencyProvider.getClearCheckpointUseCases(),
+      ),
+      new ShowCurrentTabCheckpointContextMenuListener(
+        DependencyProvider.getShowCheckpointUseCases(),
       ),
     ];
 

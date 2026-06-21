@@ -17,4 +17,8 @@ export class ChromeBrowserExtensionActionService
   setIcon(iconPath: string): void {
     chrome.action.setIcon({ path: iconPath });
   }
+
+  async openPopup(): Promise<void> {
+    await chrome.action.openPopup();
+  }
 }
