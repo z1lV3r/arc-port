@@ -28,6 +28,7 @@ context_menu:
   clear_current_tab_checkpoint: Clear current tab checkpoint
   reset_current_tab_to_checkpoint: Reset current tab to checkpoint
   set_current_tab_checkpoint: Set current tab checkpoint
+  show_current_tab_checkpoint: Show current tab checkpoint
 
 shortcuts_clear_current_tab_checkpoint: Clear current tab checkpoint
 shortcuts_reset_current_tab_to_checkpoint: Reset current tab to checkpoint

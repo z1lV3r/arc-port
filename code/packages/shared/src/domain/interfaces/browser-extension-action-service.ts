@@ -4,4 +4,5 @@ export interface BrowserExtensionActionService {
   setExtensionAction(action: ActionListener): void;
   removeExtensionAction(action: ActionListener): void;
   setIcon(icon: string): void;
+  openPopup(): Promise<void>;
 }

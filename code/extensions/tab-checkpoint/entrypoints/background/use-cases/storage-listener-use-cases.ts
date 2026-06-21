@@ -13,6 +13,6 @@ export class StorageListenerUseCases {
   registerStorageListeners(listeners: Listener[][]) {
     const listenersStore = new ListenersStore();
     listenersStore.addListeners(listeners);
-    this.browserStorageEventService.registerSettingChangeEventListeners(listenersStore);
+    this.browserStorageEventService.registerStorageEventListeners(listenersStore);
   }
 }
