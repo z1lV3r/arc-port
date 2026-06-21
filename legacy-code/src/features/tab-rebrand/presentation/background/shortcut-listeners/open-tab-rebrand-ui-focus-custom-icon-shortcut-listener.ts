@@ -16,7 +16,6 @@ export class OpenTabRebrandUiFocusCustomIconShortcutListener implements Shortcut
     mac: "Option+Shift+I",
   }
   command = async () => {
-    console.log('openPopupFocusCustomIcon');
     await this.openPopUpUseCases.openPopupFocusCustomIcon();
   };
 }
