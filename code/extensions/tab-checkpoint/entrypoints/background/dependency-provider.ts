@@ -6,20 +6,20 @@ import { ChromeStorageSettingsRepository } from "@repo/shared/infrastructure/chr
 import type { BrowserContextMenuService } from "./domain/interfaces/browser-context-menu-service";
 import type { BrowserMessageEventService } from "./domain/interfaces/browser-message-event-service";
 import type { BrowserShortcutService } from "./domain/interfaces/browser-shortcut-service";
+import { BrowserStorageEventService } from "./domain/interfaces/browser-storage-event-service";
 import type { BrowserTabEventService } from "./domain/interfaces/browser-tab-event-service";
 import ChromeContextMenuService from "./infrastructure/chrome-context-menu-service";
 import { ChromeMessageEventService } from "./infrastructure/chrome-message-event-service";
 import ChromeShortcutService from "./infrastructure/chrome-shortcut-service";
+import { ChromeStorageEventService } from "./infrastructure/chrome-storage-event-service";
 import ChromeTabEventService from "./infrastructure/chrome-tab-event-service";
 import { ContextMenuListenerUseCases } from "./use-cases/context-menu-listener-use-cases";
 import { ExtensionListenerUseCases } from "./use-cases/extension-listener-use-cases";
 import { MessageEventListenerUseCases } from "./use-cases/message-event-listeners-use-cases";
-import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
-import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
 import { SettingChangeEventListenerUseCases } from "./use-cases/settings-listener-use-cases";
-import { BrowserStorageEventService } from "./domain/interfaces/browser-storage-event-service";
-import { ChromeStorageEventService } from "./infrastructure/chrome-storage-event-service";
+import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
 import { StorageListenerUseCases } from "./use-cases/storage-listener-use-cases";
+import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
 
 export class DependencyProvider {
   private constructor() {}
@@ -159,7 +159,10 @@ export class DependencyProvider {
     if (this.settingChangeEventListenersUseCases) {
       return this.settingChangeEventListenersUseCases;
     }
-    this.settingChangeEventListenersUseCases = new SettingChangeEventListenerUseCases(DependencyProvider.getBrowserStorageEventService());
+    this.settingChangeEventListenersUseCases =
+      new SettingChangeEventListenerUseCases(
+        DependencyProvider.getBrowserStorageEventService(),
+      );
     return this.settingChangeEventListenersUseCases;
   }
 }

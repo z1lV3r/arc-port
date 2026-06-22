@@ -4,7 +4,6 @@ import type { TabEventListener } from "@repo/shared/domain/models/tab-event-list
 import type { BrowserTabEventService } from "../domain/interfaces/browser-tab-event-service";
 
 export default class ChromeTabEventService implements BrowserTabEventService {
-
   async registerOnTabActivatedEventListeners(listenersStore: ListenersStore) {
     chrome.tabs.onActivated.addListener(async (tabId) => {
       for (const [_, tabEventListener] of listenersStore.getAllListeners()) {

@@ -1,9 +1,7 @@
 import type { BrowserExtensionActionService } from "../domain/interfaces/browser-extension-action-service";
 import type { ActionListener } from "../domain/models/action-listener";
 
-export class ChromeBrowserExtensionActionService
-  implements BrowserExtensionActionService
-{
+export class ChromeBrowserExtensionActionService implements BrowserExtensionActionService {
   private readonly actionListeners = new Map<
     string,
     Parameters<typeof chrome.action.onClicked.addListener>[0]

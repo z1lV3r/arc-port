@@ -7,21 +7,22 @@ import {
   GroupCardContent,
 } from "@repo/shared/presentation/group-card";
 import { ItemGroup } from "@repo/shared/presentation/item";
-import { Separator } from "@repo/shared/presentation/separator";
 import { SelectSetting } from "@repo/shared/presentation/select-setting";
+import { Separator } from "@repo/shared/presentation/separator";
 import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts";
 import { ToggleSetting } from "@repo/shared/presentation/toggle-setting";
 
 import { DependencyProvider } from "../dependency-provider";
-
 
 export function Settings() {
   const tabsService = DependencyProvider.getBrowserTabsService();
   const shortcutSettingsService =
     DependencyProvider.getShortcutSettingsService();
   const shortcutListeners = DependencyProvider.getShortcutListeners();
-  const showContextMenuSettingUseCases = DependencyProvider.getShowContextMenuSettingUseCases();
-  const extensionActionSettingUseCases = DependencyProvider.getExtensionActionSettingUseCases();
+  const showContextMenuSettingUseCases =
+    DependencyProvider.getShowContextMenuSettingUseCases();
+  const extensionActionSettingUseCases =
+    DependencyProvider.getExtensionActionSettingUseCases();
   const actionListeners = DependencyProvider.getActionListeners();
 
   const [extensionAction, setExtensionAction] = useState<string>("");
@@ -31,9 +32,12 @@ export function Settings() {
   // Load settings from storage on mount
   useEffect(() => {
     const loadSettings = async () => {
-      const extensionActionValue = await extensionActionSettingUseCases.getExtensionAction();
+      const extensionActionValue =
+        await extensionActionSettingUseCases.getExtensionAction();
       setExtensionAction(extensionActionValue);
-      setShowContextMenu(await showContextMenuSettingUseCases.getShowContextMenu());
+      setShowContextMenu(
+        await showContextMenuSettingUseCases.getShowContextMenu(),
+      );
     };
     const loadShortcuts = async () => {
       const currentShortcuts =
@@ -47,21 +51,31 @@ export function Settings() {
 
   const handleSelectExtensionAction = async (value: string) => {
     await extensionActionSettingUseCases.setExtensionAction(value);
-    setExtensionAction(await extensionActionSettingUseCases.getExtensionAction());
+    setExtensionAction(
+      await extensionActionSettingUseCases.getExtensionAction(),
+    );
   };
 
   const handleToggleShowContextMenu = async () => {
     await showContextMenuSettingUseCases.setShowContextMenu(!showContextMenu);
-    setShowContextMenu(await showContextMenuSettingUseCases.getShowContextMenu());
+    setShowContextMenu(
+      await showContextMenuSettingUseCases.getShowContextMenu(),
+    );
   };
 
   const handleResetSettings = async () => {
-    const resetExtensionAction = extensionActionSettingUseCases.resetExtensionAction();
-    const resetShowContextMenu = showContextMenuSettingUseCases.resetShowContextMenu();
+    const resetExtensionAction =
+      extensionActionSettingUseCases.resetExtensionAction();
+    const resetShowContextMenu =
+      showContextMenuSettingUseCases.resetShowContextMenu();
     await resetExtensionAction;
     await resetShowContextMenu;
-    setExtensionAction(await extensionActionSettingUseCases.getExtensionAction());
-    setShowContextMenu(await showContextMenuSettingUseCases.getShowContextMenu());
+    setExtensionAction(
+      await extensionActionSettingUseCases.getExtensionAction(),
+    );
+    setShowContextMenu(
+      await showContextMenuSettingUseCases.getShowContextMenu(),
+    );
   };
 
   return (

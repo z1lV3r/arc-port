@@ -5,14 +5,14 @@ import type { BrowserStorageEventService } from "../domain/interfaces/browser-st
 
 export class SettingChangeEventListenerUseCases {
   private browserStorageEventService: BrowserStorageEventService;
-  constructor(
-    browserStorageEventService: BrowserStorageEventService,
-  ) {
+  constructor(browserStorageEventService: BrowserStorageEventService) {
     this.browserStorageEventService = browserStorageEventService;
   }
   registerSettingChangeEventListeners(listeners: Listener[][]) {
     const listenersStore = new ListenersStore();
     listenersStore.addListeners(listeners);
-    this.browserStorageEventService.registerSettingChangeEventListeners(listenersStore);
+    this.browserStorageEventService.registerSettingChangeEventListeners(
+      listenersStore,
+    );
   }
 }

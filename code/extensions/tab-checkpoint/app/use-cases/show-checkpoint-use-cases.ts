@@ -19,12 +19,16 @@ export class ShowCheckpointUseCases {
   }
 
   async showCurrentTabCheckpoint(): Promise<void> {
-    const currentActionName = await this.extensionActionSettingUseCases.getExtensionAction();
+    const currentActionName =
+      await this.extensionActionSettingUseCases.getExtensionAction();
 
-    const showPopUpAction = this.actionListeners.find((l) => l.popupPath !== "");
+    const showPopUpAction = this.actionListeners.find(
+      (l) => l.popupPath !== "",
+    );
 
     const needsTemporarySwitch =
-      showPopUpAction !== undefined && currentActionName !== showPopUpAction.name;
+      showPopUpAction !== undefined &&
+      currentActionName !== showPopUpAction.name;
 
     if (needsTemporarySwitch) {
       this.browserExtensionActionService.setExtensionAction(showPopUpAction!);

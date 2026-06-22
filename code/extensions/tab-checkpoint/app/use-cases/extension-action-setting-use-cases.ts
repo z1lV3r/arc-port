@@ -1,7 +1,9 @@
-import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
+import {
+  EXTENSION_ACTION_SETTING_DEFAULT,
+  EXTENSION_ACTION_SETTING_NAME,
+} from "@/app/presentation/browser-events/settings-event-listeners/extension-action-setting.ts";
 
-export const EXTENSION_ACTION_SETTING_NAME = "setting-action";
-export const EXTENSION_ACTION_SETTING_DEFAULT = "on-click-show-pop-up";
+import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
 
 export class ExtensionActionSettingUseCases {
   private readonly settingsRepository: SettingsRepository;
@@ -18,7 +20,10 @@ export class ExtensionActionSettingUseCases {
   }
 
   async setExtensionAction(extensionActionName: string): Promise<void> {
-    await this.settingsRepository.set(EXTENSION_ACTION_SETTING_NAME, extensionActionName);
+    await this.settingsRepository.set(
+      EXTENSION_ACTION_SETTING_NAME,
+      extensionActionName,
+    );
   }
 
   async resetExtensionAction(): Promise<void> {

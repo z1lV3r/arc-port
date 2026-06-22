@@ -1,7 +1,9 @@
-import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
+import {
+  SHOW_CONTEXT_MENU_SETTING_DEFAULT,
+  SHOW_CONTEXT_MENU_SETTING_NAME,
+} from "@/app/presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
 
-export const SHOW_CONTEXT_MENU_SETTING_NAME = "setting-show-context-menu";
-export const SHOW_CONTEXT_MENU_SETTING_DEFAULT = true;
+import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
 
 export class ShowContextMenuSettingUseCases {
   private readonly settingsRepository: SettingsRepository;
@@ -18,7 +20,10 @@ export class ShowContextMenuSettingUseCases {
   }
 
   async setShowContextMenu(showContextMenu: boolean): Promise<void> {
-    await this.settingsRepository.set(SHOW_CONTEXT_MENU_SETTING_NAME, showContextMenu);
+    await this.settingsRepository.set(
+      SHOW_CONTEXT_MENU_SETTING_NAME,
+      showContextMenu,
+    );
   }
 
   async resetShowContextMenu(): Promise<void> {
