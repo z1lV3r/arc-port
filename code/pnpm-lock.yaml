@@ -154,6 +154,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/chrome':
+        specifier: ^0.0.280
+        version: 0.0.280
       '@types/node':
         specifier: ^22.15.3
         version: 22.19.19

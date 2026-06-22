@@ -46,7 +46,8 @@ import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases"
 import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
 import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases";
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
-import { SettingsUseCases } from "./use-cases/settings-use-cases";
+import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases";
+import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases";
 import { ShowCheckpointUseCases } from "./use-cases/show-checkpoint-use-cases";
 import { ActionListener } from "@repo/shared/domain/models/action-listener";
 import { OnClickShowPopUp } from "./presentation/browser-events/action-event-listeners/on-click-show-pop-up.ts";
@@ -187,18 +188,30 @@ export class DependencyProvider {
 
     return this.resetTabToCheckpointUseCases;
   }
-  private static settingsUseCases: SettingsUseCases;
-  static getSettingsUseCases(): SettingsUseCases {
-    if (this.settingsUseCases) {
-      return this.settingsUseCases;
+  private static showContextMenuSettingUseCases: ShowContextMenuSettingUseCases;
+  static getShowContextMenuSettingUseCases(): ShowContextMenuSettingUseCases {
+    if (this.showContextMenuSettingUseCases) {
+      return this.showContextMenuSettingUseCases;
     }
 
-    this.settingsUseCases = new SettingsUseCases(
-      DependencyProvider.getSettingsRepository(),
-      DependencyProvider.getSettingChangeEventListeners()
+    this.showContextMenuSettingUseCases = new ShowContextMenuSettingUseCases(
+      DependencyProvider.getSettingsRepository()
     );
 
-    return this.settingsUseCases;
+    return this.showContextMenuSettingUseCases;
+  }
+
+  private static extensionActionSettingUseCases: ExtensionActionSettingUseCases;
+  static getExtensionActionSettingUseCases(): ExtensionActionSettingUseCases {
+    if (this.extensionActionSettingUseCases) {
+      return this.extensionActionSettingUseCases;
+    }
+
+    this.extensionActionSettingUseCases = new ExtensionActionSettingUseCases(
+      DependencyProvider.getSettingsRepository()
+    );
+
+    return this.extensionActionSettingUseCases;
   }
 
   private static showCheckpointUseCases: ShowCheckpointUseCases;
@@ -210,7 +223,7 @@ export class DependencyProvider {
     this.showCheckpointUseCases = new ShowCheckpointUseCases(
       DependencyProvider.getBrowserExtensionActionService(),
       DependencyProvider.getActionListeners(),
-      () => DependencyProvider.getSettingsUseCases(),
+      DependencyProvider.getExtensionActionSettingUseCases(),
     );
 
     return this.showCheckpointUseCases;
@@ -288,7 +301,8 @@ export class DependencyProvider {
 
     this.onExtensionInstalledListeners = [
       new OnExtensionInstalledLoadDefaultSettings(
-        DependencyProvider.getSettingsUseCases(),
+        DependencyProvider.getShowContextMenuSettingUseCases(),
+        DependencyProvider.getExtensionActionSettingUseCases(),
       ),
     ];
 

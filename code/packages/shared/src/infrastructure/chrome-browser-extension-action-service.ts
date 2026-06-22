@@ -4,25 +4,28 @@ import type { ActionListener } from "../domain/models/action-listener";
 export class ChromeBrowserExtensionActionService
   implements BrowserExtensionActionService
 {
-
-  private currentListener?: () => void;
+  private readonly actionListeners = new Map<
+    string,
+    Parameters<typeof chrome.action.onClicked.addListener>[0]
+  >();
 
   setExtensionAction(action: ActionListener): void {
     chrome.action.setPopup({ popup: action.popupPath });
-    
-    if (this.currentListener) {
-      chrome.action.onClicked.removeListener(this.currentListener);
-    }
-    
-    this.currentListener = () => action.command();
-    chrome.action.onClicked.addListener(this.currentListener);
+
+    this.removeExtensionAction(action);
+
+    const listener = () => action.command();
+    this.actionListeners.set(action.name, listener);
+    chrome.action.onClicked.addListener(listener);
   }
 
   removeExtensionAction(action: ActionListener): void {
-    if (this.currentListener) {
-      chrome.action.onClicked.removeListener(this.currentListener);
-      this.currentListener = undefined;
-    }
+    const listener = this.actionListeners.get(action.name);
+
+    if (!listener) return;
+
+    chrome.action.onClicked.removeListener(listener);
+    this.actionListeners.delete(action.name);
   }
 
   setIcon(iconPath: string): void {

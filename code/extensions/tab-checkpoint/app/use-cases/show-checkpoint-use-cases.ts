@@ -1,26 +1,25 @@
 import type { BrowserExtensionActionService } from "@repo/shared/domain/interfaces/browser-extension-action-service";
 import type { ActionListener } from "@repo/shared/domain/models/action-listener";
 
-import type { SettingsUseCases } from "./settings-use-cases";
+import type { ExtensionActionSettingUseCases } from "./extension-action-setting-use-cases";
 
 export class ShowCheckpointUseCases {
   private readonly browserExtensionActionService: BrowserExtensionActionService;
   private readonly actionListeners: ActionListener[];
-  private readonly getSettingsUseCases: () => SettingsUseCases;
+  private readonly extensionActionSettingUseCases: ExtensionActionSettingUseCases;
 
   constructor(
     browserExtensionActionService: BrowserExtensionActionService,
     actionListeners: ActionListener[],
-    getSettingsUseCases: () => SettingsUseCases,
+    extensionActionSettingUseCases: ExtensionActionSettingUseCases,
   ) {
     this.browserExtensionActionService = browserExtensionActionService;
     this.actionListeners = actionListeners;
-    this.getSettingsUseCases = getSettingsUseCases;
+    this.extensionActionSettingUseCases = extensionActionSettingUseCases;
   }
 
   async showCurrentTabCheckpoint(): Promise<void> {
-    const settingsUseCases = this.getSettingsUseCases();
-    const currentActionName = await settingsUseCases.getExtensionAction();
+    const currentActionName = await this.extensionActionSettingUseCases.getExtensionAction();
 
     const showPopUpAction = this.actionListeners.find((l) => l.popupPath !== "");
 

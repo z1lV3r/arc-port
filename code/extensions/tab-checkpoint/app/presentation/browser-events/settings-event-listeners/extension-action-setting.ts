@@ -20,12 +20,12 @@ export class ExtensionActionSetting implements SettingChangeListener {
     command = async (oldValue: string, newValue: string) => {
         if (newValue === oldValue) return;
         const newAction = this.actionListeners.find((l) => l.name === newValue);
-        const oldAction = this.actionListeners.find((l) => l.name === oldValue);
-        if (oldAction) {
-            this.browserExtensionActionService.removeExtensionAction(oldAction);
+      const oldAction = this.actionListeners.find((l) => l.name === oldValue);
+      if (oldAction) {
+        this.browserExtensionActionService.removeExtensionAction(oldAction);
         }
-        if (newAction) {
-            this.browserExtensionActionService.setExtensionAction(newAction);
+      if (newAction) {
+        this.browserExtensionActionService.setExtensionAction(newAction);
         }
     };
 }
