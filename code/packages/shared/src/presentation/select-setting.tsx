@@ -1,6 +1,19 @@
 import type { Listener } from "../domain/models/listener";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "./item";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./select";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "./item";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
 
 type SelectSettingProps = {
   title: string;
@@ -10,7 +23,13 @@ type SelectSettingProps = {
   currentValue: string;
 };
 
-function SelectSetting({ title, description, values, onSelect, currentValue }: SelectSettingProps) {
+function SelectSetting({
+  title,
+  description,
+  values,
+  onSelect,
+  currentValue,
+}: SelectSettingProps) {
   return (
     <Item className="col-span-2">
       <ItemContent>

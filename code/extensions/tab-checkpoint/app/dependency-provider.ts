@@ -4,10 +4,13 @@ import { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-me
 import type { BrowserShortcutSettingsService } from "@repo/shared/domain/interfaces/browser-shortcut-settings-service";
 import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
+import { ActionListener } from "@repo/shared/domain/models/action-listener";
 import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
 import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
 import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
+import { SettingChangeListener } from "@repo/shared/domain/models/setting-listener";
 import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
+import { StorageListener } from "@repo/shared/domain/models/storage-listener";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
 import { ChromeBrowserExtensionActionService } from "@repo/shared/infrastructure/chrome-browser-extension-action-service";
 import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
@@ -18,7 +21,13 @@ import { ChromeTabsService } from "@repo/shared/infrastructure/chrome-tabs-servi
 
 import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository";
 import { ChromeStorageCheckpointRepository } from "./infrastructure/chrome-storage-checkpoint-repository";
+import { OnClickResetCurrentTabToCheckpoint } from "./presentation/browser-events/action-event-listeners/on-click-reset-current-tab-to-checkpoint.ts";
+import { OnClickShowPopUp } from "./presentation/browser-events/action-event-listeners/on-click-show-pop-up.ts";
 import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/browser-events/extension-event-listeners/on-extension-installed-load-default-settings.ts";
+import { ExtensionActionSetting } from "./presentation/browser-events/settings-event-listeners/extension-action-setting.ts";
+import { ShowContextMenuSetting } from "./presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
+import { OnCheckpointChanged } from "./presentation/browser-events/storage-event-listeners/on-checkpoint-changed.ts";
+import { OnTabActivatedSetIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-activated-set-icon.ts";
 import { OnTabCloseRemoveCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-close-delete-checkpoint.ts";
 import { OnTabCreatePinnedSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-create-pinned-checkpoint.ts";
 import { OnTabPinSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-pin-set-checkpoint.ts";
@@ -43,21 +52,12 @@ import { ResetCurrentTabToCheckpointShortcutListener } from "./presentation/shor
 import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-or-close-current-tab-to-checkpoint-shortcut-listener.ts";
 import { SetCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/set-current-tab-checkpoint-shortcut-listener.ts";
 import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases";
+import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases";
 import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases";
 import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases";
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
-import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases";
-import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases";
 import { ShowCheckpointUseCases } from "./use-cases/show-checkpoint-use-cases";
-import { ActionListener } from "@repo/shared/domain/models/action-listener";
-import { OnClickShowPopUp } from "./presentation/browser-events/action-event-listeners/on-click-show-pop-up.ts";
-import { OnClickResetCurrentTabToCheckpoint } from "./presentation/browser-events/action-event-listeners/on-click-reset-current-tab-to-checkpoint.ts";
-import { SettingChangeListener } from "@repo/shared/domain/models/setting-listener";
-import { ShowContextMenuSetting } from "./presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
-import { ExtensionActionSetting } from "./presentation/browser-events/settings-event-listeners/extension-action-setting.ts";
-import { OnTabActivatedSetIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-activated-set-icon.ts";
-import { StorageListener } from "@repo/shared/domain/models/storage-listener";
-import { OnCheckpointChanged } from "./presentation/browser-events/storage-event-listeners/on-checkpoint-changed.ts";
+import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -195,7 +195,7 @@ export class DependencyProvider {
     }
 
     this.showContextMenuSettingUseCases = new ShowContextMenuSettingUseCases(
-      DependencyProvider.getSettingsRepository()
+      DependencyProvider.getSettingsRepository(),
     );
 
     return this.showContextMenuSettingUseCases;
@@ -208,7 +208,7 @@ export class DependencyProvider {
     }
 
     this.extensionActionSettingUseCases = new ExtensionActionSettingUseCases(
-      DependencyProvider.getSettingsRepository()
+      DependencyProvider.getSettingsRepository(),
     );
 
     return this.extensionActionSettingUseCases;
@@ -230,8 +230,14 @@ export class DependencyProvider {
   }
 
   //Presentation - Settings event listeners
-  private static settingChangeEventListeners: [ShowContextMenuSetting, ExtensionActionSetting];
-  static getSettingChangeEventListeners(): [ShowContextMenuSetting, ExtensionActionSetting] {
+  private static settingChangeEventListeners: [
+    ShowContextMenuSetting,
+    ExtensionActionSetting,
+  ];
+  static getSettingChangeEventListeners(): [
+    ShowContextMenuSetting,
+    ExtensionActionSetting,
+  ] {
     if (this.settingChangeEventListeners) {
       return this.settingChangeEventListeners;
     }
@@ -243,8 +249,8 @@ export class DependencyProvider {
       ),
       new ExtensionActionSetting(
         DependencyProvider.getBrowserExtensionActionService(),
-        DependencyProvider.getActionListeners()
-      )
+        DependencyProvider.getActionListeners(),
+      ),
     ];
 
     return this.settingChangeEventListeners;

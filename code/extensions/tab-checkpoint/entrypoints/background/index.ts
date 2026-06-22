@@ -29,5 +29,5 @@ export default defineBackground(() => {
   settingsEventListenerProvider.registerFeaturesSettingsEventListeners();
 
   const storageListenerProvider = new StorageListenerProvider();
-  storageListenerProvider.registerFeaturesStorageListeners()
+  storageListenerProvider.registerFeaturesStorageListeners();
 });
