@@ -20,7 +20,8 @@ export function Settings() {
   const shortcutSettingsService =
     DependencyProvider.getShortcutSettingsService();
   const shortcutListeners = DependencyProvider.getShortcutListeners();
-  const settingsUseCases = DependencyProvider.getSettingsUseCases();
+  const showContextMenuSettingUseCases = DependencyProvider.getShowContextMenuSettingUseCases();
+  const extensionActionSettingUseCases = DependencyProvider.getExtensionActionSettingUseCases();
   const actionListeners = DependencyProvider.getActionListeners();
 
   const [extensionAction, setExtensionAction] = useState<string>("");
@@ -30,9 +31,9 @@ export function Settings() {
   // Load settings from storage on mount
   useEffect(() => {
     const loadSettings = async () => {
-      const extensionActionValue = await settingsUseCases.getExtensionAction();
+      const extensionActionValue = await extensionActionSettingUseCases.getExtensionAction();
       setExtensionAction(extensionActionValue);
-      setShowContextMenu(await settingsUseCases.getShowContextMenu());
+      setShowContextMenu(await showContextMenuSettingUseCases.getShowContextMenu());
     };
     const loadShortcuts = async () => {
       const currentShortcuts =
@@ -45,22 +46,22 @@ export function Settings() {
   }, []);
 
   const handleSelectExtensionAction = async (value: string) => {
-    await settingsUseCases.setExtensionAction(value);
-    setExtensionAction(await settingsUseCases.getExtensionAction());
+    await extensionActionSettingUseCases.setExtensionAction(value);
+    setExtensionAction(await extensionActionSettingUseCases.getExtensionAction());
   };
 
   const handleToggleShowContextMenu = async () => {
-    await settingsUseCases.setShowContextMenu(!showContextMenu);
-    setShowContextMenu(await settingsUseCases.getShowContextMenu());
+    await showContextMenuSettingUseCases.setShowContextMenu(!showContextMenu);
+    setShowContextMenu(await showContextMenuSettingUseCases.getShowContextMenu());
   };
 
   const handleResetSettings = async () => {
-    const resetExtensionAction = settingsUseCases.resetExtensionAction();
-    const resetShowContextMenu = settingsUseCases.resetShowContextMenu();
+    const resetExtensionAction = extensionActionSettingUseCases.resetExtensionAction();
+    const resetShowContextMenu = showContextMenuSettingUseCases.resetShowContextMenu();
     await resetExtensionAction;
     await resetShowContextMenu;
-    setExtensionAction(await settingsUseCases.getExtensionAction());
-    setShowContextMenu(await settingsUseCases.getShowContextMenu());
+    setExtensionAction(await extensionActionSettingUseCases.getExtensionAction());
+    setShowContextMenu(await showContextMenuSettingUseCases.getShowContextMenu());
   };
 
   return (

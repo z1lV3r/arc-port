@@ -1,0 +1,27 @@
+import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
+
+export const EXTENSION_ACTION_SETTING_NAME = "setting-action";
+export const EXTENSION_ACTION_SETTING_DEFAULT = "on-click-show-pop-up";
+
+export class ExtensionActionSettingUseCases {
+  private readonly settingsRepository: SettingsRepository;
+
+  constructor(settingsRepository: SettingsRepository) {
+    this.settingsRepository = settingsRepository;
+  }
+
+  async getExtensionAction(): Promise<string> {
+    return (await this.settingsRepository.getOrDefault(
+      EXTENSION_ACTION_SETTING_NAME,
+      EXTENSION_ACTION_SETTING_DEFAULT,
+    )) as string;
+  }
+
+  async setExtensionAction(extensionActionName: string): Promise<void> {
+    await this.settingsRepository.set(EXTENSION_ACTION_SETTING_NAME, extensionActionName);
+  }
+
+  async resetExtensionAction(): Promise<void> {
+    this.setExtensionAction(EXTENSION_ACTION_SETTING_DEFAULT);
+  }
+}

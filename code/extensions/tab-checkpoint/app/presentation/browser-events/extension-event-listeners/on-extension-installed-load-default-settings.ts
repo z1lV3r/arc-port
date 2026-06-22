@@ -1,21 +1,27 @@
-import type { SettingsUseCases } from "@/app/use-cases/settings-use-cases";
-
 import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
 
-export class OnExtensionInstalledLoadDefaultSettings implements ExtensionListener {
-  private readonly settingsUseCases: SettingsUseCases;
+import type { ShowContextMenuSettingUseCases } from "@/app/use-cases/show-context-menu-setting-use-cases";
+import type { ExtensionActionSettingUseCases } from "@/app/use-cases/extension-action-setting-use-cases";
 
-  constructor(settingsUseCases: SettingsUseCases) {
-    this.settingsUseCases = settingsUseCases;
+export class OnExtensionInstalledLoadDefaultSettings implements ExtensionListener {
+  private readonly showContextMenuSettingUseCases: ShowContextMenuSettingUseCases;
+  private readonly extensionActionSettingUseCases: ExtensionActionSettingUseCases;
+
+  constructor(
+    showContextMenuSettingUseCases: ShowContextMenuSettingUseCases,
+    extensionActionSettingUseCases: ExtensionActionSettingUseCases
+  ) {
+    this.showContextMenuSettingUseCases = showContextMenuSettingUseCases;
+    this.extensionActionSettingUseCases = extensionActionSettingUseCases;
   }
 
   name = "on-extension-installed-load-default-settings";
   description = t("browser_events.on_extension_installed_load_default_settings");
   command = async () => {
-    const showContextMenu = await this.settingsUseCases.getShowContextMenu();
-    await this.settingsUseCases.setShowContextMenu(showContextMenu);
+    const showContextMenu = await this.showContextMenuSettingUseCases.getShowContextMenu();
+    await this.showContextMenuSettingUseCases.setShowContextMenu(showContextMenu);
 
-    const extensionAction = await this.settingsUseCases.getExtensionAction();
-    await this.settingsUseCases.setExtensionAction(extensionAction);
+    const extensionAction = await this.extensionActionSettingUseCases.getExtensionAction();
+    await this.extensionActionSettingUseCases.setExtensionAction(extensionAction);
   };
 }
