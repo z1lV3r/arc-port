@@ -1,7 +1,7 @@
 import {
   SHOW_CONTEXT_MENU_SETTING_DEFAULT,
   SHOW_CONTEXT_MENU_SETTING_NAME,
-} from "@/app/presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
+} from "../presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
 
 import type { SettingsRepository } from "@repo/shared/domain/interfaces/settings-repository";
 

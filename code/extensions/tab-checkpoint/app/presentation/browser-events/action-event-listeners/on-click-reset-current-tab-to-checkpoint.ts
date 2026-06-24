@@ -1,4 +1,4 @@
-import type { ResetTabToCheckpointUseCases } from "@/app/use-cases/reset-tab-to-checkpoint-use-cases";
+import type { ResetTabToCheckpointUseCases } from "../../../use-cases/reset-tab-to-checkpoint-use-cases";
 
 import { ActionListener } from "@repo/shared/domain/models/action-listener";
 

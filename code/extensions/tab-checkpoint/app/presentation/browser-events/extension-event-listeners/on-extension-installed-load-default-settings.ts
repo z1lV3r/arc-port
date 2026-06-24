@@ -1,5 +1,5 @@
-import type { ExtensionActionSettingUseCases } from "@/app/use-cases/extension-action-setting-use-cases";
-import type { ShowContextMenuSettingUseCases } from "@/app/use-cases/show-context-menu-setting-use-cases";
+import type { ExtensionActionSettingUseCases } from "../../../use-cases/extension-action-setting-use-cases";
+import type { ShowContextMenuSettingUseCases } from "../../../use-cases/show-context-menu-setting-use-cases";
 
 import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
 
