@@ -1,4 +1,4 @@
-import { GetCheckpointUseCases } from "@/app/use-cases/get-checkpoint-use-cases";
+import { GetCheckpointUseCases } from "../../../use-cases/get-checkpoint-use-cases";
 
 import { BrowserExtensionActionService } from "@repo/shared/domain/interfaces/browser-extension-action-service";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
