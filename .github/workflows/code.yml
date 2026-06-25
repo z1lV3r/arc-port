@@ -18,27 +18,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: code/package-lock.json
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Extension
-        run: npm run build
+      - name: Zip Extension
+        run: pnpm --filter tab-checkpoint zip
 
       - name: Get Version
         id: version
         run: |
-          VERSION=$(jq -r .version dist/manifest.json)
+          VERSION=$(jq -r .version extensions/tab-checkpoint/package.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Zip Extension
-        run: cd dist && zip -r ../arc-port.zip .
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
@@ -46,6 +46,6 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           target_commitish: ${{ github.sha }}
           name: Release v${{ steps.version.outputs.version }}
-          files: code/arc-port.zip
+          files: code/extensions/tab-checkpoint/.output/*-chrome.zip
           generate_release_notes: true
           draft: false
