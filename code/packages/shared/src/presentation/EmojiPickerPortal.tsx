@@ -38,8 +38,33 @@ export function EmojiPickerPortal({
   useEffect(() => {
     if (open) {
       setHasBeenOpened(true);
+
+      let attempts = 0;
+      const focusFirstEmoji = () => {
+        if (!pickerRef.current) {
+          if (attempts < 20) {
+            attempts++;
+            setTimeout(focusFirstEmoji, 100);
+          }
+          return;
+        }
+        
+        // Try to find an category button first, fallback to any button
+        const firstEmojiButton = pickerRef.current.querySelector(
+          "button.epr-emoji, button",
+        ) as HTMLButtonElement | null;
+        
+        if (firstEmojiButton) {
+          firstEmojiButton.focus();
+        } else if (attempts < 20) {
+          attempts++;
+          setTimeout(focusFirstEmoji, 100);
+        }
+      };
+
+      focusFirstEmoji();
     }
-  }, [open]);
+  }, [open, pickerRef]);
 
   if (!hasBeenOpened) return null;
 

@@ -1,16 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Note: Many standard ignores (node_modules, .DS_Store, dist, logs) are already handled by the root /.gitignore.
 
 # Dependencies
-node_modules
 .pnp
 .pnp.js
 
 # Local env files
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Testing
 coverage
@@ -25,14 +23,13 @@ coverage
 .next/
 out/
 build
-dist
+.output/
 
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# WXT Browser Extensions
+.wxt/
+stats.html
+stats-*.json
+web-ext.config.ts
 
 # Misc
-.DS_Store
 *.pem

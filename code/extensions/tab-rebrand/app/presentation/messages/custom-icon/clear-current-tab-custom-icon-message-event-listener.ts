@@ -1,0 +1,18 @@
+import type { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
+import type { ClearTabCustomIconUseCases } from "../../../use-cases/clear-tab-custom-icon-use-cases.ts";
+
+export class ClearCurrentTabCustomIconMessageEventListener implements MessageEventListener {
+  private readonly clearTabCustomIconUseCases: ClearTabCustomIconUseCases;
+
+  constructor(clearTabCustomIconUseCases: ClearTabCustomIconUseCases) {
+    this.clearTabCustomIconUseCases = clearTabCustomIconUseCases;
+  }
+
+  name = "clear-current-tab-custom-icon-message-event-listener";
+  description = t("messages.clear_current_tab_custom_icon");
+
+  async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+    await this.clearTabCustomIconUseCases.clearCurrentTabCustomIcon();
+    sendResponse({ success: true });
+  }
+}

@@ -9,22 +9,25 @@ head:
 
 hero:
   name: "Arc Port"
-  text: "Chrome extension"
-  tagline: Port Arc browser features into chrome
+  text: "Extension Suite"
+  tagline: Port Arc browser features into Chrome
   image:
     src: /app/assets/icon/arc-port-256.png
     alt: Arc Port
-  actions:
-    - theme: brand
-      text: Chrome web store
-      link: https://chromewebstore.google.com/detail/arc-port/kajmnfhpmkimleehomeioondgfcjjnbp
-    - theme: alt
-      text: Download
-      link: https://github.com/z1lV3r/arc-port/releases/latest
 
 features:
-  - icon: ↩️
-    title: "Checkpoint"
+  - icon: 
+      src: /features/checkpoint/64.png
+    title: "Tab Checkpoint"
     details: Set a tab navigation checkpoint for a quick reset
-    link: /features/checkpoint
+    link: /features/tab-checkpoint
+  - icon: 
+      src: /features/tab-rebrand/64.png
+    title: "Tab Rebrand"
+    details: Customize tab name and icon
+    link: /features/tab-rebrand
+  - icon: 
+      src: /app/assets/icon/under-construction-64.png
+    title: "Workspaces"
+    details: Coming soon... 👷‍♂️🧰👷‍♀️
 ---

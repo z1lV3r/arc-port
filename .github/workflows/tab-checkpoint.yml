@@ -34,6 +34,8 @@ jobs:
         run: |
           if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif ! git rev-parse --verify --quiet "${{ github.event.before }}^{commit}"; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           elif git diff --name-only "${{ github.event.before }}" HEAD -- extensions/tab-checkpoint/ | grep -q .; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
@@ -43,6 +45,8 @@ jobs:
       - name: Setup pnpm
         if: steps.check-changes.outputs.changed == 'true'
         uses: pnpm/action-setup@v4
+        with:
+          package_json_file: code/package.json
 
       - name: Setup Node
         if: steps.check-changes.outputs.changed == 'true'
@@ -71,27 +75,27 @@ jobs:
         if: steps.check-changes.outputs.changed == 'true'
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: v${{ steps.version.outputs.version }}${{ github.ref_name == 'beta' && '-beta' || '' }}
+          tag_name: tab-checkpoint-v${{ steps.version.outputs.version }}${{ github.ref_name == 'beta' && '-beta' || '' }}
           target_commitish: ${{ github.sha }}
-          name: Release v${{ steps.version.outputs.version }}${{ github.ref_name == 'beta' && ' (Beta)' || '' }}
+          name: tab-checkpoint v${{ steps.version.outputs.version }}${{ github.ref_name == 'beta' && ' (Beta)' || '' }}
           files: code/extensions/tab-checkpoint/.output/*-chrome.zip
           generate_release_notes: true
           draft: false
           prerelease: ${{ github.ref_name == 'beta' }}
 
-      # --- Submission Step (Only runs on main branch and if changes exist) ---
-      - name: Setup Chrome Web Store credentials
-        if: github.ref_name == 'main' && steps.check-changes.outputs.changed == 'true'
-        run: |
-          cat > extensions/tab-checkpoint/.env.submit << 'EOF'
-          TAB_CHECKPOINT_CHROME_EXTENSION_ID=${{ vars.TAB_CHECKPOINT_CHROME_EXTENSION_ID }}
-          TAB_CHECKPOINT_CHROME_CLIENT_ID=${{ vars.TAB_CHECKPOINT_CHROME_CLIENT_ID }}
-          TAB_CHECKPOINT_CHROME_CLIENT_SECRET=${{ secrets.TAB_CHECKPOINT_CHROME_CLIENT_SECRET }}
-          TAB_CHECKPOINT_CHROME_REFRESH_TOKEN=${{ secrets.TAB_CHECKPOINT_CHROME_REFRESH_TOKEN }}
-          TAB_CHECKPOINT_CHROME_PUBLISH_TARGET=${{ vars.TAB_CHECKPOINT_CHROME_PUBLISH_TARGET || 'default' }}
-          TAB_CHECKPOINT_CHROME_SKIP_SUBMIT_REVIEW=${{ vars.TAB_CHECKPOINT_CHROME_SKIP_SUBMIT_REVIEW || 'false' }}
-          EOF
-
-      - name: Submit to Chrome Web Store
-        if: github.ref_name == 'main' && steps.check-changes.outputs.changed == 'true'
-        run: pnpm --filter tab-checkpoint submit
+#      # --- Submission Step (Only runs on main branch and if changes exist) ---
+#      - name: Setup Chrome Web Store credentials
+#        if: github.ref_name == 'main' && steps.check-changes.outputs.changed == 'true'
+#        run: |
+#          cat > extensions/tab-checkpoint/.env.submit << 'EOF'
+#          TAB_CHECKPOINT_CHROME_EXTENSION_ID=${{ vars.TAB_CHECKPOINT_CHROME_EXTENSION_ID }}
+#          TAB_CHECKPOINT_CHROME_CLIENT_ID=${{ vars.TAB_CHECKPOINT_CHROME_CLIENT_ID }}
+#          TAB_CHECKPOINT_CHROME_CLIENT_SECRET=${{ secrets.TAB_CHECKPOINT_CHROME_CLIENT_SECRET }}
+#          TAB_CHECKPOINT_CHROME_REFRESH_TOKEN=${{ secrets.TAB_CHECKPOINT_CHROME_REFRESH_TOKEN }}
+#          TAB_CHECKPOINT_CHROME_PUBLISH_TARGET=${{ vars.TAB_CHECKPOINT_CHROME_PUBLISH_TARGET || 'default' }}
+#          TAB_CHECKPOINT_CHROME_SKIP_SUBMIT_REVIEW=${{ vars.TAB_CHECKPOINT_CHROME_SKIP_SUBMIT_REVIEW || 'false' }}
+#          EOF
+#
+#      - name: Submit to Chrome Web Store
+#        if: github.ref_name == 'main' && steps.check-changes.outputs.changed == 'true'
+#        run: pnpm --filter tab-checkpoint submit
