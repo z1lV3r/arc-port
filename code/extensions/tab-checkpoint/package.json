@@ -8,6 +8,7 @@
     "dev": "wxt",
     "build": "wxt build",
     "zip": "wxt zip",
+    "submit": "wxt submit",
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
     "e2e": "playwright test"
