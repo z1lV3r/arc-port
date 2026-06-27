@@ -1,5 +1,6 @@
 import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
 import type { BrowserExtensionActionService } from "@repo/shared/domain/interfaces/browser-extension-action-service";
+import type { BrowserService } from "@repo/shared/domain/interfaces/browser-service";
 import { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
 import type { BrowserShortcutSettingsService } from "@repo/shared/domain/interfaces/browser-shortcut-settings-service";
 import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
@@ -13,6 +14,7 @@ import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-liste
 import { StorageListener } from "@repo/shared/domain/models/storage-listener";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
 import { ChromeBrowserExtensionActionService } from "@repo/shared/infrastructure/chrome-browser-extension-action-service";
+import { ChromeBrowserService } from "@repo/shared/infrastructure/chrome-browser-service";
 import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
 import { ChromeMessageService } from "@repo/shared/infrastructure/chrome-message-service";
 import { ChromeShortcutSettingsService } from "@repo/shared/infrastructure/chrome-shortcut-settings-service";
@@ -33,6 +35,7 @@ import type { OriginalTabInformationService } from "./domain/interfaces/original
 import { ClearTabCustomIconUseCases } from "./use-cases/clear-tab-custom-icon-use-cases.ts";
 import { ClearTabCustomNameUseCases } from "./use-cases/clear-tab-custom-name-use-cases.ts";
 import { GetTabCustomIconUseCases } from "./use-cases/get-tab-custom-icon-use-cases.ts";
+import { OpenPopUpUseCases } from "./use-cases/open-pop-up-use-cases.ts";
 import { GetTabCustomNameUseCases } from "./use-cases/get-tab-custom-name-use-cases.ts";
 import { SetTabCustomIconUseCases } from "./use-cases/set-tab-custom-icon-use-cases.ts";
 import { SetTabCustomNameUseCases } from "./use-cases/set-tab-custom-name-use-cases.ts";
@@ -64,6 +67,8 @@ import { OnTabCreatePinnedSetCheckpoint } from "./presentation/browser-events/ta
 import { OnTabPinSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-pin-set-checkpoint.ts";
 import { OnTabSetToGroupSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-set-to-group-set-checkpoint.ts";
 import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/clear-current-tab-checkpoint-context-menu-listener.ts";
+import { OpenTabRebrandUiFocusCustomIconContextMenuListener } from "./presentation/context-menu/open-tab-rebrand-ui-focus-custom-icon-context-menu-listener.ts";
+import { OpenTabRebrandUiFocusCustomNameContextMenuListener } from "./presentation/context-menu/open-tab-rebrand-ui-focus-custom-name-context-menu-listener.ts";
 import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/context-menu/reset-current-tab-to-checkpoint-context-menu-listener.ts";
 import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/set-current-tab-checkpoint-context-menu-listener.ts";
 import { ShowCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/show-current-tab-checkpoint-context-menu-listener.ts";
@@ -79,6 +84,8 @@ import { SetCheckpointMessageEventSender } from "./presentation/messages/set-che
 import { SetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/set-checkpoint/set-current-tab-checkpoint-message-event-listener.ts";
 import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/messages/set-checkpoint/set-tab-checkpoint-if-unset-message-event-listener.ts";
 import { ClearCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/clear-current-tab-checkpoint-shortcut-listener.ts";
+import { OpenTabRebrandUiFocusCustomIconShortcutListener } from "./presentation/shortcuts/open-tab-rebrand-ui-focus-custom-icon-shortcut-listener.ts";
+import { OpenTabRebrandUiFocusCustomNameShortcutListener } from "./presentation/shortcuts/open-tab-rebrand-ui-focus-custom-name-shortcut-listener.ts";
 import { ResetCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-current-tab-to-checkpoint-shortcut-listener.ts";
 import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-or-close-current-tab-to-checkpoint-shortcut-listener.ts";
 import { SetCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/set-current-tab-checkpoint-shortcut-listener.ts";
@@ -163,6 +170,17 @@ export class DependencyProvider {
       new ChromeBrowserExtensionActionService();
     return this.browserExtensionActionService;
   }
+
+  private static browserService: BrowserService;
+  static getBrowserService(): BrowserService {
+    if (this.browserService) {
+      return this.browserService;
+    }
+
+    this.browserService = new ChromeBrowserService();
+    return this.browserService;
+  }
+
   //Use cases
   private static setCheckpointUseCases: SetCheckpointUseCases;
   static getSetCheckpointUseCases(): SetCheckpointUseCases {
@@ -324,6 +342,12 @@ export class DependencyProvider {
       new ShowCurrentTabCheckpointContextMenuListener(
         DependencyProvider.getShowCheckpointUseCases(),
       ),
+      new OpenTabRebrandUiFocusCustomIconContextMenuListener(
+        DependencyProvider.getOpenPopUpUseCases(),
+      ),
+      new OpenTabRebrandUiFocusCustomNameContextMenuListener(
+        DependencyProvider.getOpenPopUpUseCases(),
+      ),
     ];
 
     return this.contextMenuListeners;
@@ -382,6 +406,12 @@ export class DependencyProvider {
       ),
       new ResetOrCloseCurrentTabToCheckpointShortcutListener(
         DependencyProvider.getResetTabToCheckpointUseCases(),
+      ),
+      new OpenTabRebrandUiFocusCustomIconShortcutListener(
+        DependencyProvider.getOpenPopUpUseCases(),
+      ),
+      new OpenTabRebrandUiFocusCustomNameShortcutListener(
+        DependencyProvider.getOpenPopUpUseCases(),
       ),
     ];
 
@@ -852,6 +882,15 @@ export class DependencyProvider {
       DependencyProvider.getContextMenuListeners(),
     );
     return this.tabRebrandSettingsUseCases;
+  }
+
+  private static openPopUpUseCases: OpenPopUpUseCases;
+  static getOpenPopUpUseCases(): OpenPopUpUseCases {
+    if (this.openPopUpUseCases) return this.openPopUpUseCases;
+    this.openPopUpUseCases = new OpenPopUpUseCases(
+      DependencyProvider.getBrowserService(),
+    );
+    return this.openPopUpUseCases;
   }
 
   // ─── Tab-Rebrand: Message Event Listeners ───────────────────────────────────
