@@ -48,6 +48,17 @@ function PopUp() {
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [pickerOpen]);
 
+  // Force Chrome popup to resize when picker opens/closes
+  useEffect(() => {
+    const html = document.documentElement;
+    if (pickerOpen) {
+      html.style.minHeight = "480px";
+    } else {
+      html.style.minHeight = "";
+      void html.offsetHeight;
+    }
+  }, [pickerOpen]);
+
   
   useEffect(() => {
     const fetchInitialData = async () => {

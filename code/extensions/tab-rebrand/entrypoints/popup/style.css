@@ -1,3 +1,10 @@
 @import "tailwindcss";
 @import "@repo/shared/styles.css";
 @source "../../node_modules/@repo/shared/src";
+
+#root {
+  min-height: auto !important;
+}
+html {
+  overflow: hidden;
+}
