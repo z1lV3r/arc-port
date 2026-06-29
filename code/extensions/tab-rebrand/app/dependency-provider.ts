@@ -9,7 +9,6 @@ import { ActionListener } from "@repo/shared/domain/models/action-listener";
 import type { ContextMenuListener } from "@repo/shared/domain/models/context-menu-listener";
 import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
 import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
-import { SettingChangeListener } from "@repo/shared/domain/models/setting-listener";
 import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
 import { StorageListener } from "@repo/shared/domain/models/storage-listener";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
@@ -53,61 +52,19 @@ import { SetCurrentTabCustomNameMessageEventListener } from "./presentation/mess
 import { SetTabCustomIconMessageEventSender } from "./presentation/messages/custom-icon/set-tab-custom-icon-message-event-sender.ts";
 import { SetTabCustomNameMessageEventSender } from "./presentation/messages/custom-name/set-tab-custom-name-message-event-sender.ts";
 
-import { CheckpointRepository } from "./domain/interfaces/checkpoint-repository.ts";
-import { ChromeStorageCheckpointRepository } from "./infrastructure/chrome-storage-checkpoint-repository.ts";
-import { OnClickResetCurrentTabToCheckpoint } from "./presentation/browser-events/action-event-listeners/on-click-reset-current-tab-to-checkpoint.ts";
 import { OnClickShowPopUp } from "./presentation/browser-events/action-event-listeners/on-click-show-pop-up.ts";
 import { OnExtensionInstalledLoadDefaultSettings } from "./presentation/browser-events/extension-event-listeners/on-extension-installed-load-default-settings.ts";
 import { ExtensionActionSetting } from "./presentation/browser-events/settings-event-listeners/extension-action-setting.ts";
 import { ShowContextMenuSetting } from "./presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
-import { OnCheckpointChanged } from "./presentation/browser-events/storage-event-listeners/on-checkpoint-changed.ts";
-import { OnTabActivatedSetIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-activated-set-icon.ts";
-import { OnTabCloseRemoveCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-close-delete-checkpoint.ts";
-import { OnTabCreatePinnedSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-create-pinned-checkpoint.ts";
-import { OnTabPinSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-pin-set-checkpoint.ts";
-import { OnTabSetToGroupSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-set-to-group-set-checkpoint.ts";
-import { ClearCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/clear-current-tab-checkpoint-context-menu-listener.ts";
 import { OpenTabRebrandUiFocusCustomIconContextMenuListener } from "./presentation/context-menu/open-tab-rebrand-ui-focus-custom-icon-context-menu-listener.ts";
 import { OpenTabRebrandUiFocusCustomNameContextMenuListener } from "./presentation/context-menu/open-tab-rebrand-ui-focus-custom-name-context-menu-listener.ts";
-import { ResetCurrentTabToCheckpointContextMenuListener } from "./presentation/context-menu/reset-current-tab-to-checkpoint-context-menu-listener.ts";
-import { SetCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/set-current-tab-checkpoint-context-menu-listener.ts";
-import { ShowCurrentTabCheckpointContextMenuListener } from "./presentation/context-menu/show-current-tab-checkpoint-context-menu-listener.ts";
-import { ClearCheckpointMessageEventSender } from "./presentation/messages/clear-checkpoint/_clear-checkpoint-message-event-sender.ts";
-import { ClearCurrentTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint/clear-current-tab-checkpoint-message-event-listener.ts";
-import { ClearTabCheckpointMessageEventListener } from "./presentation/messages/clear-checkpoint/clear-tab-checkpoint-message-event-listener.ts";
-import { GetCheckpointMessageEventSender } from "./presentation/messages/get-checkpoint/_get-checkpoint-message-event-sender.ts";
-import { GetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/get-checkpoint/get-current-tab-checkpoint-message-event-listener.ts";
-import { ResetTabToCheckpointMessageEventSender } from "./presentation/messages/reset-tab-to-checkpoint/_reset-tab-to-checkpoint-message-event-sender.ts";
-import { ResetCurrentTabToCheckpointMessageEventListener } from "./presentation/messages/reset-tab-to-checkpoint/reset-current-tab-to-checkpoint-message-event-listener.ts";
-import { ResetOrCloseCurrentTabToCheckpointMessageEventListener } from "./presentation/messages/reset-tab-to-checkpoint/reset-or-close-current-tab-to-checkpoint-message-event-listener.ts";
-import { SetCheckpointMessageEventSender } from "./presentation/messages/set-checkpoint/_set-checkpoint-message-event-sender.ts";
-import { SetCurrentTabCheckpointMessageEventListener } from "./presentation/messages/set-checkpoint/set-current-tab-checkpoint-message-event-listener.ts";
-import { SetTabCheckpointIfUnsetMessageEventListener } from "./presentation/messages/set-checkpoint/set-tab-checkpoint-if-unset-message-event-listener.ts";
-import { ClearCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/clear-current-tab-checkpoint-shortcut-listener.ts";
 import { OpenTabRebrandUiFocusCustomIconShortcutListener } from "./presentation/shortcuts/open-tab-rebrand-ui-focus-custom-icon-shortcut-listener.ts";
 import { OpenTabRebrandUiFocusCustomNameShortcutListener } from "./presentation/shortcuts/open-tab-rebrand-ui-focus-custom-name-shortcut-listener.ts";
-import { ResetCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-current-tab-to-checkpoint-shortcut-listener.ts";
-import { ResetOrCloseCurrentTabToCheckpointShortcutListener } from "./presentation/shortcuts/reset-or-close-current-tab-to-checkpoint-shortcut-listener.ts";
-import { SetCurrentTabCheckpointShortcutListener } from "./presentation/shortcuts/set-current-tab-checkpoint-shortcut-listener.ts";
-import { ClearCheckpointUseCases } from "./use-cases/clear-checkpoint-use-cases.ts";
 import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases.ts";
-import { GetCheckpointUseCases } from "./use-cases/get-checkpoint-use-cases.ts";
-import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoint-use-cases.ts";
-import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases.ts";
-import { ShowCheckpointUseCases } from "./use-cases/show-checkpoint-use-cases.ts";
 import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
-  private static checkpointRepository: CheckpointRepository;
-  static getCheckpointRepository(): CheckpointRepository {
-    if (this.checkpointRepository) {
-      return this.checkpointRepository;
-    }
-
-    this.checkpointRepository = new ChromeStorageCheckpointRepository();
-    return this.checkpointRepository;
-  }
 
   //Infrastructure - Browser
   private static browserMessageService: BrowserMessageService;
@@ -182,61 +139,6 @@ export class DependencyProvider {
   }
 
   //Use cases
-  private static setCheckpointUseCases: SetCheckpointUseCases;
-  static getSetCheckpointUseCases(): SetCheckpointUseCases {
-    if (this.setCheckpointUseCases) {
-      return this.setCheckpointUseCases;
-    }
-
-    this.setCheckpointUseCases = new SetCheckpointUseCases(
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getCheckpointRepository(),
-    );
-
-    return this.setCheckpointUseCases;
-  }
-
-  private static getCheckpointUseCases: GetCheckpointUseCases;
-  static getGetCheckpointUseCases(): GetCheckpointUseCases {
-    if (this.getCheckpointUseCases) {
-      return this.getCheckpointUseCases;
-    }
-
-    this.getCheckpointUseCases = new GetCheckpointUseCases(
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getCheckpointRepository(),
-    );
-
-    return this.getCheckpointUseCases;
-  }
-
-  private static clearCheckpointUseCases: ClearCheckpointUseCases;
-  static getClearCheckpointUseCases(): ClearCheckpointUseCases {
-    if (this.clearCheckpointUseCases) {
-      return this.clearCheckpointUseCases;
-    }
-
-    this.clearCheckpointUseCases = new ClearCheckpointUseCases(
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getCheckpointRepository(),
-    );
-
-    return this.clearCheckpointUseCases;
-  }
-
-  private static resetTabToCheckpointUseCases: ResetTabToCheckpointUseCases;
-  static getResetTabToCheckpointUseCases(): ResetTabToCheckpointUseCases {
-    if (this.resetTabToCheckpointUseCases) {
-      return this.resetTabToCheckpointUseCases;
-    }
-
-    this.resetTabToCheckpointUseCases = new ResetTabToCheckpointUseCases(
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getCheckpointRepository(),
-    );
-
-    return this.resetTabToCheckpointUseCases;
-  }
   private static showContextMenuSettingUseCases: ShowContextMenuSettingUseCases;
   static getShowContextMenuSettingUseCases(): ShowContextMenuSettingUseCases {
     if (this.showContextMenuSettingUseCases) {
@@ -261,21 +163,6 @@ export class DependencyProvider {
     );
 
     return this.extensionActionSettingUseCases;
-  }
-
-  private static showCheckpointUseCases: ShowCheckpointUseCases;
-  static getShowCheckpointUseCases(): ShowCheckpointUseCases {
-    if (this.showCheckpointUseCases) {
-      return this.showCheckpointUseCases;
-    }
-
-    this.showCheckpointUseCases = new ShowCheckpointUseCases(
-      DependencyProvider.getBrowserExtensionActionService(),
-      DependencyProvider.getActionListeners(),
-      DependencyProvider.getExtensionActionSettingUseCases(),
-    );
-
-    return this.showCheckpointUseCases;
   }
 
   //Presentation - Settings event listeners
@@ -306,21 +193,6 @@ export class DependencyProvider {
   }
 
   //Presentation - storage listeners
-  private static storageListeners: StorageListener[];
-  static getStorageListeners(): StorageListener[] {
-    if (this.storageListeners) {
-      return this.storageListeners;
-    }
-
-    this.storageListeners = [
-      new OnCheckpointChanged(
-        DependencyProvider.getBrowserExtensionActionService(),
-        DependencyProvider.getBrowserTabsService(),
-      ),
-    ];
-
-    return this.storageListeners;
-  }
 
   //Presentation - Context menu listeners
   private static contextMenuListeners: ContextMenuListener[];
@@ -330,18 +202,6 @@ export class DependencyProvider {
     }
 
     this.contextMenuListeners = [
-      new SetCurrentTabCheckpointContextMenuListener(
-        DependencyProvider.getSetCheckpointUseCases(),
-      ),
-      new ResetCurrentTabToCheckpointContextMenuListener(
-        DependencyProvider.getResetTabToCheckpointUseCases(),
-      ),
-      new ClearCurrentTabCheckpointContextMenuListener(
-        DependencyProvider.getClearCheckpointUseCases(),
-      ),
-      new ShowCurrentTabCheckpointContextMenuListener(
-        DependencyProvider.getShowCheckpointUseCases(),
-      ),
       new OpenTabRebrandUiFocusCustomIconContextMenuListener(
         DependencyProvider.getOpenPopUpUseCases(),
       ),
@@ -378,10 +238,7 @@ export class DependencyProvider {
     }
 
     this.actionListeners = [
-      new OnClickShowPopUp(),
-      new OnClickResetCurrentTabToCheckpoint(
-        DependencyProvider.getResetTabToCheckpointUseCases(),
-      ),
+      new OnClickShowPopUp()
     ];
 
     return this.actionListeners;
@@ -395,18 +252,6 @@ export class DependencyProvider {
     }
 
     this.shortcutListeners = [
-      new SetCurrentTabCheckpointShortcutListener(
-        DependencyProvider.getSetCheckpointUseCases(),
-      ),
-      new ClearCurrentTabCheckpointShortcutListener(
-        DependencyProvider.getClearCheckpointUseCases(),
-      ),
-      new ResetCurrentTabToCheckpointShortcutListener(
-        DependencyProvider.getResetTabToCheckpointUseCases(),
-      ),
-      new ResetOrCloseCurrentTabToCheckpointShortcutListener(
-        DependencyProvider.getResetTabToCheckpointUseCases(),
-      ),
       new OpenTabRebrandUiFocusCustomIconShortcutListener(
         DependencyProvider.getOpenPopUpUseCases(),
       ),
@@ -419,22 +264,6 @@ export class DependencyProvider {
   }
 
   //Presentation - Tab event listeners
-  private static onTabActivatedEventListeners: TabEventListener[];
-  static getOnTabActivatedEventListeners(): TabEventListener[] {
-    if (this.onTabActivatedEventListeners) {
-      return this.onTabActivatedEventListeners;
-    }
-
-    this.onTabActivatedEventListeners = [
-      new OnTabActivatedSetIcon(
-        DependencyProvider.getBrowserExtensionActionService(),
-        DependencyProvider.getGetCheckpointUseCases(),
-      ),
-    ];
-
-    return this.onTabActivatedEventListeners;
-  }
-
   private static onCloseTabEventListeners: TabEventListener[];
   static getOnCloseTabEventListeners(): TabEventListener[] {
     if (this.onCloseTabEventListeners) {
@@ -442,44 +271,12 @@ export class DependencyProvider {
     }
 
     this.onCloseTabEventListeners = [
-      new OnTabCloseRemoveCheckpoint(
-        DependencyProvider.getClearCheckpointUseCases(),
-      ),
+      //TODO: clear custom icon and custom name
     ];
 
     return this.onCloseTabEventListeners;
   }
 
-  private static onUpdateTabEventListeners: TabEventListener[];
-  static getOnUpdateTabEventListeners(): TabEventListener[] {
-    if (this.onUpdateTabEventListeners) {
-      return this.onUpdateTabEventListeners;
-    }
-
-    this.onUpdateTabEventListeners = [
-      new OnTabPinSetCheckpoint(DependencyProvider.getSetCheckpointUseCases()),
-      new OnTabSetToGroupSetCheckpoint(
-        DependencyProvider.getSetCheckpointUseCases(),
-      ),
-    ];
-
-    return this.onUpdateTabEventListeners;
-  }
-
-  private static onCreateTabEventListeners: TabEventListener[];
-  static getOnCreateTabEventListeners(): TabEventListener[] {
-    if (this.onCreateTabEventListeners) {
-      return this.onCreateTabEventListeners;
-    }
-
-    this.onCreateTabEventListeners = [
-      new OnTabCreatePinnedSetCheckpoint(
-        DependencyProvider.getSetCheckpointUseCases(),
-      ),
-    ];
-
-    return this.onCreateTabEventListeners;
-  }
   //Presentation - Message events - Listeners
   private static messageEventListeners: MessageEventListener[];
   static getMessageEventListeners(): MessageEventListener[] {
@@ -488,10 +285,6 @@ export class DependencyProvider {
     }
 
     this.messageEventListeners = [
-      ...DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
-      ...DependencyProvider.getSetCheckpointUseCaseMessageEventListeners(),
-      ...DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
-      ...DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
       ...DependencyProvider.getClearTabCustomNameUseCaseMessageEventListeners(),
       ...DependencyProvider.getGetTabCustomNameUseCaseMessageEventListeners(),
       ...DependencyProvider.getSetTabCustomNameUseCaseMessageEventListeners(),
@@ -617,154 +410,7 @@ export class DependencyProvider {
     return this.clearTabCustiomIconUseCaseListeners;
   }
 
-  private static setCheckpointUseCaseListeners: [
-    SetCurrentTabCheckpointMessageEventListener,
-    SetTabCheckpointIfUnsetMessageEventListener,
-  ];
-  static getSetCheckpointUseCaseMessageEventListeners(): [
-    SetCurrentTabCheckpointMessageEventListener,
-    SetTabCheckpointIfUnsetMessageEventListener,
-  ] {
-    if (this.setCheckpointUseCaseListeners) {
-      return this.setCheckpointUseCaseListeners;
-    }
-
-    this.setCheckpointUseCaseListeners = [
-      new SetCurrentTabCheckpointMessageEventListener(
-        DependencyProvider.getSetCheckpointUseCases(),
-      ),
-      new SetTabCheckpointIfUnsetMessageEventListener(
-        DependencyProvider.getSetCheckpointUseCases(),
-      ),
-    ];
-
-    return this.setCheckpointUseCaseListeners;
-  }
-
-  private static getCheckpointUseCaseListeners: [
-    GetCurrentTabCheckpointMessageEventListener,
-  ];
-  static getGetCheckpointUseCaseMessageEventListeners(): [
-    GetCurrentTabCheckpointMessageEventListener,
-  ] {
-    if (this.getCheckpointUseCaseListeners) {
-      return this.getCheckpointUseCaseListeners;
-    }
-
-    this.getCheckpointUseCaseListeners = [
-      new GetCurrentTabCheckpointMessageEventListener(
-        DependencyProvider.getGetCheckpointUseCases(),
-      ),
-    ];
-
-    return this.getCheckpointUseCaseListeners;
-  }
-
-  private static clearCheckpointUseCaseListeners: [
-    ClearCurrentTabCheckpointMessageEventListener,
-    ClearTabCheckpointMessageEventListener,
-  ];
-  static getClearCheckpointUseCaseMessageEventListeners(): [
-    ClearCurrentTabCheckpointMessageEventListener,
-    ClearTabCheckpointMessageEventListener,
-  ] {
-    if (this.clearCheckpointUseCaseListeners) {
-      return this.clearCheckpointUseCaseListeners;
-    }
-
-    this.clearCheckpointUseCaseListeners = [
-      new ClearCurrentTabCheckpointMessageEventListener(
-        DependencyProvider.getClearCheckpointUseCases(),
-      ),
-      new ClearTabCheckpointMessageEventListener(
-        DependencyProvider.getClearCheckpointUseCases(),
-      ),
-    ];
-
-    return this.clearCheckpointUseCaseListeners;
-  }
-
-  private static resetTabToCheckpointUseCaseListeners: [
-    ResetCurrentTabToCheckpointMessageEventListener,
-    ResetOrCloseCurrentTabToCheckpointMessageEventListener,
-  ];
-  static getResetTabToCheckpointUseCaseMessageEventListeners(): [
-    ResetCurrentTabToCheckpointMessageEventListener,
-    ResetOrCloseCurrentTabToCheckpointMessageEventListener,
-  ] {
-    if (this.resetTabToCheckpointUseCaseListeners) {
-      return this.resetTabToCheckpointUseCaseListeners;
-    }
-
-    this.resetTabToCheckpointUseCaseListeners = [
-      new ResetCurrentTabToCheckpointMessageEventListener(
-        DependencyProvider.getResetTabToCheckpointUseCases(),
-      ),
-      new ResetOrCloseCurrentTabToCheckpointMessageEventListener(
-        DependencyProvider.getResetTabToCheckpointUseCases(),
-      ),
-    ];
-
-    return this.resetTabToCheckpointUseCaseListeners;
-  }
   //Presentation - Message events - Senders
-  private static resetTabToCheckpointMessageEventSender: ResetTabToCheckpointMessageEventSender;
-  static getResetTabToCheckpointMessageEventSender(): ResetTabToCheckpointMessageEventSender {
-    if (this.resetTabToCheckpointMessageEventSender) {
-      return this.resetTabToCheckpointMessageEventSender;
-    }
-
-    this.resetTabToCheckpointMessageEventSender =
-      new ResetTabToCheckpointMessageEventSender(
-        DependencyProvider.getBrowserMessageService(),
-        DependencyProvider.getResetTabToCheckpointUseCaseMessageEventListeners(),
-      );
-
-    return this.resetTabToCheckpointMessageEventSender;
-  }
-
-  private static clearCheckpointMessageEventSender: ClearCheckpointMessageEventSender;
-  static getClearCheckpointMessageEventSender(): ClearCheckpointMessageEventSender {
-    if (this.clearCheckpointMessageEventSender) {
-      return this.clearCheckpointMessageEventSender;
-    }
-
-    this.clearCheckpointMessageEventSender =
-      new ClearCheckpointMessageEventSender(
-        DependencyProvider.getBrowserMessageService(),
-        DependencyProvider.getClearCheckpointUseCaseMessageEventListeners(),
-      );
-
-    return this.clearCheckpointMessageEventSender;
-  }
-
-  private static getCheckpointMessageEventSender: GetCheckpointMessageEventSender;
-  static getGetCheckpointMessageEventSender(): GetCheckpointMessageEventSender {
-    if (this.getCheckpointMessageEventSender) {
-      return this.getCheckpointMessageEventSender;
-    }
-
-    this.getCheckpointMessageEventSender = new GetCheckpointMessageEventSender(
-      DependencyProvider.getBrowserMessageService(),
-      DependencyProvider.getGetCheckpointUseCaseMessageEventListeners(),
-    );
-
-    return this.getCheckpointMessageEventSender;
-  }
-
-  private static setCheckpointMessageEventSender: SetCheckpointMessageEventSender;
-  static getSetCheckpointMessageEventSender(): SetCheckpointMessageEventSender {
-    if (this.setCheckpointMessageEventSender) {
-      return this.setCheckpointMessageEventSender;
-    }
-
-    this.setCheckpointMessageEventSender = new SetCheckpointMessageEventSender(
-      DependencyProvider.getBrowserMessageService(),
-      DependencyProvider.getSetCheckpointUseCaseMessageEventListeners(),
-    );
-
-    return this.setCheckpointMessageEventSender;
-  }
 
   // ─── Tab-Rebrand: Infrastructure ────────────────────────────────────────────
 

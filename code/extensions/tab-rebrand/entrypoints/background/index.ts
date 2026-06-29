@@ -3,7 +3,6 @@ import { ExtensionListenerProvider } from "./presentation/extension-listener-pro
 import { MessageEventListenerProvider } from "./presentation/message-event-listener-provider";
 import { SettingsEventListenerProvider } from "./presentation/settings-listener-provider";
 import { ShortcutListenerProvider } from "./presentation/shortcut-listener-provider";
-import { StorageListenerProvider } from "./presentation/storage-listener-provider";
 import { TabEventListenerProvider } from "./presentation/tab-event-listener-provider";
 
 export default defineBackground(() => {
@@ -20,14 +19,8 @@ export default defineBackground(() => {
   shortcutListenerProvider.registerFeaturesShortcutListeners();
 
   const tabEventListenerProvider = new TabEventListenerProvider();
-  tabEventListenerProvider.registerFeaturesOnActivatedTabEventListeners();
   tabEventListenerProvider.registerFeaturesOnCloseTabEventListeners();
-  tabEventListenerProvider.registerFeaturesOnUpdateTabEventListeners();
-  tabEventListenerProvider.registerFeaturesOnCreateTabEventListeners();
 
   const settingsEventListenerProvider = new SettingsEventListenerProvider();
   settingsEventListenerProvider.registerFeaturesSettingsEventListeners();
-
-  const storageListenerProvider = new StorageListenerProvider();
-  storageListenerProvider.registerFeaturesStorageListeners();
 });
