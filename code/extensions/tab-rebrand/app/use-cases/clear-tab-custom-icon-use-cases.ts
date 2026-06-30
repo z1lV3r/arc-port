@@ -23,12 +23,23 @@ export class ClearTabCustomIconUseCases {
 
   async clearCurrentTabCustomIcon(): Promise<void> {
     const currentTab = await this.tabsService.getCurrentTab();
-    await this.customIconRepository.delete(currentTab.id);
-    let originalIcon = await this.originalIconRepository.get(currentTab.id);
-    if (!originalIcon) {
-      originalIcon = await this.originalTabInformationService.getOriginalIcon(currentTab.id);
+    await this.clearTabCustomIcon(currentTab.id);
+  }
+
+  async clearTabCustomIcon(tabId: string): Promise<void> {
+    await this.customIconRepository.delete(tabId);
+    try {
+      let originalIcon = await this.originalIconRepository.get(tabId);
+      if (!originalIcon) {
+        originalIcon = await this.originalTabInformationService.getOriginalIcon(tabId);
+      }
+      if (await this.tabsService.exists(tabId)) {
+        await this.tabsService.setTabIcon(tabId, originalIcon);
+      }
+    } catch (error) {
+      console.error("Error clearing tab custom icon:", error);
+    } finally {
+      await this.originalIconRepository.delete(tabId);
     }
-    await this.tabsService.setTabIcon(currentTab.id, originalIcon);
-    await this.originalIconRepository.delete(currentTab.id);
   }
 }

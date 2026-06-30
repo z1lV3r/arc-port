@@ -23,12 +23,23 @@ export class ClearTabCustomNameUseCases {
 
   async clearCurrentTabCustomName(): Promise<void> {
     const currentTab = await this.tabsService.getCurrentTab();
-    await this.customNameRepository.delete(currentTab.id);
-    let originalName = await this.originalNameRepository.get(currentTab.id);
-    if (!originalName) {
-      originalName = await this.originalTabInformationService.getOriginalName(currentTab.id);
+    await this.clearTabCustomName(currentTab.id);
+  }
+
+  async clearTabCustomName(tabId: string): Promise<void> {
+    await this.customNameRepository.delete(tabId);
+    try {
+      let originalName = await this.originalNameRepository.get(tabId);
+      if (!originalName) {
+        originalName = await this.originalTabInformationService.getOriginalName(tabId);
+      }
+      if (await this.tabsService.exists(tabId)) {
+        await this.tabsService.setTabName(tabId, originalName);
+      }
+    } catch (error) {
+      console.error("Error clearing tab custom name:", error);
+    } finally {
+      await this.originalNameRepository.delete(tabId);
     }
-    await this.tabsService.setTabName(currentTab.id, originalName);
-    await this.originalNameRepository.delete(currentTab.id);
   }
 }

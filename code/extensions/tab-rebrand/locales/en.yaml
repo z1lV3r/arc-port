@@ -34,6 +34,7 @@ browser_events:
   on_click_show_pop_up: Show extension pop up
   on_extension_action_setting_change: On action setting change
   on_context_menu_setting_change: On context menu setting change
+  on_tab_close_clear_custom_name_icon: On tab close clear custom name and custom icon
 
 messages:
   clear_current_tab_custom_icon: Clear current tab custom icon message event listener

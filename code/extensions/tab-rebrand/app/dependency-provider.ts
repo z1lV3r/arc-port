@@ -62,6 +62,7 @@ import { OpenTabRebrandUiFocusCustomIconShortcutListener } from "./presentation/
 import { OpenTabRebrandUiFocusCustomNameShortcutListener } from "./presentation/shortcuts/open-tab-rebrand-ui-focus-custom-name-shortcut-listener.ts";
 import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases.ts";
 import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases.ts";
+import { OnTabCloseClearCustomNameIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-close-clear-custom-name-icon.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -271,7 +272,10 @@ export class DependencyProvider {
     }
 
     this.onCloseTabEventListeners = [
-      //TODO: clear custom icon and custom name
+      new OnTabCloseClearCustomNameIcon(
+        DependencyProvider.getClearTabCustomIconUseCases(),
+        DependencyProvider.getClearTabCustomNameUseCases(),
+      ),
     ];
 
     return this.onCloseTabEventListeners;
