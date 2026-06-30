@@ -135,7 +135,7 @@ function PopUp() {
   return (
     <GroupCard className="w-full min-w-64">
       <GroupCardHeader>
-        <GroupCardTitle>Tab Rebrand</GroupCardTitle>
+        <GroupCardTitle>{t("extension_name")}</GroupCardTitle>
       </GroupCardHeader>
       <GroupCardContent className="p-3">
         <InputGroup>
@@ -146,7 +146,7 @@ function PopUp() {
                 ref={sparkleRef}
                 size="icon-sm"
                 className="text-base"
-                aria-label="Open emoji picker"
+                aria-label={t("pop_up.open_emoji_picker_label")}
                 aria-expanded={pickerOpen}
                 onClick={() => setPickerOpen((o) => !o)}
               >
@@ -163,7 +163,7 @@ function PopUp() {
               {hasCustomIcon && (
                 <button
                   type="button"
-                  aria-label="Reset emoji"
+                  aria-label={t("pop_up.reset_emoji_label")}
                   onClick={handleClearIcon}
                   className="absolute -right-1 -top-1 flex size-3.5 items-center justify-center rounded-full bg-destructive text-[8px] font-bold leading-none text-destructive-foreground shadow-sm transition-opacity opacity-0 group-hover/icon:opacity-100 hover:brightness-110"
                 >
@@ -177,7 +177,7 @@ function PopUp() {
             ref={inputRef}
             autoComplete="off"
             maxLength={64}
-            placeholder="Custom name"
+            placeholder={t("pop_up.name_placeholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -185,7 +185,7 @@ function PopUp() {
           <InputGroupAddon align="inline-end">
             <InputGroupButton
               size="icon-sm"
-              aria-label="Clear name"
+              aria-label={t("pop_up.reset_name_label")}
               disabled={!name}
               onClick={handleClear}
             >

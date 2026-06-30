@@ -1,16 +1,14 @@
 extension_full_name: ArcPort - Tab Rebrand
 extension_name: Tab Rebrand
-#---
+
 pop_up:
-  url:
-    placeholder: empty
-  button:
-    reset: Reset tab to URL
-    set_current_url: Set current URL
-    clear: Clear
+  name_placeholder: Custom name
+  open_emoji_picker_label: Open emoji picker
+  reset_emoji_label: Reset emoji
+  reset_name_label: Reset name
 
-extension_settings: Tab Checkpoint - Settings
-
+extension_settings: Tab Rebrand - Settings
+#---
 settings:
   edit_shortcuts: Edit shortcuts
   reset_to_default: Reset to default

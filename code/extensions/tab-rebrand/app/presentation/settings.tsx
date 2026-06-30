@@ -83,7 +83,7 @@ export function Settings() {
       <GroupCardContent>
         <div className="flex flex-col gap-4 min-w-[300px]">
           {/* Settings Options */}
-          <ItemGroup className="grid grid-cols-4 gap-4">
+          <ItemGroup className="grid grid-cols-2 gap-4">
             {/* Context Menu Setting */}
             <SelectSetting
               title={t("settings.action.title")}
@@ -103,6 +103,7 @@ export function Settings() {
 
             {/* Shortcuts */}
             <SettingsShortcuts
+              className="col-span-4"
               tabsService={tabsService}
               shortcuts={shortcuts}
               editShortcutsButtonMessage={t("settings.edit_shortcuts")}

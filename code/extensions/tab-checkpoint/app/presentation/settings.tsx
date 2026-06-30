@@ -103,6 +103,7 @@ export function Settings() {
 
             {/* Shortcuts */}
             <SettingsShortcuts
+              className="col-span-4"
               tabsService={tabsService}
               shortcuts={shortcuts}
               editShortcutsButtonMessage={t("settings.edit_shortcuts")}
