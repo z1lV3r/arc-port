@@ -9,7 +9,7 @@ export class SetCurrentTabCustomIconMessageEventListener implements MessageEvent
   }
 
   name = "set-current-tab-custom-icon-message-event-listener";
-  description = "Set current tab custom icon message event listener";
+  description = t('messages.set_current_tab_custom_icon');
 
   async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
     const iconUrl = _request.iconUrl;

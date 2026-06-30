@@ -85,13 +85,15 @@ export function Settings() {
           {/* Settings Options */}
           <ItemGroup className="grid grid-cols-2 gap-4">
             {/* Context Menu Setting */}
-            <SelectSetting
-              title={t("settings.action.title")}
-              description={t("settings.action.description")}
-              currentValue={extensionAction}
-              values={actionListeners}
-              onSelect={handleSelectExtensionAction}
-            />
+            {actionListeners.length > 1 && (
+              <SelectSetting
+                title={t("settings.action.title")}
+                description={t("settings.action.description")}
+                currentValue={extensionAction}
+                values={actionListeners}
+                onSelect={handleSelectExtensionAction}
+              />
+            )}
             <ToggleSetting
               title={t("settings.context_menu.title")}
               description={t("settings.context_menu.description")}

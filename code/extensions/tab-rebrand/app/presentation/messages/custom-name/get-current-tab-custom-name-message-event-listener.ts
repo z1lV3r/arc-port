@@ -9,7 +9,7 @@ export class GetCurrentTabCustomNameMessageEventListener implements MessageEvent
   }
 
   name = "get-current-tab-custom-name-message-event-listener";
-  description = "Get current tab custom name message event listener";
+  description = t('messages.get_current_tab_custom_name');
 
   async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
     const tabCustomName = await this.getTabCustomNameUseCases.getCurrentTabCustomName();

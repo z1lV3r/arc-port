@@ -9,7 +9,7 @@ export class ClearCurrentTabCustomIconMessageEventListener implements MessageEve
   }
 
   name = "clear-current-tab-custom-icon-message-event-listener";
-  description = "Clear current tab custom icon message event listener";
+  description = t("messages.clear_current_tab_custom_icon");
 
   async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
     await this.clearTabCustomIconUseCases.clearCurrentTabCustomIcon();
