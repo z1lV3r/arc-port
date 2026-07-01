@@ -1,0 +1,17 @@
+import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+import type { SetTabCustomIconUseCases } from "../../../use-cases/set-tab-custom-icon-use-cases.ts";
+
+export class OnTabIconUpdateRestoreCustomIcon implements TabEventListener {
+  private readonly setTabCustomIconUseCases: SetTabCustomIconUseCases;
+
+  constructor(setTabCustomIconUseCases: SetTabCustomIconUseCases) {
+    this.setTabCustomIconUseCases = setTabCustomIconUseCases;
+  }
+
+  name = "on-tab-icon-update-restore-custom-icon";
+  description = "Restore custom tab icon when page icon changes";
+
+  async command(tabId: string): Promise<void> {
+    await this.setTabCustomIconUseCases.resetTabCustomIcon(tabId);
+  }
+}

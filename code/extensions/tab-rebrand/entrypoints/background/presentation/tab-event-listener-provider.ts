@@ -17,4 +17,11 @@ export class TabEventListenerProvider {
       AppDependencyProvider.getOnCloseTabEventListeners(),
     ]);
   }
+
+  registerFeaturesOnUpdateTabEventListeners() {
+    this.tabEventListenerUseCases.registerOnUpdateTabEventListeners([
+      AppDependencyProvider.getOnUpdateTabEventListeners(),
+    ]);
+  }
+
 }

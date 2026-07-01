@@ -2,6 +2,18 @@ import type { BrowserTabsService } from "../domain/interfaces/browser-tabs-servi
 import { Tab } from "../domain/models/tab";
 
 export class ChromeTabsService implements BrowserTabsService {
+  async exists(id: string): Promise<boolean> {
+    if (!chrome || !chrome.tabs || !id) {
+      return false;
+    }
+    try {
+      const tab = await chrome.tabs.get(parseInt(id));
+      return !!tab;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async getCurrentTab(): Promise<Tab> {
     if (!chrome || !chrome.tabs) {
       return new Tab("", "", 0);

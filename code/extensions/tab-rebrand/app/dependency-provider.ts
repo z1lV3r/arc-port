@@ -63,6 +63,8 @@ import { OpenTabRebrandUiFocusCustomNameShortcutListener } from "./presentation/
 import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases.ts";
 import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases.ts";
 import { OnTabCloseClearCustomNameIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-close-clear-custom-name-icon.ts";
+import { OnTabIconUpdateRestoreCustomIcon } from "./presentation/browser-events/tab-event-listeners/on-tab-icon-update-restore-custom-icon.ts";
+import { OnTabTitleUpdateRestoreCustomName } from "./presentation/browser-events/tab-event-listeners/on-tab-title-update-restore-custom-name.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -279,6 +281,19 @@ export class DependencyProvider {
     ];
 
     return this.onCloseTabEventListeners;
+  }
+
+  private static onUpdateTabEventListeners: TabEventListener[];
+  static getOnUpdateTabEventListeners(): TabEventListener[] {
+    if (this.onUpdateTabEventListeners) {
+      return this.onUpdateTabEventListeners;
+    }
+
+    this.onUpdateTabEventListeners = [
+      new OnTabTitleUpdateRestoreCustomName(DependencyProvider.getSetTabCustomNameUseCases()),
+      new OnTabIconUpdateRestoreCustomIcon(DependencyProvider.getSetTabCustomIconUseCases()),
+    ];
+    return this.onUpdateTabEventListeners;
   }
 
   //Presentation - Message events - Listeners

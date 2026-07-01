@@ -1,6 +1,8 @@
 import { Tab } from "../models/tab";
 
 export interface BrowserTabsService {
+  exists(id: string): Promise<boolean>;
+
   getCurrentTab(): Promise<Tab>;
   getTab(id: string): Promise<Tab>;
   createTabByUrl(url: string): Promise<Tab>;

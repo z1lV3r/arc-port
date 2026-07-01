@@ -20,6 +20,7 @@ export default defineBackground(() => {
 
   const tabEventListenerProvider = new TabEventListenerProvider();
   tabEventListenerProvider.registerFeaturesOnCloseTabEventListeners();
+  tabEventListenerProvider.registerFeaturesOnUpdateTabEventListeners();
 
   const settingsEventListenerProvider = new SettingsEventListenerProvider();
   settingsEventListenerProvider.registerFeaturesSettingsEventListeners();
