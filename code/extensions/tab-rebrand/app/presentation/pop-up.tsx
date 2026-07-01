@@ -80,19 +80,21 @@ function PopUp() {
   ]);
 
   useEffect(() => {
+    if (!showPopUp) return;
+
     // Check if the popup was opened via shortcut with a specific focus target
     chrome.storage.session.get("focusElementId").then(({ focusElementId }) => {
       if (focusElementId) {
         if (focusElementId === "custom-icon") {
           setPickerOpen(true);
-          sparkleRef.current?.focus();
+          setTimeout(() => sparkleRef.current?.focus(), 0);
         } else if (focusElementId === "custom-name") {
-          inputRef.current?.focus();
+          setTimeout(() => inputRef.current?.focus(), 0);
         }
         chrome.storage.session.remove("focusElementId");
       }
     });
-  }, []);
+  }, [showPopUp]);
 
   const handleEmojiClick = async (emojiData: EmojiClickData) => {
     setPickerOpen(false);
