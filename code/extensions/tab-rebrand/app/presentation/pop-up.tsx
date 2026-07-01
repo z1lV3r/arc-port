@@ -87,7 +87,6 @@ function PopUp() {
       if (focusElementId) {
         if (focusElementId === "custom-icon") {
           setPickerOpen(true);
-          setTimeout(() => sparkleRef.current?.focus(), 0);
         } else if (focusElementId === "custom-name") {
           setTimeout(() => inputRef.current?.focus(), 0);
         }
