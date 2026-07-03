@@ -37,31 +37,27 @@ export class PlaywrightBrowserMessageService {
     }
   }
 
-  async sendSetCurrentTabCheckpointEventMessage(): Promise<string> {
-    return (await this.sendEventMessage("set-current-tab-checkpoint-message-event-listener", {})).data;
+  async sendSetCurrentTabCustomNameEventMessage(name: string): Promise<string> {
+    return (await this.sendEventMessage("set-current-tab-custom-name-message-event-listener", { name })).data;
   }
 
-  async sendSetTabCheckpointIfUnsetMessageEventMessage(tabId: number): Promise<string> {
-    return (await this.sendEventMessage("set-tab-checkpoint-if-unset-message-event-listener", { tabId })).data;
+  async sendGetCurrentTabCustomNameEventMessage(): Promise<string> {
+    return (await this.sendEventMessage("get-current-tab-custom-name-message-event-listener", {})).data;
   }
 
-  async sendGetCurrentTabCheckpointEventMessage(): Promise<string> {
-    return (await this.sendEventMessage("get-current-tab-checkpoint-message-event-listener", {})).data;
+  async sendClearCurrentTabCustomNameEventMessage(): Promise<void> {
+    await this.sendEventMessage("clear-current-tab-custom-name-message-event-listener", {});
   }
 
-  async sendResetCurrentTabToCheckpointEventMessage(): Promise<void> {
-    await this.sendEventMessage("reset-current-tab-to-checkpoint-message-event-listener", {});
+  async sendSetCurrentTabCustomIconEventMessage(icon: string): Promise<string> {
+    return (await this.sendEventMessage("set-current-tab-custom-icon-message-event-listener", { iconUrl: icon })).data;
   }
 
-  async sendResetOrCloseCurrentTabToCheckpointEventMessage(): Promise<void> {
-    await this.sendEventMessage("reset-or-close-current-tab-to-checkpoint-message-event-listener", {});
+  async sendGetCurrentTabCustomIconEventMessage(): Promise<string> {
+    return (await this.sendEventMessage("get-current-tab-custom-icon-message-event-listener", {})).data;
   }
 
-  async sendClearCurrentTabCheckpointEventMessage(): Promise<void> {
-    await this.sendEventMessage("clear-current-tab-checkpoint-message-event-listener", {});
-  }
-
-  async sendClearTabCheckpointEventMessage(tabId: string): Promise<void> {
-    await this.sendEventMessage("clear-tab-checkpoint-message-event-listener", { tabId });
+  async sendClearCurrentTabCustomIconEventMessage(): Promise<void> {
+    await this.sendEventMessage("clear-current-tab-custom-icon-message-event-listener", {});
   }
 }

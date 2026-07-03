@@ -1,67 +1,65 @@
 import { test, expect } from '../fixtures';
 import { PlaywrightBrowserMessageService } from '../test-services/playwright-browser-message-service';
 
-test.describe('Checkpoint Happy Path', () => {
+test.describe('Rebrand Happy Path', () => {
   let messageService: PlaywrightBrowserMessageService;
   
   test('invoke all the operations using MessageEventSender', async ({ context, extensionId }) => {
     messageService = new PlaywrightBrowserMessageService(context, extensionId);
 
-    // 1. Open new tab https://example.com
+    //1. Open a new tab to example.com
     const page = await context.newPage();
     await page.goto('https://example.com/');
     await page.waitForLoadState('networkidle');
 
-    // 2. Set Checkpoint
-    await messageService.sendSetCurrentTabCheckpointEventMessage();
+    //2. Generate emoji data URL the same way the app does (imageUrlToDataUrl)
+    const emojiImageUrl = 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f600.png';
+    const testIconUrl = await page.evaluate(async (url: string) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }, emojiImageUrl);
     
-    // - Validate there should be a checkpoint
-    let defaultUrlRes = await messageService.sendGetCurrentTabCheckpointEventMessage();
-    expect(defaultUrlRes).toBe('https://example.com/');
+    //3. Change icon to the emoji
+    await messageService.sendSetCurrentTabCustomIconEventMessage(testIconUrl);
 
-    // 3. Reset tab to checkpoint
-    // Go to a different URL first to see if it resets
-    await page.goto('https://example.net/');
+    //4. Change name to a text
+    await messageService.sendSetCurrentTabCustomNameEventMessage('My Test Tab');
+
+    //5. Validate icon and name
+    let iconRes = await messageService.sendGetCurrentTabCustomIconEventMessage();
+    expect(iconRes).toBe(testIconUrl);
+    let nameRes = await messageService.sendGetCurrentTabCustomNameEventMessage();
+    expect(nameRes).toBe('My Test Tab');
+
+    //6. Navigate to a new url
+    await page.goto('https://www.ipn.mx/');
     await page.waitForLoadState('networkidle');
-    // options page that sendEventMessage opens internally.
-    const resetPagePromise = context.waitForEvent('page', {
-      predicate: (p) => !p.url().startsWith('chrome-extension://') && !p.url().startsWith('about:'),
-    });
-    await messageService.sendResetCurrentTabToCheckpointEventMessage();
-    const resetPage = await resetPagePromise;
 
-    // - Validate there should be a checkpoint with the new tab id
-    await resetPage.waitForLoadState('load');
-    await expect(resetPage).toHaveURL('https://example.com/');
-    defaultUrlRes = await messageService.sendGetCurrentTabCheckpointEventMessage();
-    expect(defaultUrlRes).toBe('https://example.com/');
-
-    // 4. Go to a different url
-    await resetPage.goto('https://example.org/');
-    await resetPage.waitForLoadState('networkidle');
-
-    // - Validate there should not be any change in checkpoint
-    defaultUrlRes = await messageService.sendGetCurrentTabCheckpointEventMessage();
-    expect(defaultUrlRes).toBe('https://example.com/');
-
-    // 5. Reset or close tab to checkpoint
-    const finalPagePromise = context.waitForEvent('page', {
-      predicate: (p) => !p.url().startsWith('chrome-extension://') && !p.url().startsWith('about:'),
-    });
-    await messageService.sendResetOrCloseCurrentTabToCheckpointEventMessage();
-    const finalPage = await finalPagePromise;
-
-    // - Validate there should be a checkpoint with the new tab id
-    await finalPage.waitForLoadState('load');
-    await expect(finalPage).toHaveURL('https://example.com/');
-    defaultUrlRes = await messageService.sendGetCurrentTabCheckpointEventMessage();
-    expect(defaultUrlRes).toBe('https://example.com/');
-
-    // 6. Clear   checkpoint
-    await messageService.sendClearCurrentTabCheckpointEventMessage();
+    //7. Validate icon and name are the same
+    iconRes = await messageService.sendGetCurrentTabCustomIconEventMessage();
     
-    // - Validate there should not be any checkpoint
-    defaultUrlRes = await messageService.sendGetCurrentTabCheckpointEventMessage();
-    expect(defaultUrlRes).toBe('');
+    expect(iconRes).toBe(testIconUrl);
+    nameRes = await messageService.sendGetCurrentTabCustomNameEventMessage();
+    expect(nameRes).toBe('My Test Tab');
+
+    //8. Validate icon and name from the web page
+    await expect(page).toHaveTitle('My Test Tab');
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', testIconUrl);
+
+    //9. Clear icon and name
+    await messageService.sendClearCurrentTabCustomIconEventMessage();
+    await messageService.sendClearCurrentTabCustomNameEventMessage();
+
+    //10. Validate icon and name are reset to default
+    iconRes = await messageService.sendGetCurrentTabCustomIconEventMessage();
+    expect(iconRes).toBe('');
+    nameRes = await messageService.sendGetCurrentTabCustomNameEventMessage();
+    expect(nameRes).toBe('');
   });
 });
