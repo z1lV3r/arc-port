@@ -1,0 +1,5 @@
+{
+  "i18n-ally.localesPaths": ["locales"],
+  "i18n-ally.sourceLanguage": "en",
+  "playwright.configs": ["playwright.config.ts"]
+}

@@ -1,0 +1,12 @@
+# .vscode/i18n-ally-custom-framework.yml
+languageIds:
+  - typescript
+  - typescriptreact
+  - javascript
+  - javascriptreact
+
+usageMatchRegex:
+  # Matches t("key") or t('key')
+  - "[^\\w\\d]t\\(['\"`]({key})['\"`]"
+  # Matches __MSG_key__ in wxt.config.ts or other config files
+  - "__MSG_({key})__"
