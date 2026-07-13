@@ -22,16 +22,17 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-nav
     nav: [
       { text: '🏠 Home', link: '/' },
-      { text: '🚀 Features', link: '/features/' },
+      { text: '⚙ Extensions', link: '/features/' },
       { text: '📜 Changelog', link: 'https://github.com/z1lV3r/arc-port/releases' }
     ],
 
     // https://vitepress.dev/reference/default-theme-sidebar
     sidebar: [
       {
-        text: 'Features',
+        text: 'Extensions',
         items: [
-          { text: 'Checkpoint', link: '/features/checkpoint' }
+          { text: 'Tab Checkpoint', link: '/features/tab-checkpoint' },
+          { text: 'Tab Rebrand', link: '/features/tab-rebrand' }
         ]
       }
     ],
