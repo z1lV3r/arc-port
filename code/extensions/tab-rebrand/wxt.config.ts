@@ -14,7 +14,6 @@ export default defineConfig({
       "storage",
       "scripting",
       "contextMenus",
-      "tabGroups",
     ],
     host_permissions: ["<all_urls>"],
     commands: getCommands(),

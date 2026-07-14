@@ -46,7 +46,6 @@
 | `storage`        | Persist custom names, icons, and settings via Chrome storage.      |
 | `scripting`      | Inject content scripts to apply custom names and icons to tabs.    |
 | `contextMenus`   | Register right-click context menu entries.                         |
-| `tabGroups`      | Detect tab group membership for context-aware behavior.            |
 | `<all_urls>`     | Required host permission for tab content access across all sites.  |
 
 ## 🏗️ Architecture
