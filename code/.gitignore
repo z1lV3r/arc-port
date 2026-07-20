@@ -1,0 +1,35 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Note: Many standard ignores (node_modules, .DS_Store, dist, logs) are already handled by the root /.gitignore.
+
+# Dependencies
+.pnp
+.pnp.js
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Testing
+coverage
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Build Outputs
+.next/
+out/
+build
+.output/
+
+# WXT Browser Extensions
+.wxt/
+stats.html
+stats-*.json
+web-ext.config.ts
+
+# Misc
+*.pem

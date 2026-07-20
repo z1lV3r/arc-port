@@ -1,0 +1,45 @@
+extension_full_name: ArcPort - Tab Rebrand
+extension_name: Tab Rebrand
+
+pop_up:
+  name_placeholder: Custom name
+  open_emoji_picker_label: Open emoji picker
+  reset_emoji_label: Reset emoji
+  reset_name_label: Reset name
+
+extension_settings: Tab Rebrand - Settings
+#---
+settings:
+  edit_shortcuts: Edit shortcuts
+  reset_to_default: Reset to default
+  context_menu:
+    title: Context Menu
+    description: Show items on right click context menu
+  action:
+    title: Extension click action
+    description: Action executed when clicking on the extension icon
+    options:
+      popup: Show extension popup
+
+context_menu:
+  open_tab_rebrand_ui_focus_custom_icon: Edit custom tab icon
+  open_tab_rebrand_ui_focus_custom_name: Edit custom tab name
+
+shortcuts_open_tab_rebrand_ui_focus_custom_icon: Edit custom tab icon
+shortcuts_open_tab_rebrand_ui_focus_custom_name: Edit custom tab name
+
+# Not used in UI
+browser_events:
+  on_extension_installed_load_default_settings: On extension installed load default settings
+  on_click_show_pop_up: Show extension pop up
+  on_extension_action_setting_change: On action setting change
+  on_context_menu_setting_change: On context menu setting change
+  on_tab_close_clear_custom_name_icon: On tab close clear custom name and custom icon
+
+messages:
+  clear_current_tab_custom_icon: Clear current tab custom icon message event listener
+  get_current_tab_custom_icon: Get current tab custom icon message event listener
+  set_current_tab_custom_icon: Set current tab custom icon message event listener
+  clear_current_tab_custom_name: Clear current tab custom name message event listener
+  get_current_tab_custom_name: Get current tab custom name message event listener
+  set_current_tab_custom_name: Set current tab custom name message event listener

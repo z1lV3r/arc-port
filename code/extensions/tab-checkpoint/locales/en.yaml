@@ -1,0 +1,59 @@
+extension_full_name: ArcPort - Tab Checkpoint
+extension_name: Tab Checkpoint
+
+pop_up:
+  url:
+    placeholder: empty
+  button:
+    reset: Reset tab to URL
+    set_current_url: Set current URL
+    clear: Clear
+
+extension_settings: Tab Checkpoint - Settings
+
+settings:
+  edit_shortcuts: Edit shortcuts
+  reset_to_default: Reset to default
+  context_menu:
+    title: Context Menu
+    description: Show items on right click context menu
+  action:
+    title: Extension click action
+    description: Action executed when clicking on the extension icon
+    options:
+      popup: Show extension popup
+      reset_current_tab_to_checkpoint: Reset current tab to checkpoint
+
+context_menu:
+  clear_current_tab_checkpoint: Clear current tab checkpoint
+  reset_current_tab_to_checkpoint: Reset current tab to checkpoint
+  set_current_tab_checkpoint: Set current tab checkpoint
+  show_current_tab_checkpoint: Show current tab checkpoint
+
+shortcuts_clear_current_tab_checkpoint: Clear current tab checkpoint
+shortcuts_reset_current_tab_to_checkpoint: Reset current tab to checkpoint
+shortcuts_reset_or_close_current_tab_to_checkpoint: Reset or close current tab to checkpoint
+shortcuts_set_current_tab_checkpoint: Set current tab checkpoint
+
+# Not used in UI
+browser_events:
+  on_extension_installed_load_default_settings: On extension installed load default settings
+  on_tab_activated_set_icon: On tab activated set icon
+  on_tab_close_remove_checkpoint: Remove checkpoint when tab is closed
+  on_tab_create_pinned_set_checkpoint: Set tab checkpoint if tab pinned was created
+  on_tab_pin_set_checkpoint: Set tab checkpoint if unset by tab id
+  on_tab_set_to_group_set_checkpoint: Set tab checkpoint if tab was set to group
+  on_click_show_pop_up: Show extension pop up
+  on_click_reset_current_tab_to_checkpoint: Reset current tab to checkpoint
+  on_extension_action_setting_change: On action setting change
+  on_context_menu_setting_change: On context menu setting change
+  on_checkpoint_changed: On checkpoint changed
+
+messages:
+  clear_current_tab_checkpoint: Clear current tab checkpoint message event listener
+  clear_tab_checkpoint: Clear tab checkpoint message event listener
+  get_current_tab_checkpoint: Get current tab checkpoint message event listener
+  reset_current_tab_to_checkpoint: Reset current tab to checkpoint message event listener
+  reset_or_close_current_tab_to_checkpoint: Reset or close current tab to checkpoint message event listener
+  set_current_tab_checkpoint: Set current tab checkpoint message event listener
+  set_tab_checkpoint_if_unset: Set tab checkpoint if unset message event listener

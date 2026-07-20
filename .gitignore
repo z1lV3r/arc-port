@@ -22,6 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.code-workspace
 
 # VitePress
 docs/.vitepress/cache
@@ -29,3 +30,6 @@ docs/.vitepress/cache
 # Playwright
 playwright-report/
 test-results/
+
+# WXT
+**/.env.submit
