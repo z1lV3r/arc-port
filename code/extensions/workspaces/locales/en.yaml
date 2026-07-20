@@ -1,0 +1,16 @@
+extension_full_name: ArcPort - Workspaces
+extension_name: Workspaces
+
+extension_settings: Tab Workspaces - Settings
+
+settings:
+  edit_shortcuts: Edit shortcuts
+  reset_to_default: Reset to default
+  context_menu:
+    title: Context Menu
+    description: Show items on right click context menu
+  action:
+    title: Extension click action
+    description: Action executed when clicking on the extension icon
+    options:
+      popup: Show extension popup
