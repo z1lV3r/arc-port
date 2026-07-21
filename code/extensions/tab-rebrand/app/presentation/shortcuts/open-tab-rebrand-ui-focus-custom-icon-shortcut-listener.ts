@@ -10,7 +10,7 @@ export class OpenTabRebrandUiFocusCustomIconShortcutListener implements Shortcut
   }
 
   name = "shortcut-open-tab-rebrand-ui-focus-custom-icon";
-  description = "__MSG_shortcuts_open_tab_rebrand_ui_focus_custom_icon__";
+  description = "shortcuts.open_tab_rebrand_ui_focus_custom_icon";
   key = {
     default: "Alt+Shift+I",
     mac: "Option+Shift+I",

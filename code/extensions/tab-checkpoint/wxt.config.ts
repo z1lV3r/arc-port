@@ -38,6 +38,7 @@ function getCommands() {
 
   for (let i = 0; i < shortcuts.length; i++) {
     const shortcut = shortcuts[i];
+    const manifestDescription = `__MSG_${shortcut.description.replace(/\./g, "_")}__`;
 
     if (i < 4) {
       commands[shortcut.name] = {
@@ -45,11 +46,11 @@ function getCommands() {
           default: shortcut.key.default,
           mac: shortcut.key.mac,
         },
-        description: shortcut.description,
+        description: manifestDescription,
       };
     } else {
       commands[shortcut.name] = {
-        description: shortcut.description,
+        description: manifestDescription,
       };
     }
   }

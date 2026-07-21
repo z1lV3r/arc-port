@@ -10,7 +10,7 @@ export class ResetCurrentTabToCheckpointShortcutListener implements ShortcutList
   }
 
   name = "shortcut-reset-current-tab-to-checkpoint";
-  description = "__MSG_shortcuts_reset_current_tab_to_checkpoint__";
+  description = "shortcuts.reset_current_tab_to_checkpoint";
   key = {
     default: "Alt+Shift+R",
     mac: "Option+Shift+R",
