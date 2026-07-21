@@ -1,4 +1,5 @@
 import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+import { t } from "@/utils/alias";
 
 import type { BrowserShortcutService } from "../domain/interfaces/browser-shortcut-service";
 
@@ -25,7 +26,7 @@ function showToast(tab: chrome.tabs.Tab, command: string) {
       .executeScript({
         target: { tabId: tab.id },
         func: createToast,
-        args: [`${command} executed`],
+        args: [t(command)],
       })
       .catch((e) => console.error("Failed to execute toast script:", e));
   }

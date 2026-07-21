@@ -30,10 +30,11 @@ context_menu:
   set_current_tab_checkpoint: Set current tab checkpoint
   show_current_tab_checkpoint: Show current tab checkpoint
 
-shortcuts_clear_current_tab_checkpoint: Clear current tab checkpoint
-shortcuts_reset_current_tab_to_checkpoint: Reset current tab to checkpoint
-shortcuts_reset_or_close_current_tab_to_checkpoint: Reset or close current tab to checkpoint
-shortcuts_set_current_tab_checkpoint: Set current tab checkpoint
+shortcuts:
+  clear_current_tab_checkpoint: Clear current tab checkpoint
+  reset_current_tab_to_checkpoint: Reset current tab to checkpoint
+  reset_or_close_current_tab_to_checkpoint: Reset or close current tab to checkpoint
+  set_current_tab_checkpoint: Set current tab checkpoint
 
 # Not used in UI
 browser_events:

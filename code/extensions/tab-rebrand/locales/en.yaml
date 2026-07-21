@@ -25,8 +25,9 @@ context_menu:
   open_tab_rebrand_ui_focus_custom_icon: Edit custom tab icon
   open_tab_rebrand_ui_focus_custom_name: Edit custom tab name
 
-shortcuts_open_tab_rebrand_ui_focus_custom_icon: Edit custom tab icon
-shortcuts_open_tab_rebrand_ui_focus_custom_name: Edit custom tab name
+shortcuts:
+  open_tab_rebrand_ui_focus_custom_icon: Edit custom tab icon
+  open_tab_rebrand_ui_focus_custom_name: Edit custom tab name
 
 # Not used in UI
 browser_events:

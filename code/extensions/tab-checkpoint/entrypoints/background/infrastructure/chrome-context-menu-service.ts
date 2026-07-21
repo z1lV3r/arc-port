@@ -1,4 +1,5 @@
 import type { ListenersStore } from "@repo/shared/domain/models/listeners-store";
+import { t } from "@/utils/alias";
 
 import type { BrowserContextMenuService } from "../domain/interfaces/browser-context-menu-service";
 
@@ -8,7 +9,7 @@ export default class ChromeContextMenuService implements BrowserContextMenuServi
       const listener = listenersStore.getListener(info.menuItemId.toString());
       if (listener && tab?.id) {
         await listener.command(tab.id.toString());
-        showToast(tab, listener.description);
+        showToast(tab, t(listener.description));
       }
     });
   }
