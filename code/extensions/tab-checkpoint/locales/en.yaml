@@ -42,6 +42,7 @@ browser_events:
   on_tab_activated_set_icon: On tab activated set icon
   on_tab_close_remove_checkpoint: Remove checkpoint when tab is closed
   on_tab_create_pinned_set_checkpoint: Set tab checkpoint if tab pinned was created
+  on_tab_create_grouped_set_checkpoint: Set tab checkpoint if tab grouped was created
   on_tab_pin_set_checkpoint: Set tab checkpoint if unset by tab id
   on_tab_set_to_group_set_checkpoint: Set tab checkpoint if tab was set to group
   on_click_show_pop_up: Show extension pop up

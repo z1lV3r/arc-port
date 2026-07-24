@@ -58,6 +58,7 @@ import { ResetTabToCheckpointUseCases } from "./use-cases/reset-tab-to-checkpoin
 import { SetCheckpointUseCases } from "./use-cases/set-checkpoint-use-cases";
 import { ShowCheckpointUseCases } from "./use-cases/show-checkpoint-use-cases";
 import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases";
+import { OnTabCreateGroupedSetCheckpoint } from "./presentation/browser-events/tab-event-listeners/on-tab-create-grouped-set-checkpoint.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -413,6 +414,9 @@ export class DependencyProvider {
 
     this.onCreateTabEventListeners = [
       new OnTabCreatePinnedSetCheckpoint(
+        DependencyProvider.getSetCheckpointUseCases(),
+      ),
+      new OnTabCreateGroupedSetCheckpoint(
         DependencyProvider.getSetCheckpointUseCases(),
       ),
     ];

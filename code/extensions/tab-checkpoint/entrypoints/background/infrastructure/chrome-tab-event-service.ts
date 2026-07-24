@@ -65,14 +65,23 @@ export default class ChromeTabEventService implements BrowserTabEventService {
 
   async registerOnCreateTabEventListeners(listenersStore: ListenersStore) {
     const onCreatePinnedTabEventListeners: TabEventListener[] = [];
+    const onCreateGroupedTabEventListeners: TabEventListener[] = [];
     for (const [name, tabEventListener] of listenersStore.getAllListeners()) {
       if (name.startsWith("on-tab-create-pinned")) {
         onCreatePinnedTabEventListeners.push(tabEventListener);
+      }
+      if (name.startsWith("on-tab-create-grouped")) {
+        onCreateGroupedTabEventListeners.push(tabEventListener);
       }
     }
     chrome.tabs.onCreated.addListener(async (tab) => {
       if (tab.pinned && tab.id) {
         for (const tabEventListener of onCreatePinnedTabEventListeners) {
+          await tabEventListener.command(tab.id.toString());
+        }
+      }
+      if (tab.groupId && tab.groupId !== -1 && tab.id) {
+        for (const tabEventListener of onCreateGroupedTabEventListeners) {
           await tabEventListener.command(tab.id.toString());
         }
       }
