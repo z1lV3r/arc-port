@@ -36,13 +36,24 @@ This directory holds the primary **business logic and clean architecture layers*
   - It enforces the Singleton pattern for these classes, ensuring only one instance of each is shared across the application to manage state and logic efficiently.
 
 - **`/domain`**: The innermost layer. It defines the core enterprise rules and models. This layer is completely isolated and has **no dependencies** on external frameworks, APIs, or UI.
-  - **`/interfaces`**: Contains TypeScript definitions (ports) that the domain needs to interact with the outside world. For example, `checkpoint-repository.ts` defines how a checkpoint should be saved or retrieved, without caring whether it's stored in Chrome local storage, sync storage, or an external database.
+  - **`/interfaces`**: Contains TypeScript definitions (ports) that the domain needs to interact with the outside world.
+    - **Files:**
+      - `checkpoint-repository.ts`: Defines how a checkpoint should be saved or retrieved, without caring whether it's stored in Chrome local storage, sync storage, or an external database.
 
 - **`/use-cases`**: Contains application-specific business rules. It orchestrates the flow of data between the presentation layer and the domain/infrastructure layers.
-  - **File Types (`*-use-cases.ts`)**: Classes like `SetCheckpointUseCases` or `ClearCheckpointUseCases`. They receive commands from the presentation layer (e.g., a user clicking a button), interact with interfaces (like `TabsService` or `CheckpointRepository`), and execute the logic required to fulfill the user's request.
+  - **File Types (`*-use-cases.ts`)**: Classes that receive commands from the presentation layer (e.g., a user clicking a button), interact with interfaces (like `TabsService` or `CheckpointRepository`), and execute the logic required to fulfill the user's request.
+  - **Files:**
+    - `clear-checkpoint-use-cases.ts`: Contains logic for clearing existing checkpoints for one or multiple tabs.
+    - `extension-action-setting-use-cases.ts`: Handles the execution flow related to updating or checking the default extension icon click behavior.
+    - `get-checkpoint-use-cases.ts`: Manages logic for retrieving one or multiple checkpoints.
+    - `reset-tab-to-checkpoint-use-cases.ts`: Contains the core logic to revert a tab's URL to its currently saved checkpoint.
+    - `set-checkpoint-use-cases.ts`: Orchestrates the saving of new checkpoints for specific tabs.
+    - `show-checkpoint-use-cases.ts`: Connects business logic related to bringing a tab with a checkpoint into focus.
+    - `show-context-menu-setting-use-cases.ts`: Handles logic for updating user preferences regarding context menu visibility.
 
 - **`/infrastructure`**: The outermost layer dealing with data persistence and external APIs. This layer implements the interfaces defined in the `domain` layer.
-  - **File Types (`*-repository.ts` / `*-service.ts`)**: Contains concrete implementations. For instance, `chrome-storage-checkpoint-repository.ts` implements `CheckpointRepository` using the `chrome.storage.local` API.
+  - **Files (`*-repository.ts` / `*-service.ts`)**: Contains concrete implementations.
+    - `chrome-storage-checkpoint-repository.ts`: Implements `CheckpointRepository` using the `chrome.storage.local` API.
 
 - **`/presentation`**: The outermost layer responsible for User Interfaces, handling user inputs, browser triggers, and inter-process messaging within the extension.
   - **UI Components (`.tsx`)**: Contains React components like `pop-up.tsx` and `settings.tsx` for visual interfaces.
@@ -89,13 +100,38 @@ This directory holds the primary **business logic and clean architecture layers*
         - `on-tab-pin-set-checkpoint.ts`: Automatically sets a checkpoint when an existing tab is pinned.
         - `on-tab-set-to-group-set-checkpoint.ts`: Automatically sets a checkpoint when a tab is added to a tab group.
   - **`/context-menu`**: 
-    - **File Types (`*-context-menu-listener.ts`)**: Listeners tied to the browser's right-click context menu. They bridge the gap between a user selecting a context menu item and executing the corresponding Use Case.
+    - **Description:** Listeners tied to the browser's right-click context menu. They bridge the gap between a user selecting a context menu item and executing the corresponding Use Case.
+    - **Files:**
+      - `clear-current-tab-checkpoint-context-menu-listener.ts`: Handles the context menu click to clear the active tab's checkpoint.
+      - `reset-current-tab-to-checkpoint-context-menu-listener.ts`: Handles the context menu click to reset the active tab to its checkpoint.
+      - `set-current-tab-checkpoint-context-menu-listener.ts`: Handles the context menu click to set a checkpoint for the active tab.
+      - `show-current-tab-checkpoint-context-menu-listener.ts`: Handles the context menu click to show/focus the tab's current checkpoint.
   - **`/shortcuts`**: 
-    - **File Types (`*-shortcut-listener.ts`)**: Keyboard shortcut handlers. They map predefined key combinations to specific Use Cases.
+    - **Description:** Keyboard shortcut handlers. They map predefined key combinations to specific Use Cases.
+    - **Files:**
+      - `clear-current-tab-checkpoint-shortcut-listener.ts`: Triggered when the user presses the shortcut to clear a checkpoint.
+      - `reset-current-tab-to-checkpoint-shortcut-listener.ts`: Triggered when the user presses the shortcut to reset the tab to its checkpoint.
+      - `reset-or-close-current-tab-to-checkpoint-shortcut-listener.ts`: Triggered when the user presses the shortcut to reset the tab, or close it if no checkpoint is available.
+      - `set-current-tab-checkpoint-shortcut-listener.ts`: Triggered when the user presses the shortcut to set a checkpoint.
   - **`/messages`**: Manages internal communication between different extension contexts (e.g., background service worker communicating with the popup or content scripts). 
     - **Use Case Subdirectories:** The `messages` directory is strictly organized into subdirectories that correspond 1:1 with the application's core Use Cases (e.g., `/clear-checkpoint`, `/set-checkpoint`, `/reset-tab-to-checkpoint`, `/get-checkpoint`). Each subdirectory encapsulates all the messaging infrastructure required to trigger that specific use case remotely.
-    - **Senders (`_*-message-event-sender.ts`)**: Wrapper classes (often prefixed with an underscore to group them at the top of the directory) that group all the related operations for a particular Use Case to send messages. For example, `_clear-checkpoint-message-event-sender.ts` has distinct methods like `sendClearCurrentTabCheckpointEventMessage()` and `sendClearTabCheckpointEventMessage(tabId)` to dispatch the respective operations through the browser's messaging API.
-    - **Listeners (`*-message-event-listener.ts`)**: Receivers that implement the `MessageEventListener` interface. Each listener class is strictly associated with exactly **one operation** from the Use Case. For example, `ClearCurrentTabCheckpointMessageEventListener` only handles the `clearCurrentTabCheckpoint()` operation, while a separate class `ClearTabCheckpointMessageEventListener` handles the `clearTabCheckpoint(tabId)` operation. When their targeted message payload is received, they invoke the corresponding method on the injected Use Case class.
+    - **Senders (`_*-message-event-sender.ts`)**: Wrapper classes (often prefixed with an underscore to group them at the top of the directory) that group all the related operations for a particular Use Case to send messages through the browser's messaging API.
+    - **Listeners (`*-message-event-listener.ts`)**: Receivers that implement the `MessageEventListener` interface. Each listener class is strictly associated with exactly **one operation** from the Use Case. When their targeted message payload is received, they invoke the corresponding method on the injected Use Case class.
+    - **`/clear-checkpoint`**
+      - `_clear-checkpoint-message-event-sender.ts`: Contains methods to send clear checkpoint events.
+      - `clear-current-tab-checkpoint-message-event-listener.ts`: Receives requests to clear the current tab's checkpoint.
+      - `clear-tab-checkpoint-message-event-listener.ts`: Receives requests to clear a specific tab's checkpoint by ID.
+    - **`/get-checkpoint`**
+      - `_get-checkpoint-message-event-sender.ts`: Contains methods to send get checkpoint events.
+      - `get-current-tab-checkpoint-message-event-listener.ts`: Receives requests to get the current tab's checkpoint.
+    - **`/reset-tab-to-checkpoint`**
+      - `_reset-tab-to-checkpoint-message-event-sender.ts`: Contains methods to send reset checkpoint events.
+      - `reset-current-tab-to-checkpoint-message-event-listener.ts`: Receives requests to reset the current tab.
+      - `reset-or-close-current-tab-to-checkpoint-message-event-listener.ts`: Receives requests to reset or close the current tab.
+    - **`/set-checkpoint`**
+      - `_set-checkpoint-message-event-sender.ts`: Contains methods to send set checkpoint events.
+      - `set-current-tab-checkpoint-message-event-listener.ts`: Receives requests to set the current tab's checkpoint.
+      - `set-tab-checkpoint-if-unset-message-event-listener.ts`: Receives requests to set a checkpoint only if it's currently unset.
 
 ### 2. `/entrypoints`
 Required by the **WXT Framework**, this directory defines the actual extension entry points (background scripts, popup HTML, options page) that are bundled into the final extension manifest.
@@ -103,10 +139,38 @@ Required by the **WXT Framework**, this directory defines the actual extension e
 - **`/background`**: The Service Worker entry point. Like the `/app` module, this folder also strictly follows **Clean Architecture**:
   - **`index.ts`**: The initialization file where WXT registers the background script.
   - **`dependency-provider.ts`**: DI Container specifically for background lifecycle listeners and browser services.
-  - **`/domain/interfaces`**: Defines interfaces for browser services (e.g., `browser-tab-event-service.ts`, `browser-context-menu-service.ts`, `browser-shortcut-service.ts`, `browser-message-event-service.ts`, `browser-storage-event-service.ts`).
-  - **`/infrastructure`**: Concrete implementations of browser services utilizing the Chrome Extension APIs (e.g., `chrome-tab-event-service.ts`, `chrome-context-menu-service.ts`, `chrome-message-event-service.ts`).
-  - **`/presentation`**: Providers that register listeners for the background script. These connect the underlying OS/browser event hooks to the application's Use Cases (e.g., `tab-event-listener-provider.ts`, `context-menu-listener-provider.ts`, `shortcut-listener-provider.ts`).
-  - **`/use-cases`**: Logic that orchestrates event listener registration via the browser services (e.g., `tab-event-listener-use-cases.ts`, `shortcut-listener-use-cases.ts`).
+  - **`/domain/interfaces`**: Defines interfaces for browser services.
+    - **Files:**
+      - `browser-context-menu-service.ts`
+      - `browser-message-event-service.ts`
+      - `browser-shortcut-service.ts`
+      - `browser-storage-event-service.ts`
+      - `browser-tab-event-service.ts`
+  - **`/infrastructure`**: Concrete implementations of browser services utilizing the Chrome Extension APIs.
+    - **Files:**
+      - `chrome-context-menu-service.ts`
+      - `chrome-message-event-service.ts`
+      - `chrome-shortcut-service.ts`
+      - `chrome-storage-event-service.ts`
+      - `chrome-tab-event-service.ts`
+  - **`/presentation`**: Providers that register listeners for the background script. These connect the underlying OS/browser event hooks to the application's Use Cases.
+    - **Files:**
+      - `context-menu-listener-provider.ts`
+      - `extension-listener-provider.ts`
+      - `message-event-listener-provider.ts`
+      - `settings-listener-provider.ts`
+      - `shortcut-listener-provider.ts`
+      - `storage-listener-provider.ts`
+      - `tab-event-listener-provider.ts`
+  - **`/use-cases`**: Logic that orchestrates event listener registration via the browser services.
+    - **Files:**
+      - `context-menu-listener-use-cases.ts`
+      - `extension-listener-use-cases.ts`
+      - `message-event-listeners-use-cases.ts`
+      - `settings-listener-use-cases.ts`
+      - `shortcut-listener-use-cases.ts`
+      - `storage-listener-use-cases.ts`
+      - `tab-event-listener-use-cases.ts`
 
 - **`/options`**: 
   - Contains `options.tsx`, `index.html`, and `style.css` which render the extension's settings/options page.
