@@ -14,3 +14,8 @@ settings:
     description: Action executed when clicking on the extension icon
     options:
       popup: Show extension popup
+
+pop_up:
+  open_emoji_picker_label: Open emoji picker
+  reset_emoji_label: Reset emoji
+  name_placeholder: Name
