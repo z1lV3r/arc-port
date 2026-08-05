@@ -23,9 +23,21 @@ import { ExtensionActionSetting } from "./presentation/browser-events/settings-e
 import { ShowContextMenuSetting } from "./presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
 import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases.ts";
 import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases.ts";
+import { CreateWorkspaceUseCases } from "./use-cases/create-workspace-use-cases.ts";
+import { WorkspaceRepository } from "./domain/interfaces/workspace-repository.ts";
+import { ChromeStorageWorkspaceRepository } from "./infrastructure/chrome-storage-workspace-repository.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
+  private static workspaceRepository: WorkspaceRepository;
+  static getWorkspaceRepository(): WorkspaceRepository {
+    if (this.workspaceRepository) {
+      return this.workspaceRepository;
+    }
+
+    this.workspaceRepository = new ChromeStorageWorkspaceRepository();
+    return this.workspaceRepository;
+  }
 
   //Infrastructure - Browser
   private static browserMessageService: BrowserMessageService;
@@ -113,6 +125,19 @@ export class DependencyProvider {
     );
 
     return this.extensionActionSettingUseCases;
+  }
+
+  private static createWorkspaceUseCases: CreateWorkspaceUseCases;
+  static getCreateWorkspaceUseCases(): CreateWorkspaceUseCases {
+    if (this.createWorkspaceUseCases) {
+      return this.createWorkspaceUseCases;
+    }
+
+    this.createWorkspaceUseCases = new CreateWorkspaceUseCases(
+      DependencyProvider.getWorkspaceRepository(),
+    );
+
+    return this.createWorkspaceUseCases;
   }
 
   //Presentation - Settings event listeners
