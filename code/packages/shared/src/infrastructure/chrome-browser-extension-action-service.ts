@@ -30,7 +30,10 @@ export class ChromeBrowserExtensionActionService implements BrowserExtensionActi
     chrome.action.setIcon({ path: iconPath });
   }
 
-  async openPopup(): Promise<void> {
+  async openPopup(focusElementId?: string): Promise<void> {
+    if (focusElementId) {
+      await chrome.storage.session.set({ focusElementId });
+    }
     await chrome.action.openPopup();
   }
 }

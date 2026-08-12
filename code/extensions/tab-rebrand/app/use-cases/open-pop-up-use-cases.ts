@@ -1,17 +1,17 @@
-import type { BrowserService } from "@repo/shared/domain/interfaces/browser-service";
+import type { BrowserExtensionActionService } from "@repo/shared/domain/interfaces/browser-extension-action-service";
 
 export class OpenPopUpUseCases {
-  private browserService: BrowserService;
+  private browserExtensionActionService: BrowserExtensionActionService;
 
-  constructor(browserService: BrowserService) {
-    this.browserService = browserService;
+  constructor(browserExtensionActionService: BrowserExtensionActionService) {
+    this.browserExtensionActionService = browserExtensionActionService;
   }
 
   async openPopupFocusCustomName(): Promise<void> {
-    await this.browserService.openPopup("custom-name");
+    await this.browserExtensionActionService.openPopup("custom-name");
   }
 
   async openPopupFocusCustomIcon(): Promise<void> {
-    await this.browserService.openPopup("custom-icon");
+    await this.browserExtensionActionService.openPopup("custom-icon");
   }
 }
