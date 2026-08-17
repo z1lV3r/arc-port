@@ -21,10 +21,11 @@ export class ChromeWorkspaceService implements BrowserWorkspaceService {
 
   }
 
-  async createWorkspace(name: string, iconUrl: string, color: string): Promise<void> {
-    // Create new window with extension options page
-    const newWindow = await this.browserWindowService.create("popup.html"); //TODO: change to extension page
-    
+  async createWorkspace(id: string, name: string, iconUrl: string, color: string): Promise<void> {
+    // Create new window with extension page, passing workspace id as query param
+    const pageUrl = `${chrome.runtime.getURL("page.html")}?workspaceId=${encodeURIComponent(id)}`;
+    const newWindow = await this.browserWindowService.create(pageUrl);
+
     // Pin the options tab
     const pinnedTab = newWindow.tabs?.[0] ;
     if (!pinnedTab?.id) {

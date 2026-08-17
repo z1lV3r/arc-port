@@ -13,7 +13,13 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
     }
     
     async get(id: string): Promise<Workspace> {
-        throw new Error("Method not implemented.");
+        const storageKey = id + this.postfix;
+        const result = await chrome.storage.local.get(storageKey);
+        const data = result[storageKey];
+        if (!data) {
+            throw new Error(`Workspace with id ${id} not found`);
+        }
+        return new Workspace(id, data.name, data.iconUrl, data.color);
     }
     
     list(): Promise<Workspace[]> {

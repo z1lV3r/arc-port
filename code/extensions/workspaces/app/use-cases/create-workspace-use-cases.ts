@@ -17,7 +17,7 @@ export class CreateWorkspaceUseCases {
   async saveWorkspace(name: string, iconUrl: string, color: string): Promise<void> {
     const id = crypto.randomUUID();
     await this.workspaceRepository.create(id, name, iconUrl, color);
-    await this.browserWorkspaceService.createWorkspace(name, iconUrl, color);
+    await this.browserWorkspaceService.createWorkspace(id, name, iconUrl, color);
   }
 
   async getWorkspace(id: string): Promise<Workspace> {
