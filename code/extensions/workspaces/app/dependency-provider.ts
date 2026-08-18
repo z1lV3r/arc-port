@@ -23,9 +23,27 @@ import { ExtensionActionSetting } from "./presentation/browser-events/settings-e
 import { ShowContextMenuSetting } from "./presentation/browser-events/settings-event-listeners/show-context-menu-setting.ts";
 import { ExtensionActionSettingUseCases } from "./use-cases/extension-action-setting-use-cases.ts";
 import { ShowContextMenuSettingUseCases } from "./use-cases/show-context-menu-setting-use-cases.ts";
+import { CreateWorkspaceUseCases } from "./use-cases/create-workspace-use-cases.ts";
+import { WorkspaceRepository } from "./domain/interfaces/workspace-repository.ts";
+import { ChromeStorageWorkspaceRepository } from "./infrastructure/chrome-storage-workspace-repository.ts";
+import { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
+import { ChromeWindowService } from "@repo/shared/infrastructure/chrome-window-service";
+import { ChromeWorkspaceService } from "./infrastructure/chrome-workspace-service.ts";
+import { BrowserWorkspaceService } from "./domain/interfaces/browser-workspace-service.ts";
+import { ChromeTabGroupService } from "@repo/shared/infrastructure/chrome-tab-group-service";
+import { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
 
 export class DependencyProvider {
   //Infrastructure - Data
+  private static workspaceRepository: WorkspaceRepository;
+  static getWorkspaceRepository(): WorkspaceRepository {
+    if (this.workspaceRepository) {
+      return this.workspaceRepository;
+    }
+
+    this.workspaceRepository = new ChromeStorageWorkspaceRepository();
+    return this.workspaceRepository;
+  }
 
   //Infrastructure - Browser
   private static browserMessageService: BrowserMessageService;
@@ -46,6 +64,40 @@ export class DependencyProvider {
 
     this.browserTabsService = new ChromeTabsService();
     return this.browserTabsService;
+  }
+
+  private static browserTabGroupsService: BrowserTabGroupService;
+  static getBrowserTabGroupsService(): BrowserTabGroupService {
+    if (this.browserTabGroupsService) {
+      return this.browserTabGroupsService;
+    }
+
+    this.browserTabGroupsService = new ChromeTabGroupService();
+    return this.browserTabGroupsService;
+  }
+
+  private static browserWindowsService: BrowserWindowService;
+  static getBrowserWindowsService(): BrowserWindowService {
+    if (this.browserWindowsService) {
+      return this.browserWindowsService;
+    }
+
+    this.browserWindowsService = new ChromeWindowService();
+    return this.browserWindowsService;
+  }
+
+  private static browserWorkspaceService: BrowserWorkspaceService;
+  static getBrowserWorkspaceService(): BrowserWorkspaceService {
+    if (this.browserWorkspaceService) {
+      return this.browserWorkspaceService;
+    }
+
+    this.browserWorkspaceService = new ChromeWorkspaceService(
+      DependencyProvider.getBrowserWindowsService(),
+      DependencyProvider.getBrowserTabsService(),
+      DependencyProvider.getBrowserTabGroupsService()
+    );
+    return this.browserWorkspaceService;
   }
 
   private static browserShortcutSettingsService: BrowserShortcutSettingsService;
@@ -113,6 +165,20 @@ export class DependencyProvider {
     );
 
     return this.extensionActionSettingUseCases;
+  }
+
+  private static createWorkspaceUseCases: CreateWorkspaceUseCases;
+  static getCreateWorkspaceUseCases(): CreateWorkspaceUseCases {
+    if (this.createWorkspaceUseCases) {
+      return this.createWorkspaceUseCases;
+    }
+
+    this.createWorkspaceUseCases = new CreateWorkspaceUseCases(
+      DependencyProvider.getWorkspaceRepository(),
+      DependencyProvider.getBrowserWorkspaceService(),
+    );
+
+    return this.createWorkspaceUseCases;
   }
 
   //Presentation - Settings event listeners

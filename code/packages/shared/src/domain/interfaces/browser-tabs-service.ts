@@ -5,7 +5,9 @@ export interface BrowserTabsService {
 
   getCurrentTab(): Promise<Tab>;
   getTab(id: string): Promise<Tab>;
-  createTabByUrl(url: string): Promise<Tab>;
+
+  createEmptyTab(windowId?: number): Promise<Tab>;
+  createTabByUrl(url?: string): Promise<Tab>;
   createTab(tab: Tab): Promise<Tab>;
   closeTab(id: string): Promise<void>;
 
@@ -14,4 +16,6 @@ export interface BrowserTabsService {
 
   getTabIcon(id: string): Promise<string>;
   setTabIcon(id: string, customIcon: string): Promise<void>;
+
+  setTabPinned(id: string, pinned: boolean): Promise<void>;
 }

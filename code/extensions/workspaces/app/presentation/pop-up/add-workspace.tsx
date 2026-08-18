@@ -2,19 +2,29 @@ import { Button } from "@repo/shared/presentation/button";
 import { GroupCard, GroupCardHeader, GroupCardTitle, GroupCardContent } from "@repo/shared/presentation/group-card";
 import { LIST_VIEW_NAME } from "./list-workspaces";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@repo/shared/presentation/input-group";
-import { Layers, CirclePlus } from "lucide-react";
+import { Layers, CirclePlus, PaintbrushVertical } from "lucide-react";
 import { EmojiPickerPortal, imageUrlToDataUrl } from "@repo/shared/presentation/EmojiPickerPortal";
+import { ColorPickerPortal, COLORS } from "@repo/shared/presentation/ColorPickerPortal";
 import { type EmojiClickData } from "emoji-picker-react";
+import { CreateWorkspaceUseCases } from "../../use-cases/create-workspace-use-cases";
+import { DependencyProvider } from "@/app/dependency-provider";
 
 export const ADD_VIEW_NAME = "add";
 
 export function WorkspaceForm({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
+  const workspaceUseCases = DependencyProvider.getCreateWorkspaceUseCases();
+
   const [name, setName] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("#bdc1c6");
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
   const sparkleRef = useRef<HTMLButtonElement>(null);
+  const paletteRef = useRef<HTMLButtonElement>(null);
+  const colorPickerRef = useRef<HTMLDivElement>(null);
   const hasCustomIcon = iconUrl !== null;
 
   // Close picker on outside click
@@ -33,6 +43,22 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
     document.addEventListener("mousedown", handleMouseDown);
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [pickerOpen]);
+
+  // Close color picker on outside click
+  useEffect(() => {
+    if (!paletteOpen) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        !colorPickerRef.current?.contains(target) &&
+        !paletteRef.current?.contains(target)
+      ) {
+        setPaletteOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+  }, [paletteOpen]);
 
   // Force Chrome popup to resize when picker opens/closes
   useEffect(() => {
@@ -57,30 +83,34 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
     e.stopPropagation();
     setIconUrl(null);
     inputRef.current?.focus();
-    //await clearTabCustomIconMessageEventSender.sendClearCurrentTabCustomIconEventMessage();
   };
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (name.length > 0) {
-        //await setTabCustomNameMessageEventSender.sendSetCurrentTabCustomNameEventMessage(name);
-      } else {
-        //await clearTabCustomNameMessageEventSender.sendClearCurrentTabCustomNameEventMessage();
-      }
-    }
-    if (e.key === "Escape") {
-      if (pickerOpen) {
-        setPickerOpen(false);
-      }
+  const saveWorkspace = async () => {
+    if (name.trim().length > 0) {
+      setError(null);
+      await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor]);
+      window.close();
+    } else {
+      setError(t("pop_up.name_empty_error"));
     }
   };
 
   const handleCreateWorkspace = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (name.length > 0) {
-      setCurrentView(LIST_VIEW_NAME)
-    } else {
-      //error
+    saveWorkspace();
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      saveWorkspace();
+    }
+    if (e.key === "Escape") {
+      if (pickerOpen) {
+        setPickerOpen(false);
+      }
+      if (paletteOpen) {
+        setPaletteOpen(false);
+      }
     }
   };
 
@@ -130,12 +160,32 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
               ref={inputRef}
               autoComplete="off"
               maxLength={64}
+              aria-invalid={!!error}
               placeholder={t("pop_up.name_placeholder")}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (error) setError(null);
+              }}
               onKeyDown={handleKeyDown}
             />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                ref={paletteRef}
+                size="icon-sm"
+                aria-label={t("pop_up.color_palette")}
+                aria-expanded={paletteOpen}
+                onClick={() => setPaletteOpen((o) => !o)}
+              >
+                <PaintbrushVertical style={{ color: selectedColor }} />
+              </InputGroupButton>
+            </InputGroupAddon>
           </InputGroup>
+          {error && (
+            <span className="w-full text-left text-xs text-destructive px-1">
+              {error}
+            </span>
+          )}
           <div className="flex flex-row items-center gap-2">
             <Button variant="outline" className="hover:text-blue-500" onClick={handleCreateWorkspace}><CirclePlus className="text-blue-500"/> {"Create"}</Button>
             <Button variant="outline" className="hover:text-destructive" onClick={() => setCurrentView(LIST_VIEW_NAME)}>{"Cancel"}</Button>
@@ -146,6 +196,15 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
         open={pickerOpen}
         pickerRef={pickerRef}
         onEmojiClick={handleEmojiClick}
+      />
+      <ColorPickerPortal
+        open={paletteOpen}
+        pickerRef={colorPickerRef}
+        color={selectedColor}
+        onColorChange={(hex) => {
+          setSelectedColor(hex);
+          setPaletteOpen(false);
+        }}
       />
     </GroupCard>
   );

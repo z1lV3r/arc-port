@@ -1,6 +1,5 @@
 import type { BrowserContextMenuService } from "@repo/shared/domain/interfaces/browser-context-menu-service";
 import type { BrowserExtensionActionService } from "@repo/shared/domain/interfaces/browser-extension-action-service";
-import type { BrowserService } from "@repo/shared/domain/interfaces/browser-service";
 import { BrowserMessageService } from "@repo/shared/domain/interfaces/browser-message-service";
 import type { BrowserShortcutSettingsService } from "@repo/shared/domain/interfaces/browser-shortcut-settings-service";
 import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
@@ -10,10 +9,8 @@ import type { ContextMenuListener } from "@repo/shared/domain/models/context-men
 import type { ExtensionListener } from "@repo/shared/domain/models/extension-listener";
 import { MessageEventListener } from "@repo/shared/domain/models/message-event-listener";
 import type { ShortcutListener } from "@repo/shared/domain/models/shortcut-listener";
-import { StorageListener } from "@repo/shared/domain/models/storage-listener";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
 import { ChromeBrowserExtensionActionService } from "@repo/shared/infrastructure/chrome-browser-extension-action-service";
-import { ChromeBrowserService } from "@repo/shared/infrastructure/chrome-browser-service";
 import { ChromeContextMenuService } from "@repo/shared/infrastructure/chrome-context-menu-service";
 import { ChromeMessageService } from "@repo/shared/infrastructure/chrome-message-service";
 import { ChromeShortcutSettingsService } from "@repo/shared/infrastructure/chrome-shortcut-settings-service";
@@ -129,16 +126,6 @@ export class DependencyProvider {
     this.browserExtensionActionService =
       new ChromeBrowserExtensionActionService();
     return this.browserExtensionActionService;
-  }
-
-  private static browserService: BrowserService;
-  static getBrowserService(): BrowserService {
-    if (this.browserService) {
-      return this.browserService;
-    }
-
-    this.browserService = new ChromeBrowserService();
-    return this.browserService;
   }
 
   //Use cases
@@ -553,7 +540,7 @@ export class DependencyProvider {
   static getOpenPopUpUseCases(): OpenPopUpUseCases {
     if (this.openPopUpUseCases) return this.openPopUpUseCases;
     this.openPopUpUseCases = new OpenPopUpUseCases(
-      DependencyProvider.getBrowserService(),
+      DependencyProvider.getBrowserExtensionActionService()
     );
     return this.openPopUpUseCases;
   }

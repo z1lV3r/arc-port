@@ -52,6 +52,25 @@ export class ChromeTabsService implements BrowserTabsService {
     );
   }
 
+  async createEmptyTab(windowId?: number, groupId?: number): Promise<Tab> {
+    const options: chrome.tabs.CreateProperties = { url: undefined };
+    if (windowId) {
+      options.windowId = windowId;
+    }
+    const tab = await chrome.tabs.create(options);
+
+    return new Tab(
+      tab.id?.toString() || "",
+      tab.url || "",
+      tab.index,
+      tab.groupId,
+      tab.pinned,
+      undefined,
+      undefined,
+      tab.windowId,
+    );
+  }
+
   async createTabByUrl(url: string): Promise<Tab> {
     const options: chrome.tabs.CreateProperties = { url };
     const tab = await chrome.tabs.create(options);
@@ -62,6 +81,9 @@ export class ChromeTabsService implements BrowserTabsService {
       tab.index,
       tab.groupId,
       tab.pinned,
+      undefined,
+      undefined,
+      tab.windowId,
     );
   }
 
@@ -86,6 +108,9 @@ export class ChromeTabsService implements BrowserTabsService {
       newTab.index,
       tab.groupId ?? newTab.groupId,
       tab.pinned ?? newTab.pinned,
+      undefined,
+      undefined,
+      newTab.windowId,
     );
   }
 
@@ -134,5 +159,10 @@ export class ChromeTabsService implements BrowserTabsService {
     if (!id) return "";
     const tab = await chrome.tabs.get(parseInt(id));
     return tab.favIconUrl || "";
+  }
+
+  async setTabPinned(id: string, pinned: boolean): Promise<void> {
+    if (!id) return;
+    await chrome.tabs.update(parseInt(id), { pinned });
   }
 }
