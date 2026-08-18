@@ -16,6 +16,7 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
 
   const [name, setName] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#bdc1c6");
@@ -84,13 +85,24 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
     inputRef.current?.focus();
   };
 
+  const saveWorkspace = async () => {
+    if (name.trim().length > 0) {
+      setError(null);
+      await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor]);
+      window.close();
+    } else {
+      setError(t("pop_up.name_empty_error"));
+    }
+  };
+
+  const handleCreateWorkspace = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    saveWorkspace();
+  };
+
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (name.length > 0) {
-        await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor]);
-      } else {
-        //error
-      }
+      saveWorkspace();
     }
     if (e.key === "Escape") {
       if (pickerOpen) {
@@ -99,15 +111,6 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
       if (paletteOpen) {
         setPaletteOpen(false);
       }
-    }
-  };
-
-  const handleCreateWorkspace = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (name.length > 0) {
-      await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor]);
-    } else {
-      //error
     }
   };
 
@@ -157,9 +160,13 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
               ref={inputRef}
               autoComplete="off"
               maxLength={64}
+              aria-invalid={!!error}
               placeholder={t("pop_up.name_placeholder")}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (error) setError(null);
+              }}
               onKeyDown={handleKeyDown}
             />
             <InputGroupAddon align="inline-end">
@@ -174,6 +181,11 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
+          {error && (
+            <span className="w-full text-left text-xs text-destructive px-1">
+              {error}
+            </span>
+          )}
           <div className="flex flex-row items-center gap-2">
             <Button variant="outline" className="hover:text-blue-500" onClick={handleCreateWorkspace}><CirclePlus className="text-blue-500"/> {"Create"}</Button>
             <Button variant="outline" className="hover:text-destructive" onClick={() => setCurrentView(LIST_VIEW_NAME)}>{"Cancel"}</Button>

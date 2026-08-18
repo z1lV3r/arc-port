@@ -20,3 +20,4 @@ pop_up:
   reset_emoji_label: Reset emoji
   name_placeholder: Name
   color_palette: Color palette
+  name_empty_error: Name should not be empty
