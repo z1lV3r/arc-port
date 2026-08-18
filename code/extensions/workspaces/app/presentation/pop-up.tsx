@@ -3,7 +3,7 @@ import { ADD_VIEW_NAME, WorkspaceForm } from './pop-up/add-workspace';
 import { LIST_VIEW_NAME, WorkspaceList } from './pop-up/list-workspaces';
 
 function PopUp() {
-  const [currentView, setCurrentView] = useState(ADD_VIEW_NAME);
+  const [currentView, setCurrentView] = useState(LIST_VIEW_NAME);
   return (
     <>
       {currentView === LIST_VIEW_NAME ? (
