@@ -82,15 +82,14 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
     e.stopPropagation();
     setIconUrl(null);
     inputRef.current?.focus();
-    //await clearTabCustomIconMessageEventSender.sendClearCurrentTabCustomIconEventMessage();
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (name.length > 0) {
-        //await setTabCustomNameMessageEventSender.sendSetCurrentTabCustomNameEventMessage(name);
+        await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor]);
       } else {
-        //await clearTabCustomNameMessageEventSender.sendClearCurrentTabCustomNameEventMessage();
+        //error
       }
     }
     if (e.key === "Escape") {
