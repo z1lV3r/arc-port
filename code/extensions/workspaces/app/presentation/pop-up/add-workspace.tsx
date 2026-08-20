@@ -27,6 +27,11 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
   const colorPickerRef = useRef<HTMLDivElement>(null);
   const hasCustomIcon = iconUrl !== null;
 
+  // Focus the input when the component mounts
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   // Close picker on outside click
   useEffect(() => {
 

@@ -22,12 +22,21 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
         return new Workspace(id, data.name, data.iconUrl, data.color);
     }
     
-    list(): Promise<Workspace[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<Workspace[]> {
+        const result = await chrome.storage.local.get(null);
+        return Object.keys(result)
+            .filter(key => key.endsWith(this.postfix))
+            .map(key => {
+                const id = key.slice(0, -this.postfix.length);
+                const data = result[key];
+                return new Workspace(id, data.name, data.iconUrl, data.color);
+            });
     }
+
     update(id: string, name: string, iconUrl: string, color: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
+
     delete(id: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
