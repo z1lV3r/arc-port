@@ -3,7 +3,7 @@ import { DependencyProvider } from "../dependency-provider";
 
 function Page() {
   const [workspaceName, setWorkspaceName] = useState<string>("");
-  const workspaceUseCases = DependencyProvider.getCreateWorkspaceUseCases();
+  const getWorkspaceUseCases = DependencyProvider.getGetWorkspaceUseCases();
   
   const workspaceId = new URLSearchParams(window.location.search).get("workspaceId");
   if (!workspaceId) {
@@ -12,7 +12,7 @@ function Page() {
 
   useEffect(() => {
     const loadWorkspace = async () => {
-      const workspace = await workspaceUseCases.getWorkspace(workspaceId);
+      const workspace = await getWorkspaceUseCases.getWorkspace(workspaceId);
       setWorkspaceName(workspace.name);
       setIcon(workspace.iconUrl);
       setTitle(workspace.name);

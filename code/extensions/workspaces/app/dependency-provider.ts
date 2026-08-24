@@ -32,6 +32,7 @@ import { ChromeWorkspaceService } from "./infrastructure/chrome-workspace-servic
 import { BrowserWorkspaceService } from "./domain/interfaces/browser-workspace-service.ts";
 import { ChromeTabGroupService } from "@repo/shared/infrastructure/chrome-tab-group-service";
 import { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
+import { GetWorkspaceUseCases } from "./use-cases/get-workspace-use-cases.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -179,6 +180,20 @@ export class DependencyProvider {
     );
 
     return this.createWorkspaceUseCases;
+  }
+
+  private static getWorkspaceUseCases: GetWorkspaceUseCases;
+  static getGetWorkspaceUseCases(): GetWorkspaceUseCases {
+    if (this.getWorkspaceUseCases) {
+      return this.getWorkspaceUseCases;
+    }
+
+    this.getWorkspaceUseCases = new GetWorkspaceUseCases(
+      DependencyProvider.getWorkspaceRepository(),
+      DependencyProvider.getBrowserWorkspaceService(),
+    );
+
+    return this.getWorkspaceUseCases;
   }
 
   //Presentation - Settings event listeners

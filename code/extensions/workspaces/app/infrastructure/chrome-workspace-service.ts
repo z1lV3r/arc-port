@@ -43,6 +43,21 @@ export class ChromeWorkspaceService implements BrowserWorkspaceService {
     }
 
   }
+  async getCurrentWorkspaceId(): Promise<string> {
+    const currentWindow = await this.browserWindowService.getCurrentWindow();
+    const tab = await this.browserTabsService.getTabByIndex(0, currentWindow.id);
+    console.log(tab);
+    if (!tab.url) {
+      throw new Error("Failed to get current workspace");
+    }
+    const workspaceId = tab.url.split("?workspaceId=")[1];
+    console.log(workspaceId);
+    if (!workspaceId) {
+      throw new Error("Failed to get current workspace");
+    }
+    return workspaceId;
+  }
+
   async getWorkspace(id: string): Promise<Workspace> {
     throw new Error("Method not implemented.");
   }

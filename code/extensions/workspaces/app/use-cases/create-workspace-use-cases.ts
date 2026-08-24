@@ -20,14 +20,6 @@ export class CreateWorkspaceUseCases {
     await this.browserWorkspaceService.createWorkspace(id, name, iconUrl, color);
   }
 
-  async getWorkspace(id: string): Promise<Workspace> {
-    return await this.workspaceRepository.get(id);
-  }
-
-  async listWorkspaces(): Promise<Workspace[]> {
-    return await this.workspaceRepository.list();
-  }
-
   async updateWorkspace(id: string, name: string, iconUrl: string, color:string): Promise<void> {
     await this.workspaceRepository.update(id, name, iconUrl, color);
   }
