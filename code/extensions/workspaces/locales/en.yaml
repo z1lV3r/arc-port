@@ -21,3 +21,5 @@ pop_up:
   name_placeholder: Name
   color_palette: Color palette
   name_empty_error: Name should not be empty
+  button_new: "New"
+  button_archive: "Archive"

@@ -27,6 +27,7 @@ export const LIST_VIEW_NAME = "list";
 export function WorkspaceList({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
   const getWorkspaceUseCases = DependencyProvider.getGetWorkspaceUseCases();
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
       const workspaces = await getWorkspaceUseCases.listWorkspaces();
       setWorkspaces(workspaces);
       const currentWorkspace = await getWorkspaceUseCases.getCurrentWorkspace();
+      setDefaultWorkspace(currentWorkspace);
       setCurrentWorkspace(currentWorkspace);
     };
 
@@ -46,14 +48,16 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
         <GroupCardTitle>{t("extension_name")}</GroupCardTitle>
       </GroupCardHeader>
       <GroupCardContent>
-        <div className="flex flex-col items-center gap-2">
-          <Label id="workspaces">{currentWorkspace?.name}</Label>
+        <div className="flex flex-col items-center gap-0 mt-3">
+          <Label id="workspaces" className="text-lg" style={{ color: currentWorkspace?.color }}>{currentWorkspace?.name}</Label>
           <div className="flex items-center gap-3 w-full">
-            <Button variant="outline" size="icon-sm" className="shrink-0 hover:border-yellow-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Archive className="text-yellow-500"/></Button>
-            <ScrollArea className="flex rounded-md whitespace-nowrap mt-3" type="hover">
-              <div className="flex w-max gap-1 pb-3">
+            <ScrollArea className="flex rounded-md whitespace-nowrap mt-3" type="scroll">
+              <div className="flex w-max gap-1 pb-3 ">
                 {workspaces.map((workspace) => (
-                  <Button variant="outline" size="icon-sm" aria-label={`${workspace.name} icon`} className="rounded-full hover:border-(--ws-color)!" style={{ "--ws-color": workspace.color } as React.CSSProperties} key={workspace.id} onClick={() => console.log(workspace)}>
+                  <Button variant="outline" size="icon-sm" aria-label={`${workspace.name} icon`} className="rounded-full hover:border-(--ws-color)!" style={{ "--ws-color": workspace.color } as React.CSSProperties} key={workspace.id} 
+                    onClick={() => console.log(workspace)} 
+                    onMouseEnter={() => setCurrentWorkspace(workspace)} 
+                    onMouseLeave={() => setCurrentWorkspace(defaultWorkspace)}>
                     {workspace.iconUrl ? (
                       <img
                         src={workspace.iconUrl}
@@ -68,7 +72,10 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
-            <Button variant="outline" size="icon-sm" className="shrink-0 hover:border-blue-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Plus className="text-blue-500"/></Button>
+          </div>
+          <div className="flex items-center gap-3 w-full justify-center">
+            <Button variant="outline" className="shrink-0 hover:border-yellow-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Archive className="text-yellow-500"/>{t("pop_up.button_archive")}</Button>
+            <Button variant="outline" className="shrink-0 hover:border-blue-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Plus className="text-blue-500"/>{t("pop_up.button_new")}</Button>
           </div>
         </div>
       </GroupCardContent>
