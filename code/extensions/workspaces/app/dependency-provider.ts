@@ -33,6 +33,9 @@ import { BrowserWorkspaceService } from "./domain/interfaces/browser-workspace-s
 import { ChromeTabGroupService } from "@repo/shared/infrastructure/chrome-tab-group-service";
 import { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
 import { GetWorkspaceUseCases } from "./use-cases/get-workspace-use-cases.ts";
+import { WorkspaceOrderRepository } from "./domain/interfaces/workspace-order-repository.ts";
+import { ChromeStorageWorkspaceOrderRepository } from "./infrastructure/chrome-storage-workspace-order-repository.ts";
+import { OrderWorkspaceUseCases } from "./use-cases/order-workspace-use-cases.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -44,6 +47,16 @@ export class DependencyProvider {
 
     this.workspaceRepository = new ChromeStorageWorkspaceRepository();
     return this.workspaceRepository;
+  }
+
+  private static workspaceOrderRepository: WorkspaceOrderRepository;
+  static getWorkspaceOrderRepository(): WorkspaceOrderRepository {
+    if (this.workspaceOrderRepository) {
+      return this.workspaceOrderRepository;
+    }
+
+    this.workspaceOrderRepository = new ChromeStorageWorkspaceOrderRepository();
+    return this.workspaceOrderRepository;
   }
 
   //Infrastructure - Browser
@@ -177,6 +190,7 @@ export class DependencyProvider {
     this.createWorkspaceUseCases = new CreateWorkspaceUseCases(
       DependencyProvider.getWorkspaceRepository(),
       DependencyProvider.getBrowserWorkspaceService(),
+      DependencyProvider.getOrderWorkspaceUseCases()
     );
 
     return this.createWorkspaceUseCases;
@@ -194,6 +208,19 @@ export class DependencyProvider {
     );
 
     return this.getWorkspaceUseCases;
+  }
+
+  private static orderWorkspaceUseCases: OrderWorkspaceUseCases;
+  static getOrderWorkspaceUseCases(): OrderWorkspaceUseCases {
+    if (this.orderWorkspaceUseCases) {
+      return this.orderWorkspaceUseCases;
+    }
+
+    this.orderWorkspaceUseCases = new OrderWorkspaceUseCases(
+      DependencyProvider.getWorkspaceOrderRepository()
+    );
+
+    return this.orderWorkspaceUseCases;
   }
 
   //Presentation - Settings event listeners
