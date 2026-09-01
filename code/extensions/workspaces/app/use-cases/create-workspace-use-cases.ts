@@ -1,30 +1,30 @@
 import type { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
-import type { BrowserWorkspaceService } from "../domain/interfaces/browser-workspace-service";
+import { ActivateWorkspaceUseCases } from "./activate-workspace-use-cases";
 import type { OrderWorkspaceUseCases } from "./order-workspace-use-cases";
 
 export class CreateWorkspaceUseCases {
   private workspaceRepository: WorkspaceRepository;
-  private browserWorkspaceService: BrowserWorkspaceService;
   private orderWorkspaceUseCases: OrderWorkspaceUseCases;
+  private activateWorkspaceUseCases: ActivateWorkspaceUseCases;
 
   constructor(
     workspaceRepository: WorkspaceRepository,
-    browserWorkspaceService: BrowserWorkspaceService,
     orderWorkspaceUseCases: OrderWorkspaceUseCases,
+    activateWorkspaceUseCases: ActivateWorkspaceUseCases,
   ) {
     this.workspaceRepository = workspaceRepository;
-    this.browserWorkspaceService = browserWorkspaceService;
     this.orderWorkspaceUseCases = orderWorkspaceUseCases;
+    this.activateWorkspaceUseCases = activateWorkspaceUseCases;
   }
 
-  async saveWorkspace(name: string, iconUrl: string, color: string): Promise<void> {
+  async createWorkspace(name: string, iconUrl: string, color: string): Promise<void> {
     const id = crypto.randomUUID();
     await this.workspaceRepository.create(id, name, iconUrl, color);
-    await this.browserWorkspaceService.createWorkspace(id, name, iconUrl, color);
     await this.orderWorkspaceUseCases.push(id);
+    await this.activateWorkspaceUseCases.activateWorkspace(name, color, id);
   }
 
-  async updateWorkspace(id: string, name: string, iconUrl: string, color:string): Promise<void> {
+  async updateWorkspace(id: string, name: string, iconUrl: string, color: string): Promise<void> {
     await this.workspaceRepository.update(id, name, iconUrl, color);
   }
 

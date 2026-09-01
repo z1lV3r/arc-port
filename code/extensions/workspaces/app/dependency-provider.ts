@@ -36,6 +36,7 @@ import { GetWorkspaceUseCases } from "./use-cases/get-workspace-use-cases.ts";
 import { WorkspaceOrderRepository } from "./domain/interfaces/workspace-order-repository.ts";
 import { ChromeStorageWorkspaceOrderRepository } from "./infrastructure/chrome-storage-workspace-order-repository.ts";
 import { OrderWorkspaceUseCases } from "./use-cases/order-workspace-use-cases.ts";
+import { ActivateWorkspaceUseCases } from "./use-cases/activate-workspace-use-cases.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -189,8 +190,8 @@ export class DependencyProvider {
 
     this.createWorkspaceUseCases = new CreateWorkspaceUseCases(
       DependencyProvider.getWorkspaceRepository(),
-      DependencyProvider.getBrowserWorkspaceService(),
-      DependencyProvider.getOrderWorkspaceUseCases()
+      DependencyProvider.getOrderWorkspaceUseCases(),
+      DependencyProvider.getActivateWorkspaceUseCases()
     );
 
     return this.createWorkspaceUseCases;
@@ -222,6 +223,21 @@ export class DependencyProvider {
     );
 
     return this.orderWorkspaceUseCases;
+  }
+
+  private static activateWorkspaceUseCases: ActivateWorkspaceUseCases;
+  static getActivateWorkspaceUseCases(): ActivateWorkspaceUseCases {
+    if (this.activateWorkspaceUseCases) {
+      return this.activateWorkspaceUseCases;
+    }
+
+    this.activateWorkspaceUseCases = new ActivateWorkspaceUseCases(
+      DependencyProvider.getBrowserWindowService(),
+      DependencyProvider.getBrowserTabsService(),
+      DependencyProvider.getBrowserTabGroupsService()
+    );
+
+    return this.activateWorkspaceUseCases;
   }
 
   //Presentation - Settings event listeners
