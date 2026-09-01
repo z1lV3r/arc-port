@@ -91,7 +91,7 @@ export class DependencyProvider {
   }
 
   private static browserWindowsService: BrowserWindowService;
-  static getBrowserWindowsService(): BrowserWindowService {
+  static getBrowserWindowService(): BrowserWindowService {
     if (this.browserWindowsService) {
       return this.browserWindowsService;
     }
@@ -107,7 +107,7 @@ export class DependencyProvider {
     }
 
     this.browserWorkspaceService = new ChromeWorkspaceService(
-      DependencyProvider.getBrowserWindowsService(),
+      DependencyProvider.getBrowserWindowService(),
       DependencyProvider.getBrowserTabsService(),
       DependencyProvider.getBrowserTabGroupsService()
     );
@@ -204,7 +204,8 @@ export class DependencyProvider {
 
     this.getWorkspaceUseCases = new GetWorkspaceUseCases(
       DependencyProvider.getWorkspaceRepository(),
-      DependencyProvider.getBrowserWorkspaceService(),
+      DependencyProvider.getBrowserWindowService(),
+      DependencyProvider.getBrowserTabsService()
     );
 
     return this.getWorkspaceUseCases;
