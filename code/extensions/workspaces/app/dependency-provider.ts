@@ -28,8 +28,6 @@ import { WorkspaceRepository } from "./domain/interfaces/workspace-repository.ts
 import { ChromeStorageWorkspaceRepository } from "./infrastructure/chrome-storage-workspace-repository.ts";
 import { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
 import { ChromeWindowService } from "@repo/shared/infrastructure/chrome-window-service";
-import { ChromeWorkspaceService } from "./infrastructure/chrome-workspace-service.ts";
-import { BrowserWorkspaceService } from "./domain/interfaces/browser-workspace-service.ts";
 import { ChromeTabGroupService } from "@repo/shared/infrastructure/chrome-tab-group-service";
 import { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
 import { GetWorkspaceUseCases } from "./use-cases/get-workspace-use-cases.ts";
@@ -99,20 +97,6 @@ export class DependencyProvider {
 
     this.browserWindowsService = new ChromeWindowService();
     return this.browserWindowsService;
-  }
-
-  private static browserWorkspaceService: BrowserWorkspaceService;
-  static getBrowserWorkspaceService(): BrowserWorkspaceService {
-    if (this.browserWorkspaceService) {
-      return this.browserWorkspaceService;
-    }
-
-    this.browserWorkspaceService = new ChromeWorkspaceService(
-      DependencyProvider.getBrowserWindowService(),
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getBrowserTabGroupsService()
-    );
-    return this.browserWorkspaceService;
   }
 
   private static browserShortcutSettingsService: BrowserShortcutSettingsService;
