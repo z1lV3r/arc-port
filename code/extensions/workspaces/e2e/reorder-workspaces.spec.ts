@@ -236,3 +236,52 @@ test("a plain click does not reorder", async ({ context, extensionId }) => {
     );
     expect(stored).toEqual(["aaa", "bbb", "ccc"]);
 });
+
+test("shows active indicator on the active workspace and updates on click", async ({
+    context,
+    extensionId,
+}) => {
+    await seedWorkspaces(context);
+
+    const page = await context.newPage();
+    await page.goto(`chrome-extension://${extensionId}/popup.html`);
+
+    const icons = page.locator('button[aria-label$="icon"]');
+    await expect(icons).toHaveCount(3);
+
+    // Clicking the second workspace activates it
+    await icons.nth(1).click();
+    await expect(icons.nth(1)).toHaveAttribute("data-active", "true");
+    await expect(icons.nth(1).locator('[data-slot="active-indicator"]')).toBeVisible();
+
+    // The other workspaces do not have the active indicator
+    await expect(icons.nth(0)).not.toHaveAttribute("data-active", "true");
+    await expect(icons.nth(0).locator('[data-slot="active-indicator"]')).toHaveCount(0);
+});
+
+test("scrolls active workspace into view when row overflows", async ({
+    context,
+    extensionId,
+}) => {
+    await seedManyWorkspaces(context, 12);
+
+    const page = await context.newPage();
+    await page.goto(`chrome-extension://${extensionId}/popup.html`);
+
+    const icons = page.locator('button[aria-label$="icon"]');
+    await expect(icons).toHaveCount(12);
+
+    const viewport = page.locator("[data-radix-scroll-area-viewport]");
+    // Initially scrolled to front
+    expect(await viewport.evaluate((el) => el.scrollLeft)).toBe(0);
+
+    // Click an icon further down the row
+    await icons.nth(8).click();
+    await expect(icons.nth(8)).toHaveAttribute("data-active", "true");
+
+    // The scroll position updates to scroll the active workspace into view
+    await page.waitForTimeout(300);
+    const scrollLeft = await viewport.evaluate((el) => el.scrollLeft);
+    expect(scrollLeft).toBeGreaterThan(0);
+});
+

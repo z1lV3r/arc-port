@@ -1,5 +1,5 @@
 import { Archive, Eraser, Layers, Plus, RotateCcw, SquarePen } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@repo/shared/presentation/button";
 import { Label } from "@repo/shared/presentation/label";
@@ -18,6 +18,7 @@ import {
 } from "@repo/shared/presentation/input-group";
 import { Separator } from "@repo/shared/presentation/separator";
 import { ScrollArea, ScrollBar } from "@repo/shared/presentation/scroll-area";
+import { cn } from "@repo/shared/lib/utils";
 
 import { DependencyProvider } from "../../dependency-provider";
 import { ADD_VIEW_NAME } from "./add-workspace";
@@ -33,6 +34,9 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
+
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const activeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     const loadWorkspaces = async () => {
@@ -54,6 +58,68 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
 
     loadWorkspaces();
   }, []);
+
+  // Scroll active workspace into view when defaultWorkspace is resolved or changes
+  useEffect(() => {
+    if (!defaultWorkspace || dragReorder.isDragging) return;
+
+    let cancelled = false;
+    let frames = 0;
+
+    const tryScroll = () => {
+      if (cancelled) return;
+      const activeButton =
+        activeButtonRef.current ??
+        scrollAreaRef.current?.querySelector<HTMLButtonElement>('button[data-active="true"]');
+
+      if (!activeButton) {
+        if (frames++ < 5) requestAnimationFrame(tryScroll);
+        return;
+      }
+
+      const viewport =
+        scrollAreaRef.current?.querySelector<HTMLElement>("[data-radix-scroll-area-viewport]") ??
+        activeButton.closest<HTMLElement>("[data-radix-scroll-area-viewport]");
+
+      if (viewport) {
+        const buttonRect = activeButton.getBoundingClientRect();
+        const viewportRect = viewport.getBoundingClientRect();
+        const targetScrollLeft =
+          viewport.scrollLeft +
+          (buttonRect.left - viewportRect.left) -
+          viewportRect.width / 2 +
+          buttonRect.width / 2;
+        const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+        if (maxScroll > 0) {
+          viewport.scrollTo({
+            left: Math.max(0, Math.min(targetScrollLeft, maxScroll)),
+            behavior: "smooth",
+          });
+        }
+      } else {
+        activeButton.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+    };
+
+    requestAnimationFrame(tryScroll);
+    return () => {
+      cancelled = true;
+    };
+  }, [defaultWorkspace?.id]);
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (e.deltaY === 0) return;
+    const viewport =
+      scrollAreaRef.current?.querySelector<HTMLElement>("[data-radix-scroll-area-viewport]") ??
+      e.currentTarget.querySelector<HTMLElement>("[data-radix-scroll-area-viewport]");
+    if (viewport) {
+      viewport.scrollLeft += e.deltaY;
+    }
+  };
 
   // The stored order is the source of truth; anything it doesn't know about yet
   // (workspaces created before the order existed) is appended at the end.
@@ -84,28 +150,63 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
           {/* min-h keeps the row below from shifting when the name appears on hover */}
           <Label id="workspaces" className="text-lg min-h-7" style={{ color: currentWorkspace?.color }}>{currentWorkspace?.name}</Label>
           <div className="flex items-center gap-3 w-full">
-            <ScrollArea className="flex mx-auto rounded-md whitespace-nowrap mt-3" type="scroll">
+            <ScrollArea
+              ref={scrollAreaRef}
+              className="flex mx-auto rounded-md whitespace-nowrap mt-3"
+              type="hover"
+              onWheel={handleWheel}
+            >
               <div className="flex w-max gap-1 pb-3 ">
                 {orderedWorkspaces.map((workspace, index) => {
                   const { style: dragStyle, ...dragProps } = dragReorder.getItemProps(index);
+                  const isActive = Boolean(defaultWorkspace?.id && defaultWorkspace.id === workspace.id);
+
                   return (
-                    <Button variant="outline" size="icon-sm" aria-label={`${workspace.name} icon`} className="rounded-full hover:border-(--ws-color)!" style={{ ...dragStyle, "--ws-color": workspace.color } as React.CSSProperties} key={workspace.id}
+                    <Button
+                      variant="outline"
+                      size="icon-sm"
+                      aria-label={`${workspace.name} icon`}
+                      aria-current={isActive ? "page" : undefined}
+                      data-active={isActive || undefined}
+                      className={cn(
+                        "rounded-full relative transition-all",
+                        isActive
+                          ? "border-(--ws-color)! bg-accent/60 shadow-xs"
+                          : "hover:border-(--ws-color)! hover:bg-accent/40",
+                      )}
+                      style={{ ...dragStyle, "--ws-color": workspace.color } as React.CSSProperties}
+                      key={workspace.id}
                       {...dragProps}
+                      ref={(el) => {
+                        dragProps.ref(el);
+                        if (isActive) {
+                          activeButtonRef.current = el;
+                        }
+                      }}
                       onClick={() => {
                         if (dragReorder.wasDragged()) return;
                         activateWorkspaceUseCases.activateWorkspace(workspace.id);
+                        setDefaultWorkspace(workspace);
+                        setCurrentWorkspace(workspace);
                       }}
                       onMouseEnter={() => setCurrentWorkspace(workspace)}
-                      onMouseLeave={() => !dragReorder.isDragging && setCurrentWorkspace(defaultWorkspace)}>
+                      onMouseLeave={() => !dragReorder.isDragging && setCurrentWorkspace(defaultWorkspace)}
+                    >
                       {workspace.iconUrl ? (
                         <img
                           src={workspace.iconUrl}
                           className="size-4.5"
                           draggable={false}
                           style={{ imageRendering: "smooth" }}
-                          />
+                        />
                       ) : (
                         <Layers className="size-4.5" />
+                      )}
+                      {isActive && (
+                        <span
+                          data-slot="active-indicator"
+                          className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-7 h-0.5 rounded-full bg-(--ws-color) shadow-xs pointer-events-none animate-in fade-in duration-200"
+                        />
                       )}
                     </Button>
                   );
