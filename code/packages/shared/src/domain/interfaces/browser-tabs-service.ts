@@ -5,6 +5,7 @@ export interface BrowserTabsService {
 
   getCurrentTab(): Promise<Tab>;
   getTab(id: string): Promise<Tab>;
+  getTabByIndex(index: number, windowId?: number): Promise<Tab>;
 
   createEmptyTab(windowId?: number): Promise<Tab>;
   createTabByUrl(url?: string): Promise<Tab>;

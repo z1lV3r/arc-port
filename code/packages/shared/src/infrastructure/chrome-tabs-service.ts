@@ -52,6 +52,26 @@ export class ChromeTabsService implements BrowserTabsService {
     );
   }
 
+  async getTabByIndex(index: number, windowId?: number): Promise<Tab> {
+    if (!chrome || !chrome.tabs) {
+      return new Tab("", "", 0);
+    }
+    const tabs = await chrome.tabs.query({
+      index,
+      ...(windowId && { windowId }),
+    });
+    if (!tabs || !tabs[0]) {
+      return new Tab("", "", 0);
+    }
+    return new Tab(
+      tabs[0].id?.toString() || "",
+      tabs[0].url || "",
+      tabs[0].index,
+      tabs[0].groupId,
+      tabs[0].pinned,
+    );
+  }
+
   async createEmptyTab(windowId?: number, groupId?: number): Promise<Tab> {
     const options: chrome.tabs.CreateProperties = { url: undefined };
     if (windowId) {

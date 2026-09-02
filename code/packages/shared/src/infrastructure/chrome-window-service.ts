@@ -11,4 +11,16 @@ export class ChromeWindowService implements BrowserWindowService {
 
     return new Window(window.id, window.tabs?.map((tab) => new Tab(tab.id?.toString() || "", tab.url || "", tab.index, tab.groupId, tab.pinned, undefined, undefined, window.id)) || []);
   }
+
+  async getCurrentWindow(): Promise<Window> {
+    const window = await chrome.windows.getCurrent();
+    if (!window.id) {
+      throw new Error("Failed to get current window");
+    }
+    return new Window(window.id, window.tabs?.map((tab) => new Tab(tab.id?.toString() || "", tab.url || "", tab.index, tab.groupId, tab.pinned, undefined, undefined, window.id)) || []);
+  }
+
+  async focus(windowId: number): Promise<void> {
+    await chrome.windows.update(windowId, { focused: true });
+  }
 }

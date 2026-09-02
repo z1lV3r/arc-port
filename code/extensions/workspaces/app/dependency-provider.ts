@@ -28,10 +28,15 @@ import { WorkspaceRepository } from "./domain/interfaces/workspace-repository.ts
 import { ChromeStorageWorkspaceRepository } from "./infrastructure/chrome-storage-workspace-repository.ts";
 import { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
 import { ChromeWindowService } from "@repo/shared/infrastructure/chrome-window-service";
-import { ChromeWorkspaceService } from "./infrastructure/chrome-workspace-service.ts";
-import { BrowserWorkspaceService } from "./domain/interfaces/browser-workspace-service.ts";
 import { ChromeTabGroupService } from "@repo/shared/infrastructure/chrome-tab-group-service";
 import { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
+import { GetWorkspaceUseCases } from "./use-cases/get-workspace-use-cases.ts";
+import { WorkspaceOrderRepository } from "./domain/interfaces/workspace-order-repository.ts";
+import { ChromeStorageWorkspaceOrderRepository } from "./infrastructure/chrome-storage-workspace-order-repository.ts";
+import { OrderWorkspaceUseCases } from "./use-cases/order-workspace-use-cases.ts";
+import { ActivateWorkspaceUseCases } from "./use-cases/activate-workspace-use-cases.ts";
+import { WorkspaceSessionRepository } from "./domain/interfaces/workspace-session-repository.ts";
+import { ChromeSessionStorageWorkspaceSessionRepository } from "./infrastructure/chrome-session-storage-workspace-session-repository.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -43,6 +48,26 @@ export class DependencyProvider {
 
     this.workspaceRepository = new ChromeStorageWorkspaceRepository();
     return this.workspaceRepository;
+  }
+
+  private static workspaceOrderRepository: WorkspaceOrderRepository;
+  static getWorkspaceOrderRepository(): WorkspaceOrderRepository {
+    if (this.workspaceOrderRepository) {
+      return this.workspaceOrderRepository;
+    }
+
+    this.workspaceOrderRepository = new ChromeStorageWorkspaceOrderRepository();
+    return this.workspaceOrderRepository;
+  }
+
+  private static workspaceSessionRepository: WorkspaceSessionRepository;
+  static getWorkspaceSessionRepository(): WorkspaceSessionRepository {
+    if (this.workspaceSessionRepository) {
+      return this.workspaceSessionRepository;
+    }
+
+    this.workspaceSessionRepository = new ChromeSessionStorageWorkspaceSessionRepository();
+    return this.workspaceSessionRepository;
   }
 
   //Infrastructure - Browser
@@ -77,27 +102,13 @@ export class DependencyProvider {
   }
 
   private static browserWindowsService: BrowserWindowService;
-  static getBrowserWindowsService(): BrowserWindowService {
+  static getBrowserWindowService(): BrowserWindowService {
     if (this.browserWindowsService) {
       return this.browserWindowsService;
     }
 
     this.browserWindowsService = new ChromeWindowService();
     return this.browserWindowsService;
-  }
-
-  private static browserWorkspaceService: BrowserWorkspaceService;
-  static getBrowserWorkspaceService(): BrowserWorkspaceService {
-    if (this.browserWorkspaceService) {
-      return this.browserWorkspaceService;
-    }
-
-    this.browserWorkspaceService = new ChromeWorkspaceService(
-      DependencyProvider.getBrowserWindowsService(),
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getBrowserTabGroupsService()
-    );
-    return this.browserWorkspaceService;
   }
 
   private static browserShortcutSettingsService: BrowserShortcutSettingsService;
@@ -175,10 +186,56 @@ export class DependencyProvider {
 
     this.createWorkspaceUseCases = new CreateWorkspaceUseCases(
       DependencyProvider.getWorkspaceRepository(),
-      DependencyProvider.getBrowserWorkspaceService(),
+      DependencyProvider.getOrderWorkspaceUseCases(),
+      DependencyProvider.getActivateWorkspaceUseCases()
     );
 
     return this.createWorkspaceUseCases;
+  }
+
+  private static getWorkspaceUseCases: GetWorkspaceUseCases;
+  static getGetWorkspaceUseCases(): GetWorkspaceUseCases {
+    if (this.getWorkspaceUseCases) {
+      return this.getWorkspaceUseCases;
+    }
+
+    this.getWorkspaceUseCases = new GetWorkspaceUseCases(
+      DependencyProvider.getWorkspaceRepository(),
+      DependencyProvider.getBrowserWindowService(),
+      DependencyProvider.getBrowserTabsService()
+    );
+
+    return this.getWorkspaceUseCases;
+  }
+
+  private static orderWorkspaceUseCases: OrderWorkspaceUseCases;
+  static getOrderWorkspaceUseCases(): OrderWorkspaceUseCases {
+    if (this.orderWorkspaceUseCases) {
+      return this.orderWorkspaceUseCases;
+    }
+
+    this.orderWorkspaceUseCases = new OrderWorkspaceUseCases(
+      DependencyProvider.getWorkspaceOrderRepository()
+    );
+
+    return this.orderWorkspaceUseCases;
+  }
+
+  private static activateWorkspaceUseCases: ActivateWorkspaceUseCases;
+  static getActivateWorkspaceUseCases(): ActivateWorkspaceUseCases {
+    if (this.activateWorkspaceUseCases) {
+      return this.activateWorkspaceUseCases;
+    }
+
+    this.activateWorkspaceUseCases = new ActivateWorkspaceUseCases(
+      DependencyProvider.getBrowserWindowService(),
+      DependencyProvider.getBrowserTabsService(),
+      DependencyProvider.getBrowserTabGroupsService(),
+      DependencyProvider.getWorkspaceSessionRepository(),
+      DependencyProvider.getWorkspaceRepository(),
+    );
+
+    return this.activateWorkspaceUseCases;
   }
 
   //Presentation - Settings event listeners

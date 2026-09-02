@@ -3,9 +3,9 @@ import { ADD_VIEW_NAME, WorkspaceForm } from './pop-up/add-workspace';
 import { LIST_VIEW_NAME, WorkspaceList } from './pop-up/list-workspaces';
 
 function PopUp() {
-  const [currentView, setCurrentView] = useState(ADD_VIEW_NAME);
+  const [currentView, setCurrentView] = useState(LIST_VIEW_NAME);
   return (
-    <>
+    <div style={{ maxWidth: 285 }} >
       {currentView === LIST_VIEW_NAME ? (
         <WorkspaceList currentView={currentView} setCurrentView={setCurrentView} />
       ) : currentView === ADD_VIEW_NAME ? (
@@ -13,7 +13,7 @@ function PopUp() {
       ) : (
         <div>Invalid View</div>
       )}
-    </>
+    </div>
   );
 }
 

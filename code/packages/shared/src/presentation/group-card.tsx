@@ -48,7 +48,7 @@ function GroupCardContent({
   return (
     <div
       data-slot="group-card-content"
-      className={cn("p-6", className)}
+      className={cn("p-5", className)}
       {...props}
     />
   );
