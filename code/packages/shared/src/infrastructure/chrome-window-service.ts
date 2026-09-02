@@ -19,4 +19,8 @@ export class ChromeWindowService implements BrowserWindowService {
     }
     return new Window(window.id, window.tabs?.map((tab) => new Tab(tab.id?.toString() || "", tab.url || "", tab.index, tab.groupId, tab.pinned, undefined, undefined, window.id)) || []);
   }
+
+  async focus(windowId: number): Promise<void> {
+    await chrome.windows.update(windowId, { focused: true });
+  }
 }

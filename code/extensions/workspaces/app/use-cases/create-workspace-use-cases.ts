@@ -21,7 +21,7 @@ export class CreateWorkspaceUseCases {
     const id = crypto.randomUUID();
     await this.workspaceRepository.create(id, name, iconUrl, color);
     await this.orderWorkspaceUseCases.push(id);
-    await this.activateWorkspaceUseCases.activateWorkspace(name, color, id);
+    await this.activateWorkspaceUseCases.activateWorkspace(id);
   }
 
   async updateWorkspace(id: string, name: string, iconUrl: string, color: string): Promise<void> {

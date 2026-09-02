@@ -28,6 +28,7 @@ export const LIST_VIEW_NAME = "list";
 export function WorkspaceList({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
   const getWorkspaceUseCases = DependencyProvider.getGetWorkspaceUseCases();
   const getWorkspaceOrderUseCases = DependencyProvider.getOrderWorkspaceUseCases();
+  const activateWorkspaceUseCases = DependencyProvider.getActivateWorkspaceUseCases();
   const [workspaceOrder, setWorkspaceOrder] = useState<string[]>([]);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
@@ -92,7 +93,7 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
                       {...dragProps}
                       onClick={() => {
                         if (dragReorder.wasDragged()) return;
-                        console.log(workspace);
+                        activateWorkspaceUseCases.activateWorkspace(workspace.id);
                       }}
                       onMouseEnter={() => setCurrentWorkspace(workspace)}
                       onMouseLeave={() => !dragReorder.isDragging && setCurrentWorkspace(defaultWorkspace)}>
