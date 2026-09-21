@@ -35,8 +35,6 @@ import { WorkspaceOrderRepository } from "./domain/interfaces/workspace-order-re
 import { ChromeStorageWorkspaceOrderRepository } from "./infrastructure/chrome-storage-workspace-order-repository.ts";
 import { OrderWorkspaceUseCases } from "./use-cases/order-workspace-use-cases.ts";
 import { ActivateWorkspaceUseCases } from "./use-cases/activate-workspace-use-cases.ts";
-import { WorkspaceSessionRepository } from "./domain/interfaces/workspace-session-repository.ts";
-import { ChromeSessionStorageWorkspaceSessionRepository } from "./infrastructure/chrome-session-storage-workspace-session-repository.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -58,16 +56,6 @@ export class DependencyProvider {
 
     this.workspaceOrderRepository = new ChromeStorageWorkspaceOrderRepository();
     return this.workspaceOrderRepository;
-  }
-
-  private static workspaceSessionRepository: WorkspaceSessionRepository;
-  static getWorkspaceSessionRepository(): WorkspaceSessionRepository {
-    if (this.workspaceSessionRepository) {
-      return this.workspaceSessionRepository;
-    }
-
-    this.workspaceSessionRepository = new ChromeSessionStorageWorkspaceSessionRepository();
-    return this.workspaceSessionRepository;
   }
 
   //Infrastructure - Browser
@@ -231,7 +219,6 @@ export class DependencyProvider {
       DependencyProvider.getBrowserWindowService(),
       DependencyProvider.getBrowserTabsService(),
       DependencyProvider.getBrowserTabGroupsService(),
-      DependencyProvider.getWorkspaceSessionRepository(),
       DependencyProvider.getWorkspaceRepository(),
     );
 

@@ -185,4 +185,9 @@ export class ChromeTabsService implements BrowserTabsService {
     if (!id) return;
     await chrome.tabs.update(parseInt(id), { pinned });
   }
+
+  async setTabUrl(id: string, url: string): Promise<void> {
+    if (!id || !url) return;
+    await chrome.tabs.update(parseInt(id), { url });
+  }
 }
