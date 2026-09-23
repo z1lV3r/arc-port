@@ -93,8 +93,11 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
   const createWorkspace = async () => {
     if (name.trim().length > 0) {
       setError(null);
+      console.log("create workspace 1")
       await workspaceUseCases.createWorkspace(name, iconUrl || "", COLORS[selectedColor]);
+      console.log("create workspace 2")
       window.close();
+      console.log("create workspace 3")
     } else {
       setError(t("pop_up.name_empty_error"));
     }

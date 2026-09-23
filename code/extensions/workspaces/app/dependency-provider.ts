@@ -35,6 +35,9 @@ import { WorkspaceOrderRepository } from "./domain/interfaces/workspace-order-re
 import { ChromeStorageWorkspaceOrderRepository } from "./infrastructure/chrome-storage-workspace-order-repository.ts";
 import { OrderWorkspaceUseCases } from "./use-cases/order-workspace-use-cases.ts";
 import { ActivateWorkspaceUseCases } from "./use-cases/activate-workspace-use-cases.ts";
+import { LoadWorkspaceWindowUseCases } from "./use-cases/load-workspace-window-use-cases.ts";
+import { LoadWorkspaceTabUseCases } from "./use-cases/load-workspace-tab-use-cases.ts";
+import { LoadWorkspaceTabGroupUseCases } from "./use-cases/load-workspace-tab-group-use-cases.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -217,12 +220,53 @@ export class DependencyProvider {
 
     this.activateWorkspaceUseCases = new ActivateWorkspaceUseCases(
       DependencyProvider.getBrowserWindowService(),
-      DependencyProvider.getBrowserTabsService(),
-      DependencyProvider.getBrowserTabGroupsService(),
       DependencyProvider.getWorkspaceRepository(),
+      DependencyProvider.getLoadWorkspaceWindowUseCases()
     );
 
     return this.activateWorkspaceUseCases;
+  }
+
+  private static loadWorkspaceWindowUseCases: LoadWorkspaceWindowUseCases;
+  static getLoadWorkspaceWindowUseCases(): LoadWorkspaceWindowUseCases {
+    if (this.loadWorkspaceWindowUseCases) {
+      return this.loadWorkspaceWindowUseCases;
+    }
+
+    this.loadWorkspaceWindowUseCases = new LoadWorkspaceWindowUseCases(
+      DependencyProvider.getBrowserWindowService(),
+      DependencyProvider.getLoadWorkspaceTabUseCases(),
+      DependencyProvider.getLoadWorkspaceTabGroupUseCases()
+    );
+
+    return this.loadWorkspaceWindowUseCases;
+  }
+
+  private static loadWorkspaceTabUseCases: LoadWorkspaceTabUseCases;
+  static getLoadWorkspaceTabUseCases(): LoadWorkspaceTabUseCases {
+    if (this.loadWorkspaceTabUseCases) {
+      return this.loadWorkspaceTabUseCases;
+    }
+
+    this.loadWorkspaceTabUseCases = new LoadWorkspaceTabUseCases(
+      DependencyProvider.getBrowserTabsService()
+    );
+
+    return this.loadWorkspaceTabUseCases;
+  }
+
+  private static loadWorkspaceTabGroupUseCases: LoadWorkspaceTabGroupUseCases;
+  static getLoadWorkspaceTabGroupUseCases(): LoadWorkspaceTabGroupUseCases {
+    if (this.loadWorkspaceTabGroupUseCases) {
+      return this.loadWorkspaceTabGroupUseCases;
+    }
+
+    this.loadWorkspaceTabGroupUseCases = new LoadWorkspaceTabGroupUseCases(
+      DependencyProvider.getBrowserTabsService(),
+      DependencyProvider.getBrowserTabGroupsService()
+    );
+
+    return this.loadWorkspaceTabGroupUseCases;
   }
 
   //Presentation - Settings event listeners
