@@ -7,12 +7,12 @@ import { EmojiPickerPortal, imageUrlToDataUrl } from "@repo/shared/presentation/
 import { ColorPickerPortal, COLORS } from "@repo/shared/presentation/ColorPickerPortal";
 import { type EmojiClickData } from "emoji-picker-react";
 import { CreateWorkspaceUseCases } from "../../use-cases/create-workspace-use-cases";
-import { DependencyProvider } from "@/app/dependency-provider";
+import { UseCasesDependencyProvider } from "@/app/dependency-provider/use-cases-dependency-provider";
 
 export const ADD_VIEW_NAME = "add";
 
 export function WorkspaceForm({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
-  const workspaceUseCases = DependencyProvider.getCreateWorkspaceUseCases();
+  const workspaceUseCases = UseCasesDependencyProvider.getCreateWorkspaceUseCases();
 
   const [name, setName] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);

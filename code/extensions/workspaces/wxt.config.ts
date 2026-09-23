@@ -1,6 +1,6 @@
 import { defineConfig } from "wxt";
 
-import { DependencyProvider } from "./app/dependency-provider";
+import { ShortcutListenersDependencyProvider } from "./app/dependency-provider/presentation/shortcut-listeners-dependency-provider";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -33,7 +33,7 @@ export default defineConfig({
 });
 
 function getCommands() {
-  const shortcuts = DependencyProvider.getShortcutListeners();
+  const shortcuts = ShortcutListenersDependencyProvider.getShortcutListeners();
   const commands: Record<string, any> = {};
 
   for (let i = 0; i < shortcuts.length; i++) {

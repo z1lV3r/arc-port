@@ -20,16 +20,16 @@ import { Separator } from "@repo/shared/presentation/separator";
 import { ScrollArea, ScrollBar } from "@repo/shared/presentation/scroll-area";
 import { cn } from "@repo/shared/lib/utils";
 
-import { DependencyProvider } from "../../dependency-provider";
+import { UseCasesDependencyProvider } from "../../dependency-provider/use-cases-dependency-provider";
 import { ADD_VIEW_NAME } from "./add-workspace";
 import { useDragReorder } from "./use-drag-reorder";
 import { Workspace } from "@/app/domain/models/workspace";
 
 export const LIST_VIEW_NAME = "list";
 export function WorkspaceList({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
-  const getWorkspaceUseCases = DependencyProvider.getGetWorkspaceUseCases();
-  const getWorkspaceOrderUseCases = DependencyProvider.getOrderWorkspaceUseCases();
-  const activateWorkspaceUseCases = DependencyProvider.getActivateWorkspaceUseCases();
+  const getWorkspaceUseCases = UseCasesDependencyProvider.getGetWorkspaceUseCases();
+  const getWorkspaceOrderUseCases = UseCasesDependencyProvider.getOrderWorkspaceUseCases();
+  const activateWorkspaceUseCases = UseCasesDependencyProvider.getActivateWorkspaceUseCases();
   const [workspaceOrder, setWorkspaceOrder] = useState<string[]>([]);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
@@ -216,8 +216,8 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
             </ScrollArea>
           </div>
           <div className="flex items-center gap-3 w-full justify-center">
-            <Button variant="outline" className="shrink-0 hover:border-yellow-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Archive className="text-yellow-500"/>{t("pop_up.button_archive")}</Button>
-            <Button variant="outline" className="shrink-0 hover:border-blue-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Plus className="text-blue-500"/>{t("pop_up.button_new")}</Button>
+            <Button variant="outline" className="shrink-0 hover:border-yellow-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Archive className="text-yellow-500" />{t("pop_up.button_archive")}</Button>
+            <Button variant="outline" className="shrink-0 hover:border-blue-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Plus className="text-blue-500" />{t("pop_up.button_new")}</Button>
           </div>
         </div>
       </GroupCardContent>

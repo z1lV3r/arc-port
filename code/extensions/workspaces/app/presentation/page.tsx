@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { DependencyProvider } from "../dependency-provider";
+import { UseCasesDependencyProvider } from "../dependency-provider/use-cases-dependency-provider";
 
 function Page() {
   const [workspaceName, setWorkspaceName] = useState<string>("");
-  const getWorkspaceUseCases = DependencyProvider.getGetWorkspaceUseCases();
-  
+  const getWorkspaceUseCases = UseCasesDependencyProvider.getGetWorkspaceUseCases();
+
   const workspaceId = new URLSearchParams(window.location.search).get("workspaceId");
   if (!workspaceId) {
     throw new Error("Workspace ID not found");

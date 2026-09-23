@@ -1,4 +1,4 @@
-import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-provider";
+import { StorageListenersDependencyProvider as AppDependencyProvider } from "@/app/dependency-provider/presentation/storage-listeners-dependency-provider";
 
 import { DependencyProvider } from "../dependency-provider";
 import { StorageListenerUseCases } from "../use-cases/storage-listener-use-cases";
