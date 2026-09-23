@@ -38,6 +38,8 @@ import { ActivateWorkspaceUseCases } from "./use-cases/activate-workspace-use-ca
 import { LoadWorkspaceWindowUseCases } from "./use-cases/load-workspace-window-use-cases.ts";
 import { LoadWorkspaceTabUseCases } from "./use-cases/load-workspace-tab-use-cases.ts";
 import { LoadWorkspaceTabGroupUseCases } from "./use-cases/load-workspace-tab-group-use-cases.ts";
+import { WorkspaceWindowRepository } from "./domain/interfaces/workspace-window-repository.ts";
+import { ChromeSessionStorageWorkspaceWindowRepository } from "./infrastructure/chrome-session-storage-workspace-window-repository.ts";
 
 export class DependencyProvider {
   //Infrastructure - Data
@@ -59,6 +61,16 @@ export class DependencyProvider {
 
     this.workspaceOrderRepository = new ChromeStorageWorkspaceOrderRepository();
     return this.workspaceOrderRepository;
+  }
+
+  private static workspaceWindowRepository: WorkspaceWindowRepository;
+  static getWorkspaceWindowRepository(): WorkspaceWindowRepository {
+    if (this.workspaceWindowRepository) {
+      return this.workspaceWindowRepository;
+    }
+
+    this.workspaceWindowRepository = new ChromeSessionStorageWorkspaceWindowRepository();
+    return this.workspaceWindowRepository;
   }
 
   //Infrastructure - Browser
@@ -221,7 +233,8 @@ export class DependencyProvider {
     this.activateWorkspaceUseCases = new ActivateWorkspaceUseCases(
       DependencyProvider.getBrowserWindowService(),
       DependencyProvider.getWorkspaceRepository(),
-      DependencyProvider.getLoadWorkspaceWindowUseCases()
+      DependencyProvider.getLoadWorkspaceWindowUseCases(),
+      DependencyProvider.getWorkspaceWindowRepository()
     );
 
     return this.activateWorkspaceUseCases;
@@ -236,7 +249,8 @@ export class DependencyProvider {
     this.loadWorkspaceWindowUseCases = new LoadWorkspaceWindowUseCases(
       DependencyProvider.getBrowserWindowService(),
       DependencyProvider.getLoadWorkspaceTabUseCases(),
-      DependencyProvider.getLoadWorkspaceTabGroupUseCases()
+      DependencyProvider.getLoadWorkspaceTabGroupUseCases(),
+      DependencyProvider.getWorkspaceWindowRepository()
     );
 
     return this.loadWorkspaceWindowUseCases;
