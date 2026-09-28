@@ -25,7 +25,6 @@ export class ActivateWorkspaceUseCases {
   }
 
   async activateWorkspace(id: string): Promise<void> {
-    console.log(`Activating workspace with id: ${id}`);
     const workspace = await this.workspaceRepository.get(id);
     if (!workspace) {
       throw new Error("Workspace not found");
@@ -37,5 +36,5 @@ export class ActivateWorkspaceUseCases {
     } else {
       await this.loadWorkspaceWindowUseCases.loadWorkspaceWindow(workspace);
     }
-  }  
+  }
 }

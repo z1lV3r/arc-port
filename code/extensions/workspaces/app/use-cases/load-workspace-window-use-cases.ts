@@ -32,7 +32,6 @@ export class LoadWorkspaceWindowUseCases {
   private async loadWorkspaceWindowBaseElements(workspace: Workspace) {
     const newWindow = await this.browserWindowService.create();
     await this.workspaceWindowRepository.save(workspace.id, newWindow.id);
-    //TODO: register window in session storage
     await this.loadWorkspaceTabUseCases.loadWorkspaceDefaultTab(newWindow.id, workspace.id);
     await this.loadWorkspaceTabGroupUseCases.loadWorkspaceDefaultGroup(newWindow.id, workspace);
   }
