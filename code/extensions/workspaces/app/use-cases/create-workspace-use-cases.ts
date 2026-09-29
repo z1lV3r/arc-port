@@ -1,4 +1,5 @@
 import type { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
+import { WorkspaceTabGroup } from "../domain/models/workspace-tab-group";
 import { ActivateWorkspaceUseCases } from "./activate-workspace-use-cases";
 import type { OrderWorkspaceUseCases } from "./order-workspace-use-cases";
 
@@ -17,15 +18,11 @@ export class CreateWorkspaceUseCases {
     this.activateWorkspaceUseCases = activateWorkspaceUseCases;
   }
 
-  async createWorkspace(name: string, iconUrl: string, color: string): Promise<void> {
-    const id = crypto.randomUUID();
-    await this.workspaceRepository.create(id, name, iconUrl, color);
+  async saveWorkspace(name: string, iconUrl: string, color: string, workspaceTabGroups?: WorkspaceTabGroup[]): Promise<void> {
+    const id = generateId();
+    await this.workspaceRepository.save(id, name, iconUrl, color, workspaceTabGroups);
     await this.orderWorkspaceUseCases.push(id);
     await this.activateWorkspaceUseCases.activateWorkspace(id);
-  }
-
-  async updateWorkspace(id: string, name: string, iconUrl: string, color: string): Promise<void> {
-    await this.workspaceRepository.update(id, name, iconUrl, color);
   }
 
   async deleteWorkspace(id: string): Promise<void> {
