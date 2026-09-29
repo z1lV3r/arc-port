@@ -1,21 +1,21 @@
-import { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
 import type { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
+import type { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
 import type { Workspace } from "../domain/models/workspace";
 
 export class GetWorkspaceUseCases {
   private workspaceRepository: WorkspaceRepository;
   private browserWindowService: BrowserWindowService;
-  private browserTabsService: BrowserTabsService;
+  private workspaceWindowRepository: WorkspaceWindowRepository;
 
   constructor(
     workspaceRepository: WorkspaceRepository,
     browserWindowService: BrowserWindowService,
-    browserTabsService: BrowserTabsService,
+    workspaceWindowRepository: WorkspaceWindowRepository,
   ) {
     this.workspaceRepository = workspaceRepository;
     this.browserWindowService = browserWindowService;
-    this.browserTabsService = browserTabsService;
+    this.workspaceWindowRepository = workspaceWindowRepository;
   }
 
   async getWorkspace(id: string): Promise<Workspace> {
@@ -24,13 +24,9 @@ export class GetWorkspaceUseCases {
 
   async getCurrentWorkspace(): Promise<Workspace> {
     const currentWindow = await this.browserWindowService.getCurrentWindow();
-    const tab = await this.browserTabsService.getTabByIndex(0, currentWindow.id);
-    if (!tab.url) {
-      throw new Error("Failed to get current workspace");
-    }
-    const workspaceId = tab.url.split("?workspaceId=")[1];
+    const workspaceId = await this.workspaceWindowRepository.getByWindowId(currentWindow.id);
     if (!workspaceId) {
-      throw new Error("Failed to get current workspace");
+      throw new Error("No workspace found");
     }
     return await this.workspaceRepository.get(workspaceId);
   }

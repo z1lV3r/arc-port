@@ -1,4 +1,3 @@
 export function generateId(): string {
-    const microtime = Math.floor((performance.timeOrigin + performance.now()) * 1000);
-    return microtime.toString(36);
+    return Math.random().toString(36).substring(2, 10);
 }
