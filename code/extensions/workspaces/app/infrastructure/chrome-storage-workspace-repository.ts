@@ -1,6 +1,5 @@
 import { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
 import { Workspace } from "../domain/models/workspace";
-import { WorkspaceTabGroup } from "../domain/models/workspace-tab-group";
 
 export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
     private postfix: string;
@@ -9,8 +8,8 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
         this.postfix = postfix;
     }
 
-    async save(id: string, name: string, iconUrl: string, color: string, workspaceTabGroups: WorkspaceTabGroup[]): Promise<void> {
-        await chrome.storage.local.set({ [id + this.postfix]: { name, iconUrl, color, workspaceTabGroups } });
+    async save(id: string, name: string, iconUrl: string, color: string, workspaceTabGroupOrder: string[]): Promise<void> {
+        await chrome.storage.local.set({ [id + this.postfix]: { name, iconUrl, color, workspaceTabGroupOrder } });
     }
 
     async get(id: string): Promise<Workspace> {
@@ -20,7 +19,7 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
         if (!data) {
             throw new Error(`Workspace with id ${id} not found`);
         }
-        return new Workspace(id, data.name, data.iconUrl, data.color, data.workspaceTabGroups);
+        return new Workspace(id, data.name, data.iconUrl, data.color, data.workspaceTabGroupOrder);
     }
 
     async list(): Promise<Workspace[]> {
@@ -30,7 +29,7 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
             .map(key => {
                 const id = key.slice(0, -this.postfix.length);
                 const data = result[key];
-                return new Workspace(id, data.name, data.iconUrl, data.color, data.workspaceTabGroups);
+                return new Workspace(id, data.name, data.iconUrl, data.color, data.workspaceTabGroupOrder);
             });
     }
 

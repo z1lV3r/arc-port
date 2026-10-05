@@ -94,7 +94,7 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
     if (name.trim().length > 0) {
       setError(null);
       console.log("create workspace 1")
-      await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor]);
+      await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor], []);
       console.log("create workspace 2")
       window.close();
       console.log("create workspace 3")

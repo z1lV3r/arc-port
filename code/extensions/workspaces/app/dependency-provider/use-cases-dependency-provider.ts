@@ -4,7 +4,7 @@ import { CreateWorkspaceUseCases } from "../use-cases/create-workspace-use-cases
 import { GetWorkspaceUseCases } from "../use-cases/get-workspace-use-cases.ts";
 import { OrderWorkspaceUseCases } from "../use-cases/order-workspace-use-cases.ts";
 import { ActivateWorkspaceUseCases } from "../use-cases/activate-workspace-use-cases.ts";
-import { LoadWorkspaceWindowUseCases } from "../use-cases/load-workspace-window-use-cases.ts";
+import { LoadWorkspaceUseCases } from "../use-cases/load-workspace-use-cases.ts";
 import { LoadWorkspaceTabUseCases } from "../use-cases/load-workspace-tab-use-cases.ts";
 import { LoadWorkspaceTabGroupUseCases } from "../use-cases/load-workspace-tab-group-use-cases.ts";
 import { BrowserDependencyProvider } from "./infrastructure/browser-dependency-provider.ts";
@@ -96,13 +96,13 @@ export class UseCasesDependencyProvider {
     return this.activateWorkspaceUseCases;
   }
 
-  private static loadWorkspaceWindowUseCases: LoadWorkspaceWindowUseCases;
-  static getLoadWorkspaceWindowUseCases(): LoadWorkspaceWindowUseCases {
+  private static loadWorkspaceWindowUseCases: LoadWorkspaceUseCases;
+  static getLoadWorkspaceWindowUseCases(): LoadWorkspaceUseCases {
     if (this.loadWorkspaceWindowUseCases) {
       return this.loadWorkspaceWindowUseCases;
     }
 
-    this.loadWorkspaceWindowUseCases = new LoadWorkspaceWindowUseCases(
+    this.loadWorkspaceWindowUseCases = new LoadWorkspaceUseCases(
       BrowserDependencyProvider.getBrowserWindowService(),
       UseCasesDependencyProvider.getLoadWorkspaceTabUseCases(),
       UseCasesDependencyProvider.getLoadWorkspaceTabGroupUseCases(),

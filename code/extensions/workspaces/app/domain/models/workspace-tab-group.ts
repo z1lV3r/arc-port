@@ -7,19 +7,19 @@ export class WorkspaceTabGroup {
   public title: string;
   public color: string;
   public type: WorkspaceTabGroupType;
-  public workspaceTabs: WorkspaceTab[];
+  public workspaceTabOrder: string[];
   
   constructor(
     id: string,
     title: string,
     color: string,
-    workspaceTabs: WorkspaceTab[],
+    workspaceTabOrder: string[],
     type: WorkspaceTabGroupType = "std",
   ) {
     this.id = id;
     this.title = title;
     this.color = color;
-    this.workspaceTabs = workspaceTabs;
+    this.workspaceTabOrder = workspaceTabOrder;
     this.type = type;
   }
 }

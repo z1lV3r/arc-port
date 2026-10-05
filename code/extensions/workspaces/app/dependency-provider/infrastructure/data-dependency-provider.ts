@@ -2,8 +2,12 @@ import { WorkspaceRepository } from "../../domain/interfaces/workspace-repositor
 import { ChromeStorageWorkspaceRepository } from "../../infrastructure/chrome-storage-workspace-repository.ts";
 import { WorkspaceOrderRepository } from "../../domain/interfaces/workspace-order-repository.ts";
 import { ChromeStorageWorkspaceOrderRepository } from "../../infrastructure/chrome-storage-workspace-order-repository.ts";
-import { WorkspaceWindowRepository } from "../../domain/interfaces/workspace-window-repository.ts";
-import { ChromeSessionStorageWorkspaceWindowRepository } from "../../infrastructure/chrome-session-storage-workspace-window-repository.ts";
+import { WorkspaceWindowSessionRepository } from "../../domain/interfaces/workspace-window-session-repository.ts";
+import { ChromeSessionStorageWorkspaceWindowSessionRepository } from "../../infrastructure/chrome-session-storage-workspace-window-repository.ts";
+import { WorkspaceTabSessionRepository } from "../../domain/interfaces/workspace-tab-session-repository.ts";
+import { ChromeSessionStorageWorkspaceTabSessionRepository } from "../../infrastructure/chrome-session-storage-workspace-tab-session-repository.ts";
+import { WorkspaceTabGroupSessionRepository } from "../../domain/interfaces/workspace-tab-group-session-repository.ts";
+import { ChromeSessionStorageWorkspaceTabGroupSessionRepository } from "../../infrastructure/chrome-session-storage-workspace-tab-group-session-repository.ts";
 
 export class DataDependencyProvider {
   private static workspaceRepository: WorkspaceRepository;
@@ -26,13 +30,33 @@ export class DataDependencyProvider {
     return this.workspaceOrderRepository;
   }
 
-  private static workspaceWindowRepository: WorkspaceWindowRepository;
-  static getWorkspaceWindowRepository(): WorkspaceWindowRepository {
+  private static workspaceWindowRepository: WorkspaceWindowSessionRepository;
+  static getWorkspaceWindowRepository(): WorkspaceWindowSessionRepository {
     if (this.workspaceWindowRepository) {
       return this.workspaceWindowRepository;
     }
 
-    this.workspaceWindowRepository = new ChromeSessionStorageWorkspaceWindowRepository();
+    this.workspaceWindowRepository = new ChromeSessionStorageWorkspaceWindowSessionRepository();
     return this.workspaceWindowRepository;
+  }
+
+  private static workspaceTabSessionRepository: WorkspaceTabSessionRepository;
+  static getWorkspaceTabSessionRepository(): WorkspaceTabSessionRepository {
+    if (this.workspaceTabSessionRepository) {
+      return this.workspaceTabSessionRepository;
+    }
+
+    this.workspaceTabSessionRepository = new ChromeSessionStorageWorkspaceTabSessionRepository();
+    return this.workspaceTabSessionRepository;
+  }
+
+  private static workspaceTabGroupSessionRepository: WorkspaceTabGroupSessionRepository;
+  static getWorkspaceTabGroupSessionRepository(): WorkspaceTabGroupSessionRepository {
+    if (this.workspaceTabGroupSessionRepository) {
+      return this.workspaceTabGroupSessionRepository;
+    }
+
+    this.workspaceTabGroupSessionRepository = new ChromeSessionStorageWorkspaceTabGroupSessionRepository();
+    return this.workspaceTabGroupSessionRepository;
   }
 }

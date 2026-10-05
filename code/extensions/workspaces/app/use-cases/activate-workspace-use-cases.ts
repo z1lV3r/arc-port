@@ -3,20 +3,20 @@ import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-
 import type { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
 import { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
 import { Workspace } from "../domain/models/workspace";
-import { LoadWorkspaceWindowUseCases } from "./load-workspace-window-use-cases";
-import { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
+import { LoadWorkspaceUseCases } from "./load-workspace-use-cases";
+import { WorkspaceWindowSessionRepository } from "../domain/interfaces/workspace-window-session-repository";
 
 export class ActivateWorkspaceUseCases {
   private browserWindowService: BrowserWindowService;
   private workspaceRepository: WorkspaceRepository;
-  private loadWorkspaceWindowUseCases: LoadWorkspaceWindowUseCases;
-  private workspaceWindowRepository: WorkspaceWindowRepository;
+  private loadWorkspaceWindowUseCases: LoadWorkspaceUseCases;
+  private workspaceWindowRepository: WorkspaceWindowSessionRepository;
 
   constructor(
     browserWindowService: BrowserWindowService,
     workspaceRepository: WorkspaceRepository,
-    loadWorkspaceWindowUseCases: LoadWorkspaceWindowUseCases,
-    workspaceWindowRepository: WorkspaceWindowRepository,
+    loadWorkspaceWindowUseCases: LoadWorkspaceUseCases,
+    workspaceWindowRepository: WorkspaceWindowSessionRepository,
   ) {
     this.browserWindowService = browserWindowService;
     this.workspaceRepository = workspaceRepository;
@@ -34,7 +34,7 @@ export class ActivateWorkspaceUseCases {
     if (workspaceWindow) {
       await this.browserWindowService.focus(workspaceWindow);
     } else {
-      await this.loadWorkspaceWindowUseCases.loadWorkspaceWindow(workspace);
+      await this.loadWorkspaceWindowUseCases.loadWorkspace(workspace);
     }
   }
 }

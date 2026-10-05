@@ -1,13 +1,13 @@
-import type { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
+import type { WorkspaceWindowSessionRepository } from "../domain/interfaces/workspace-window-session-repository";
 
-export class ChromeSessionStorageWorkspaceWindowRepository implements WorkspaceWindowRepository {
+export class ChromeSessionStorageWorkspaceWindowSessionRepository implements WorkspaceWindowSessionRepository {
     private readonly POSTFIX = "_workspace_window";
     private readonly REVERSE_POSTFIX = "_window_workspace";
 
     async save(workspaceId: string, windowId: number): Promise<void> {
         const key = workspaceId + this.POSTFIX;
         const reverseKey = windowId.toString() + this.REVERSE_POSTFIX;
-        await chrome.storage.session.set({ 
+        await chrome.storage.session.set({
             [key]: windowId,
             [reverseKey]: workspaceId
         });

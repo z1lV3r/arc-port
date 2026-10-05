@@ -6,6 +6,6 @@ export class Workspace {
     public name: string,
     public iconUrl: string,
     public color: string,
-    public workspaceTabGroups: WorkspaceTabGroup[],
+    public workspaceTabGroupOrder: string[],
   ) {}
 }

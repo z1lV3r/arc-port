@@ -18,9 +18,9 @@ export class CreateWorkspaceUseCases {
     this.activateWorkspaceUseCases = activateWorkspaceUseCases;
   }
 
-  async saveWorkspace(name: string, iconUrl: string, color: string, workspaceTabGroups?: WorkspaceTabGroup[]): Promise<void> {
+  async saveWorkspace(name: string, iconUrl: string, color: string, workspaceTabGroupOrder: string[]): Promise<void> {
     const id = generateId();
-    await this.workspaceRepository.save(id, name, iconUrl, color, workspaceTabGroups);
+    await this.workspaceRepository.save(id, name, iconUrl, color, workspaceTabGroupOrder);
     await this.orderWorkspaceUseCases.push(id);
     await this.activateWorkspaceUseCases.activateWorkspace(id);
   }

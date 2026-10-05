@@ -1,17 +1,17 @@
 import { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
 import type { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
-import type { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
+import type { WorkspaceWindowSessionRepository } from "../domain/interfaces/workspace-window-session-repository";
 import type { Workspace } from "../domain/models/workspace";
 
 export class GetWorkspaceUseCases {
   private workspaceRepository: WorkspaceRepository;
   private browserWindowService: BrowserWindowService;
-  private workspaceWindowRepository: WorkspaceWindowRepository;
+  private workspaceWindowRepository: WorkspaceWindowSessionRepository;
 
   constructor(
     workspaceRepository: WorkspaceRepository,
     browserWindowService: BrowserWindowService,
-    workspaceWindowRepository: WorkspaceWindowRepository,
+    workspaceWindowRepository: WorkspaceWindowSessionRepository,
   ) {
     this.workspaceRepository = workspaceRepository;
     this.browserWindowService = browserWindowService;
@@ -33,5 +33,5 @@ export class GetWorkspaceUseCases {
 
   async listWorkspaces(): Promise<Workspace[]> {
     return await this.workspaceRepository.list();
-  } 
+  }
 }
