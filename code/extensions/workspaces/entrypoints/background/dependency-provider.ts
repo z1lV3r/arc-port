@@ -20,6 +20,12 @@ import { SettingChangeEventListenerUseCases } from "./use-cases/settings-listene
 import { ShortcutListenerUseCases } from "./use-cases/shortcut-listener-use-cases";
 import { StorageListenerUseCases } from "./use-cases/storage-listener-use-cases";
 import { TabEventListenerUseCases } from "./use-cases/tab-event-listener-use-cases";
+import { TabGroupsEventListenerUseCases } from "./use-cases/tab-groups-event-listener-use-cases";
+import { WindowEventListenerUseCases } from "./use-cases/window-event-listener-use-cases";
+import type { BrowserWindowEventService } from "./domain/interfaces/browser-window-event-service";
+import ChromeWindowEventService from "./infrastructure/chrome-window-event-service";
+import type { BrowserTabGroupsEventService } from "./domain/interfaces/browser-tab-groups-event-service";
+import ChromeTabGroupsEventService from "./infrastructure/chrome-tab-groups-event-service";
 
 export class DependencyProvider {
   private constructor() {}
@@ -32,6 +38,24 @@ export class DependencyProvider {
     }
     this.browserTabEventService = new ChromeTabEventService();
     return this.browserTabEventService;
+  }
+
+  private static browserTabGroupsEventService: BrowserTabGroupsEventService;
+  static getBrowserTabGroupsEventService(): BrowserTabGroupsEventService {
+    if (this.browserTabGroupsEventService) {
+      return this.browserTabGroupsEventService;
+    }
+    this.browserTabGroupsEventService = new ChromeTabGroupsEventService();
+    return this.browserTabGroupsEventService;
+  }
+
+  private static browserWindowEventService: BrowserWindowEventService;
+  static getBrowserWindowEventService(): BrowserWindowEventService {
+    if (this.browserWindowEventService) {
+      return this.browserWindowEventService;
+    }
+    this.browserWindowEventService = new ChromeWindowEventService();
+    return this.browserWindowEventService;
   }
 
   private static browserStorageEventService: BrowserStorageEventService;
@@ -132,6 +156,28 @@ export class DependencyProvider {
       DependencyProvider.getBrowserTabEventService(),
     );
     return this.tabEventListenerUseCase;
+  }
+
+  private static tabGroupsEventListenerUseCase: TabGroupsEventListenerUseCases;
+  static getTabGroupsEventListenerUseCase(): TabGroupsEventListenerUseCases {
+    if (this.tabGroupsEventListenerUseCase) {
+      return this.tabGroupsEventListenerUseCase;
+    }
+    this.tabGroupsEventListenerUseCase = new TabGroupsEventListenerUseCases(
+      DependencyProvider.getBrowserTabGroupsEventService(),
+    );
+    return this.tabGroupsEventListenerUseCase;
+  }
+
+  private static windowEventListenerUseCase: WindowEventListenerUseCases;
+  static getWindowEventListenerUseCase(): WindowEventListenerUseCases {
+    if (this.windowEventListenerUseCase) {
+      return this.windowEventListenerUseCase;
+    }
+    this.windowEventListenerUseCase = new WindowEventListenerUseCases(
+      DependencyProvider.getBrowserWindowEventService(),
+    );
+    return this.windowEventListenerUseCase;
   }
 
   private static extensionListenerUseCase: ExtensionListenerUseCases;
