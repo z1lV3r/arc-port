@@ -1,15 +1,15 @@
 import { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
-import type { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
+import type { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
 import type { WorkspaceWindowSessionRepository } from "../domain/interfaces/workspace-window-session-repository";
-import type { Workspace } from "../domain/models/workspace";
+import type { WorkspaceWindow } from "../domain/models/workspace-window";
 
 export class GetWorkspaceUseCases {
-  private workspaceRepository: WorkspaceRepository;
+  private workspaceRepository: WorkspaceWindowRepository;
   private browserWindowService: BrowserWindowService;
   private workspaceWindowRepository: WorkspaceWindowSessionRepository;
 
   constructor(
-    workspaceRepository: WorkspaceRepository,
+    workspaceRepository: WorkspaceWindowRepository,
     browserWindowService: BrowserWindowService,
     workspaceWindowRepository: WorkspaceWindowSessionRepository,
   ) {
@@ -18,11 +18,11 @@ export class GetWorkspaceUseCases {
     this.workspaceWindowRepository = workspaceWindowRepository;
   }
 
-  async getWorkspace(id: string): Promise<Workspace> {
+  async getWorkspace(id: string): Promise<WorkspaceWindow> {
     return await this.workspaceRepository.get(id);
   }
 
-  async getCurrentWorkspace(): Promise<Workspace> {
+  async getCurrentWorkspace(): Promise<WorkspaceWindow> {
     const currentWindow = await this.browserWindowService.getCurrentWindow();
     const workspaceId = await this.workspaceWindowRepository.getByWindowId(currentWindow.id);
     if (!workspaceId) {
@@ -31,7 +31,7 @@ export class GetWorkspaceUseCases {
     return await this.workspaceRepository.get(workspaceId);
   }
 
-  async listWorkspaces(): Promise<Workspace[]> {
+  async listWorkspaces(): Promise<WorkspaceWindow[]> {
     return await this.workspaceRepository.list();
   }
 }

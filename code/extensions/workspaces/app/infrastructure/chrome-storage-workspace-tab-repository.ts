@@ -8,8 +8,8 @@ export class ChromeStorageWorkspaceTabRepository implements WorkspaceTabReposito
         this.postfix = postfix;
     }
 
-    async save(id: string, checkpointUrl: string): Promise<void> {
-        await chrome.storage.local.set({ [id + this.postfix]: { checkpointUrl } });
+    async save(tab: WorkspaceTab): Promise<void> {
+        await chrome.storage.local.set({ [tab.id + this.postfix]: { checkpointUrl: tab.checkpointUrl, iconUrl: tab.iconUrl } });
     }
 
     async get(id: string): Promise<WorkspaceTab> {

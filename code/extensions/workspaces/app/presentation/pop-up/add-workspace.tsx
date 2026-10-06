@@ -12,7 +12,7 @@ import { UseCasesDependencyProvider } from "@/app/dependency-provider/use-cases-
 export const ADD_VIEW_NAME = "add";
 
 export function WorkspaceForm({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
-  const workspaceUseCases = UseCasesDependencyProvider.getCreateWorkspaceUseCases();
+  const createWorkspaceUseCases = UseCasesDependencyProvider.getCreateWorkspaceUseCases();
 
   const [name, setName] = useState("");
   const [iconUrl, setIconUrl] = useState<string | null>(null);
@@ -94,7 +94,7 @@ export function WorkspaceForm({ currentView, setCurrentView }: { currentView: st
     if (name.trim().length > 0) {
       setError(null);
       console.log("create workspace 1")
-      await workspaceUseCases.saveWorkspace(name, iconUrl || "", COLORS[selectedColor], []);
+      await createWorkspaceUseCases.createWorkspace(name, iconUrl || "", COLORS[selectedColor]);
       console.log("create workspace 2")
       window.close();
       console.log("create workspace 3")

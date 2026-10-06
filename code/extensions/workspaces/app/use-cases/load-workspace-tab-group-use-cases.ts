@@ -1,6 +1,6 @@
 import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import type { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
-import { Workspace } from "../domain/models/workspace";
+import { WorkspaceWindow } from "../domain/models/workspace-window";
 
 export class LoadWorkspaceTabGroupUseCases {
     private browserTabsService: BrowserTabsService;
@@ -13,7 +13,7 @@ export class LoadWorkspaceTabGroupUseCases {
         this.browserTabGroupService = browserTabGroupService;
     }
 
-    async loadWorkspaceDefaultGroup(windowId: number, workspace: Workspace) {
+    async loadWorkspaceDefaultGroup(windowId: number, workspace: WorkspaceWindow) {
         const emptyTab = await this.browserTabsService.createEmptyTab(windowId); //TODO: Get default default group tabs or create one empty tab
 
         if (!emptyTab.id) {

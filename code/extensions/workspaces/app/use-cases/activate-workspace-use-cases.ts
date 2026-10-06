@@ -1,27 +1,24 @@
 import type { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
-import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
-import type { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
-import { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
-import { Workspace } from "../domain/models/workspace";
+import { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
 import { LoadWorkspaceUseCases } from "./load-workspace-use-cases";
 import { WorkspaceWindowSessionRepository } from "../domain/interfaces/workspace-window-session-repository";
 
 export class ActivateWorkspaceUseCases {
   private browserWindowService: BrowserWindowService;
-  private workspaceRepository: WorkspaceRepository;
+  private workspaceRepository: WorkspaceWindowRepository;
   private loadWorkspaceWindowUseCases: LoadWorkspaceUseCases;
-  private workspaceWindowRepository: WorkspaceWindowSessionRepository;
+  private workspaceWindowSessionRepository: WorkspaceWindowSessionRepository;
 
   constructor(
     browserWindowService: BrowserWindowService,
-    workspaceRepository: WorkspaceRepository,
+    workspaceRepository: WorkspaceWindowRepository,
     loadWorkspaceWindowUseCases: LoadWorkspaceUseCases,
-    workspaceWindowRepository: WorkspaceWindowSessionRepository,
+    workspaceWindowSessionRepository: WorkspaceWindowSessionRepository,
   ) {
     this.browserWindowService = browserWindowService;
     this.workspaceRepository = workspaceRepository;
     this.loadWorkspaceWindowUseCases = loadWorkspaceWindowUseCases;
-    this.workspaceWindowRepository = workspaceWindowRepository;
+    this.workspaceWindowSessionRepository = workspaceWindowSessionRepository;
   }
 
   async activateWorkspace(id: string): Promise<void> {
@@ -30,9 +27,9 @@ export class ActivateWorkspaceUseCases {
       throw new Error("Workspace not found");
     }
 
-    const workspaceWindow = await this.workspaceWindowRepository.get(id);
-    if (workspaceWindow) {
-      await this.browserWindowService.focus(workspaceWindow);
+    const workspaceWindowSession = await this.workspaceWindowSessionRepository.get(id);
+    if (workspaceWindowSession) {
+      await this.browserWindowService.focus(workspaceWindowSession);
     } else {
       await this.loadWorkspaceWindowUseCases.loadWorkspace(workspace);
     }

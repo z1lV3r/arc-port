@@ -1,35 +1,35 @@
-import { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
-import { Workspace } from "../domain/models/workspace";
+import { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
+import { WorkspaceWindow } from "../domain/models/workspace-window";
 
-export class ChromeStorageWorkspaceRepository implements WorkspaceRepository {
+export class ChromeStorageWorkspaceRepository implements WorkspaceWindowRepository {
     private postfix: string;
 
     constructor(postfix: string = "-workspace") {
         this.postfix = postfix;
     }
 
-    async save(id: string, name: string, iconUrl: string, color: string, workspaceTabGroupOrder: string[]): Promise<void> {
-        await chrome.storage.local.set({ [id + this.postfix]: { name, iconUrl, color, workspaceTabGroupOrder } });
+    async save(workspace: WorkspaceWindow): Promise<void> {
+        await chrome.storage.local.set({ [workspace.id + this.postfix]: workspace });
     }
 
-    async get(id: string): Promise<Workspace> {
+    async get(id: string): Promise<WorkspaceWindow> {
         const storageKey = id + this.postfix;
         const result = await chrome.storage.local.get(storageKey);
         const data = result[storageKey];
         if (!data) {
             throw new Error(`Workspace with id ${id} not found`);
         }
-        return new Workspace(id, data.name, data.iconUrl, data.color, data.workspaceTabGroupOrder);
+        return new WorkspaceWindow(id, data.name, data.iconUrl, data.color, data.workspaceTabOrder);
     }
 
-    async list(): Promise<Workspace[]> {
+    async list(): Promise<WorkspaceWindow[]> {
         const result = await chrome.storage.local.get(null);
         return Object.keys(result)
             .filter(key => key.endsWith(this.postfix))
             .map(key => {
                 const id = key.slice(0, -this.postfix.length);
                 const data = result[key];
-                return new Workspace(id, data.name, data.iconUrl, data.color, data.workspaceTabGroupOrder);
+                return new WorkspaceWindow(id, data.name, data.iconUrl, data.color, data.workspaceTabOrder);
             });
     }
 

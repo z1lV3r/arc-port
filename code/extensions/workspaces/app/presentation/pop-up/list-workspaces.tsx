@@ -23,7 +23,7 @@ import { cn } from "@repo/shared/lib/utils";
 import { UseCasesDependencyProvider } from "../../dependency-provider/use-cases-dependency-provider";
 import { ADD_VIEW_NAME } from "./add-workspace";
 import { useDragReorder } from "./use-drag-reorder";
-import { Workspace } from "@/app/domain/models/workspace";
+import { WorkspaceWindow } from "@/app/domain/models/workspace-window";
 
 export const LIST_VIEW_NAME = "list";
 export function WorkspaceList({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
@@ -31,9 +31,9 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
   const getWorkspaceOrderUseCases = UseCasesDependencyProvider.getOrderWorkspaceUseCases();
   const activateWorkspaceUseCases = UseCasesDependencyProvider.getActivateWorkspaceUseCases();
   const [workspaceOrder, setWorkspaceOrder] = useState<string[]>([]);
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
-  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
+  const [workspaces, setWorkspaces] = useState<WorkspaceWindow[]>([]);
+  const [defaultWorkspace, setDefaultWorkspace] = useState<WorkspaceWindow | null>(null);
+  const [currentWorkspace, setCurrentWorkspace] = useState<WorkspaceWindow | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const activeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -127,7 +127,7 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
     const byId = new Map(workspaces.map((workspace) => [workspace.id, workspace]));
     const ordered = workspaceOrder
       .map((id) => byId.get(id))
-      .filter((workspace): workspace is Workspace => workspace !== undefined);
+      .filter((workspace): workspace is WorkspaceWindow => workspace !== undefined);
     const known = new Set(ordered.map((workspace) => workspace.id));
     return [...ordered, ...workspaces.filter((workspace) => !known.has(workspace.id))];
   }, [workspaces, workspaceOrder]);

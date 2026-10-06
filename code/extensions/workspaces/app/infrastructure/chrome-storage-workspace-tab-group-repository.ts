@@ -8,8 +8,8 @@ export class ChromeStorageWorkspaceTabGroupRepository implements WorkspaceTabGro
         this.postfix = postfix;
     }
 
-    async save(id: string, title: string, color: string, workspaceTabOrder: string[], type: string): Promise<void> {
-        await chrome.storage.local.set({ [id + this.postfix]: { title, color, workspaceTabOrder, type } });
+    async save(workspaceTabGroup: WorkspaceTabGroup): Promise<void> {
+        await chrome.storage.local.set({ [workspaceTabGroup.id + this.postfix]: { title: workspaceTabGroup.title, color: workspaceTabGroup.color, type: workspaceTabGroup.type } });
     }
 
     async get(id: string): Promise<WorkspaceTabGroup> {
