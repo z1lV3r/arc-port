@@ -46,7 +46,9 @@ export class UseCasesDependencyProvider {
     this.createWorkspaceUseCases = new CreateWorkspaceUseCases(
       DataDependencyProvider.getWorkspaceRepository(),
       UseCasesDependencyProvider.getOrderWorkspaceUseCases(),
-      UseCasesDependencyProvider.getActivateWorkspaceUseCases()
+      UseCasesDependencyProvider.getActivateWorkspaceUseCases(),
+      DataDependencyProvider.getWorkspaceTabRepository(),
+      DataDependencyProvider.getWorkspaceTabGroupRepository(),
     );
 
     return this.createWorkspaceUseCases;
@@ -119,7 +121,11 @@ export class UseCasesDependencyProvider {
     }
 
     this.loadWorkspaceTabUseCases = new LoadWorkspaceTabUseCases(
-      BrowserDependencyProvider.getBrowserTabsService()
+      BrowserDependencyProvider.getBrowserTabsService(),
+      BrowserDependencyProvider.getBrowserTabGroupsService(),
+      DataDependencyProvider.getWorkspaceTabRepository(),
+      DataDependencyProvider.getWorkspaceTabGroupRepository(),
+      DataDependencyProvider.getWorkspaceTabGroupSessionRepository()
     );
 
     return this.loadWorkspaceTabUseCases;

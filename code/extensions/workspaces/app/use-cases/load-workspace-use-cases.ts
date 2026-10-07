@@ -24,14 +24,12 @@ export class LoadWorkspaceUseCases {
   }
 
   async loadWorkspace(workspace: WorkspaceWindow) {
+    console.log("[loadWorkspace] Starting", { workspace });
     const newWindow = await this.browserWindowService.create();
+    console.log("[loadWorkspace] Created window", { newWindow });
     await this.workspaceWindowSessionRepository.save(workspace.id, newWindow.id);
-    //TODO load tabs
-  }
-
-  private async loadWorkspaceBaseElements(workspace: WorkspaceWindow) {
-
-    await this.loadWorkspaceTabUseCases.loadWorkspaceDefaultTab(newWindow.id, workspace.id);
-    await this.loadWorkspaceTabGroupUseCases.loadWorkspaceDefaultGroup(newWindow.id, workspace);
+    console.log("[loadWorkspace] Saved window session", { workspace });
+    await this.loadWorkspaceTabUseCases.loadWorkspaceTabs(newWindow.id, workspace.workspaceTabOrder);
+    console.log("[loadWorkspace] Loaded tabs", { workspace });
   }
 }

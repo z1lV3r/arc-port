@@ -19,7 +19,7 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceWindowReposito
         if (!data) {
             throw new Error(`Workspace with id ${id} not found`);
         }
-        return new WorkspaceWindow(id, data.name, data.iconUrl, data.color, data.workspaceTabOrder);
+        return new WorkspaceWindow(id, data.workspaceTabOrder || []);
     }
 
     async list(): Promise<WorkspaceWindow[]> {
@@ -29,7 +29,7 @@ export class ChromeStorageWorkspaceRepository implements WorkspaceWindowReposito
             .map(key => {
                 const id = key.slice(0, -this.postfix.length);
                 const data = result[key];
-                return new WorkspaceWindow(id, data.name, data.iconUrl, data.color, data.workspaceTabOrder);
+                return new WorkspaceWindow(id, data.workspaceTabOrder || []);
             });
     }
 

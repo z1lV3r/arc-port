@@ -110,8 +110,8 @@ export class ChromeTabsService implements BrowserTabsService {
   async createTab(tab: Tab): Promise<Tab> {
     const options: chrome.tabs.CreateProperties =
       tab.index !== undefined
-        ? { url: tab.url, index: tab.index, pinned: tab.pinned }
-        : { url: tab.url, pinned: tab.pinned };
+        ? { url: tab.url, index: tab.index, pinned: tab.pinned, windowId: tab.windowId }
+        : { url: tab.url, pinned: tab.pinned, windowId: tab.windowId };
     const newTab = await chrome.tabs.create(options);
 
     if (

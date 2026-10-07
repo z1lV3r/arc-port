@@ -22,16 +22,23 @@ export class ActivateWorkspaceUseCases {
   }
 
   async activateWorkspace(id: string): Promise<void> {
+    console.log("[activateWorkspace] Starting", { id });
     const workspace = await this.workspaceRepository.get(id);
     if (!workspace) {
       throw new Error("Workspace not found");
     }
+    console.log("[activateWorkspace] Found workspace", { workspace });
 
     const workspaceWindowSession = await this.workspaceWindowSessionRepository.get(id);
+    console.log("[activateWorkspace] Found workspace window session", { workspaceWindowSession });
+
     if (workspaceWindowSession) {
+      console.log("[activateWorkspace] Focusing window",  { workspaceWindowSession });
       await this.browserWindowService.focus(workspaceWindowSession);
     } else {
+      console.log("[activateWorkspace] Loading workspace", { workspace });
       await this.loadWorkspaceWindowUseCases.loadWorkspace(workspace);
     }
+    console.log("[activateWorkspace] Done", { id });
   }
 }

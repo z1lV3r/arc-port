@@ -8,6 +8,10 @@ import { WorkspaceTabSessionRepository } from "../../domain/interfaces/workspace
 import { ChromeSessionStorageWorkspaceTabSessionRepository } from "../../infrastructure/chrome-session-storage-workspace-tab-session-repository.ts";
 import { WorkspaceTabGroupSessionRepository } from "../../domain/interfaces/workspace-tab-group-session-repository.ts";
 import { ChromeSessionStorageWorkspaceTabGroupSessionRepository } from "../../infrastructure/chrome-session-storage-workspace-tab-group-session-repository.ts";
+import { WorkspaceTabRepository } from "../../domain/interfaces/workspace-tab-repository.ts";
+import { ChromeStorageWorkspaceTabRepository } from "../../infrastructure/chrome-storage-workspace-tab-repository.ts";
+import { WorkspaceTabGroupRepository } from "../../domain/interfaces/workspace-tab-group-repository.ts";
+import { ChromeStorageWorkspaceTabGroupRepository } from "../../infrastructure/chrome-storage-workspace-tab-group-repository.ts";
 
 export class DataDependencyProvider {
   private static workspaceRepository: WorkspaceWindowRepository;
@@ -58,5 +62,25 @@ export class DataDependencyProvider {
 
     this.workspaceTabGroupSessionRepository = new ChromeSessionStorageWorkspaceTabGroupSessionRepository();
     return this.workspaceTabGroupSessionRepository;
+  }
+
+  private static workspaceTabRepository: WorkspaceTabRepository;
+  static getWorkspaceTabRepository(): WorkspaceTabRepository {
+    if (this.workspaceTabRepository) {
+      return this.workspaceTabRepository;
+    }
+
+    this.workspaceTabRepository = new ChromeStorageWorkspaceTabRepository();
+    return this.workspaceTabRepository;
+  }
+
+  private static workspaceTabGroupRepository: WorkspaceTabGroupRepository;
+  static getWorkspaceTabGroupRepository(): WorkspaceTabGroupRepository {
+    if (this.workspaceTabGroupRepository) {
+      return this.workspaceTabGroupRepository;
+    }
+
+    this.workspaceTabGroupRepository = new ChromeStorageWorkspaceTabGroupRepository();
+    return this.workspaceTabGroupRepository;
   }
 }

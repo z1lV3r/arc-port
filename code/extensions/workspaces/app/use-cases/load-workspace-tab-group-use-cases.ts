@@ -12,7 +12,7 @@ export class LoadWorkspaceTabGroupUseCases {
         this.browserTabsService = browserTabsService;
         this.browserTabGroupService = browserTabGroupService;
     }
-
+/* 
     async loadWorkspaceDefaultGroup(windowId: number, workspace: WorkspaceWindow) {
         const emptyTab = await this.browserTabsService.createEmptyTab(windowId); //TODO: Get default default group tabs or create one empty tab
 
@@ -27,5 +27,5 @@ export class LoadWorkspaceTabGroupUseCases {
         }
 
         //TODO: register tab group in session storage
-    }
+    } */
 }
