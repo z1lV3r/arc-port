@@ -1,5 +1,5 @@
 import { WorkspaceTabRepository } from "../domain/interfaces/workspace-tab-repository";
-import { WorkspaceTab } from "../domain/models/workspace-tab";
+import { WorkspaceTab, WorkspaceTabType } from "../domain/models/workspace-tab";
 
 export class ChromeStorageWorkspaceTabRepository implements WorkspaceTabRepository {
     private postfix: string;
@@ -9,7 +9,7 @@ export class ChromeStorageWorkspaceTabRepository implements WorkspaceTabReposito
     }
 
     async save(tab: WorkspaceTab): Promise<void> {
-        await chrome.storage.local.set({ [tab.id + this.postfix]: { checkpointUrl: tab.checkpointUrl, iconUrl: tab.iconUrl } });
+        await chrome.storage.local.set({ [tab.id + this.postfix]: { checkpointUrl: tab.checkpointUrl, iconUrl: tab.iconUrl, type: tab.type, tabGroupId: tab.tabGroupId } });
     }
 
     async get(id: string): Promise<WorkspaceTab> {
@@ -19,7 +19,7 @@ export class ChromeStorageWorkspaceTabRepository implements WorkspaceTabReposito
         if (!data) {
             throw new Error(`WorkspaceTab with id ${id} not found`);
         }
-        return new WorkspaceTab(id, data.checkpointUrl);
+        return new WorkspaceTab(id, data.checkpointUrl, data.type as WorkspaceTabType, data.iconUrl, data.tabGroupId);
     }
 
     async list(): Promise<WorkspaceTab[]> {

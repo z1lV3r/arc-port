@@ -40,13 +40,17 @@ export class LoadWorkspaceTabUseCases {
     }
 
     async loadWorkspaceTabs(windowId: number, tabs: string[]) {
+        console.log("[loadWorkspaceTabs] Starting", { windowId, tabs });
         const tabGroupIdToSessionGroupId = new Map<string, number>();
 
         for (let i = 0; i < tabs.length; i++) {
             const tabId = tabs[i];
+            console.log("[loadWorkspaceTabs] Getting workspace tab", { tabId });
             const workspaceTab = await this.workspaceTabRepository.get(tabId);
-            const isPinned = workspaceTab.type === "pin";
+            console.log("[loadWorkspaceTabs] Found workspace tab", { workspaceTab });
+            const isPinned = workspaceTab.type === "pin" || workspaceTab.type === "ws";
 
+            console.log("[loadWorkspaceTabs] is pinned", { isPinned });
             const createdTab = await this.browserTabsService.createTab(
                 new Tab(
                     "",
@@ -60,6 +64,7 @@ export class LoadWorkspaceTabUseCases {
                 ),
             );
 
+            console.log("[loadWorkspaceTabs] Created tab", { createdTab });
             if (!createdTab.id) {
                 throw new Error(`Failed to create tab for workspace tab ${tabId}`);
             }
@@ -83,6 +88,7 @@ export class LoadWorkspaceTabUseCases {
                 }
             } */
         }
+        console.log("[loadWorkspaceTabs] Done", { windowId, tabs });
     }
 
 }

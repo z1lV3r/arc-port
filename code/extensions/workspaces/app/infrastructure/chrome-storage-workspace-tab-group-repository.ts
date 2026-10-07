@@ -19,7 +19,7 @@ export class ChromeStorageWorkspaceTabGroupRepository implements WorkspaceTabGro
         if (!data) {
             throw new Error(`WorkspaceTabGroup with id ${id} not found`);
         }
-        return new WorkspaceTabGroup(id, data.title, data.color, data.workspaceTabOrder, data.type as WorkspaceTabGroupType);
+        return new WorkspaceTabGroup(id, data.title, data.color, data.type as WorkspaceTabGroupType);
     }
 
     async list(): Promise<WorkspaceTabGroup[]> {
@@ -29,7 +29,7 @@ export class ChromeStorageWorkspaceTabGroupRepository implements WorkspaceTabGro
             .map(key => {
                 const id = key.slice(0, -this.postfix.length);
                 const data = result[key];
-                return new WorkspaceTabGroup(id, data.title, data.color, data.workspaceTabOrder, data.type as WorkspaceTabGroupType);
+                return new WorkspaceTabGroup(id, data.title, data.color, data.type as WorkspaceTabGroupType);
             });
     }
 
