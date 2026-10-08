@@ -48,12 +48,12 @@ export class LoadWorkspaceTabUseCases {
             const isPinned = workspaceTab.type === "pin" || workspaceTab.type === "ws";
             await this.browserTabsService.setTabPinned(temporalTab.id, isPinned);
 
-            if(workspaceTab.tabGroupId && !isPinned) {
-                if(currentGroup === "") {
+            if (workspaceTab.tabGroupId && !isPinned) {
+                if (currentGroup === "") {
                     currentGroup = workspaceTab.tabGroupId;
                     tabsGrouped.push(temporalTab.id);
                 } else {
-                    if(currentGroup === workspaceTab.tabGroupId) {
+                    if (currentGroup === workspaceTab.tabGroupId) {
                         tabsGrouped.push(temporalTab.id);
                     } else {
                         this.loadWorkspaceTabGroupUseCases.loadWorkspaceTabGroup(windowId, tabsGrouped, currentGroup);
@@ -89,6 +89,10 @@ export class LoadWorkspaceTabUseCases {
         this.workspaceTabSessionRepository.save(workspaceTab.id, parseInt(createdTemporalTab.id));
 
         return createdTemporalTab;
+    }
+
+    async unloadWorkspaceTab(tabId: number) {
+        await this.workspaceTabSessionRepository.deleteByTabId(tabId);
     }
 
 }

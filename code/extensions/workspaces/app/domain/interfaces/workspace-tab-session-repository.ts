@@ -3,5 +3,5 @@ export interface WorkspaceTabSessionRepository {
     get(tabId: string): Promise<number | undefined>;
     getBySessionTabId(sessionTabId: number): Promise<string | undefined>;
     delete(tabId: string): Promise<void>;
-    deleteBySessionTabId(sessionTabId: number): Promise<void>;
+    deleteByTabId(sessionTabId: number): Promise<void>;
 }

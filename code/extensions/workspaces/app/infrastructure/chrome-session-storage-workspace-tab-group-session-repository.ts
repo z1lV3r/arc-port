@@ -34,7 +34,7 @@ export class ChromeSessionStorageWorkspaceTabGroupSessionRepository implements W
         }
     }
 
-    async deleteBySessionTabGroupId(sessionTabGroupId: number): Promise<void> {
+    async deleteByTabGroupId(sessionTabGroupId: number): Promise<void> {
         const tabGroupId = await this.getBySessionTabGroupId(sessionTabGroupId);
         if (tabGroupId !== undefined) {
             const key = tabGroupId + this.POSTFIX;

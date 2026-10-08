@@ -1,4 +1,6 @@
+import { OnTabRemovedUnloadWorkspaceTab } from "@/app/presentation/browser-events/tab-event-listeners/on-tab-removed-unload-workspace-tab";
 import type { TabEventListener } from "@repo/shared/domain/models/tab-event-listener";
+import { UseCasesDependencyProvider } from "../use-cases-dependency-provider";
 
 export class TabEventListenersDependencyProvider {
   private static onTabActivatedEventListeners: TabEventListener[];
@@ -20,6 +22,7 @@ export class TabEventListenersDependencyProvider {
     }
 
     this.onCloseTabEventListeners = [
+      new OnTabRemovedUnloadWorkspaceTab(UseCasesDependencyProvider.getLoadWorkspaceTabUseCases())
     ];
 
     return this.onCloseTabEventListeners;

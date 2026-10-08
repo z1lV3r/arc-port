@@ -34,7 +34,7 @@ export class ChromeSessionStorageWorkspaceTabSessionRepository implements Worksp
         }
     }
 
-    async deleteBySessionTabId(sessionTabId: number): Promise<void> {
+    async deleteByTabId(sessionTabId: number): Promise<void> {
         const tabId = await this.getBySessionTabId(sessionTabId);
         if (tabId !== undefined) {
             const key = tabId + this.POSTFIX;

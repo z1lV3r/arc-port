@@ -1,8 +1,10 @@
-import type { TabGroupsEventListener } from "@repo/shared/domain/models/tab-groups-event-listener";
+import { OnTabGroupRemovedUnloadWorkspaceTabGroup } from "@/app/presentation/browser-events/tab-group-event-listeners/on-tab-group-removed-unload-workspace-tab-group";
+import type { TabGroupEventListener } from "@repo/shared/domain/models/tab-group-event-listener";
+import { UseCasesDependencyProvider } from "../use-cases-dependency-provider";
 
 export class TabGroupsEventListenersDependencyProvider {
-  private static onTabGroupChangedEventListeners: TabGroupsEventListener[];
-  static getOnTabGroupChangedEventListeners(): TabGroupsEventListener[] {
+  private static onTabGroupChangedEventListeners: TabGroupEventListener[];
+  static getOnTabGroupChangedEventListeners(): TabGroupEventListener[] {
     if (this.onTabGroupChangedEventListeners) {
       return this.onTabGroupChangedEventListeners;
     }
@@ -12,8 +14,8 @@ export class TabGroupsEventListenersDependencyProvider {
     return this.onTabGroupChangedEventListeners;
   }
 
-  private static onTabGroupCreatedEventListeners: TabGroupsEventListener[];
-  static getOnTabGroupCreatedEventListeners(): TabGroupsEventListener[] {
+  private static onTabGroupCreatedEventListeners: TabGroupEventListener[];
+  static getOnTabGroupCreatedEventListeners(): TabGroupEventListener[] {
     if (this.onTabGroupCreatedEventListeners) {
       return this.onTabGroupCreatedEventListeners;
     }
@@ -23,8 +25,8 @@ export class TabGroupsEventListenersDependencyProvider {
     return this.onTabGroupCreatedEventListeners;
   }
 
-  private static onTabGroupMovedEventListeners: TabGroupsEventListener[];
-  static getOnTabGroupMovedEventListeners(): TabGroupsEventListener[] {
+  private static onTabGroupMovedEventListeners: TabGroupEventListener[];
+  static getOnTabGroupMovedEventListeners(): TabGroupEventListener[] {
     if (this.onTabGroupMovedEventListeners) {
       return this.onTabGroupMovedEventListeners;
     }
@@ -34,13 +36,16 @@ export class TabGroupsEventListenersDependencyProvider {
     return this.onTabGroupMovedEventListeners;
   }
 
-  private static onTabGroupRemovedEventListeners: TabGroupsEventListener[];
-  static getOnTabGroupRemovedEventListeners(): TabGroupsEventListener[] {
+  private static onTabGroupRemovedEventListeners: TabGroupEventListener[];
+  static getOnTabGroupRemovedEventListeners(): TabGroupEventListener[] {
     if (this.onTabGroupRemovedEventListeners) {
       return this.onTabGroupRemovedEventListeners;
     }
 
-    this.onTabGroupRemovedEventListeners = [];
+    this.onTabGroupRemovedEventListeners = [
+      new OnTabGroupRemovedUnloadWorkspaceTabGroup(
+        UseCasesDependencyProvider.getLoadWorkspaceTabGroupUseCases())
+    ];
 
     return this.onTabGroupRemovedEventListeners;
   }

@@ -24,13 +24,17 @@ export class LoadWorkspaceTabGroupUseCases {
 
         //create tabs group
         const createdGroup = await this.browserTabGroupService.createGroup(
-                workspaceTabGroup.title,
-                workspaceTabGroup.color,
-                tabsGrouped,
-                windowId,
-            );
+            workspaceTabGroup.title,
+            workspaceTabGroup.color,
+            tabsGrouped,
+            windowId,
+        );
         //associate group id with workspace tab group
 
         await this.workspaceTabGroupSessionRepository.save(groupId, createdGroup.id);
+    }
+
+    async unloadWorkspaceTabGroup(groupId: number) {
+        await this.workspaceTabGroupSessionRepository.deleteByTabGroupId(groupId);
     }
 }
