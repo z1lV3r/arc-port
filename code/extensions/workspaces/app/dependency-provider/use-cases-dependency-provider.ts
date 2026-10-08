@@ -122,10 +122,9 @@ export class UseCasesDependencyProvider {
 
     this.loadWorkspaceTabUseCases = new LoadWorkspaceTabUseCases(
       BrowserDependencyProvider.getBrowserTabsService(),
-      BrowserDependencyProvider.getBrowserTabGroupsService(),
       DataDependencyProvider.getWorkspaceTabRepository(),
-      DataDependencyProvider.getWorkspaceTabGroupRepository(),
-      DataDependencyProvider.getWorkspaceTabGroupSessionRepository()
+      DataDependencyProvider.getWorkspaceTabSessionRepository(),
+      UseCasesDependencyProvider.getLoadWorkspaceTabGroupUseCases(),
     );
 
     return this.loadWorkspaceTabUseCases;
@@ -138,8 +137,9 @@ export class UseCasesDependencyProvider {
     }
 
     this.loadWorkspaceTabGroupUseCases = new LoadWorkspaceTabGroupUseCases(
-      BrowserDependencyProvider.getBrowserTabsService(),
-      BrowserDependencyProvider.getBrowserTabGroupsService()
+      BrowserDependencyProvider.getBrowserTabGroupsService(),
+      DataDependencyProvider.getWorkspaceTabGroupRepository(),
+      DataDependencyProvider.getWorkspaceTabGroupSessionRepository()
     );
 
     return this.loadWorkspaceTabGroupUseCases;

@@ -1,31 +1,36 @@
 import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
 import type { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
-import { WorkspaceWindow } from "../domain/models/workspace-window";
+import { WorkspaceTabGroupRepository } from "../domain/interfaces/workspace-tab-group-repository";
+import { WorkspaceTabGroupSessionRepository } from "../domain/interfaces/workspace-tab-group-session-repository";
 
 export class LoadWorkspaceTabGroupUseCases {
-    private browserTabsService: BrowserTabsService;
+
     private browserTabGroupService: BrowserTabGroupService;
+    private workspaceTabGroupRepository: WorkspaceTabGroupRepository;
+    private workspaceTabGroupSessionRepository: WorkspaceTabGroupSessionRepository;
+
     constructor(
-        browserTabsService: BrowserTabsService,
         browserTabGroupService: BrowserTabGroupService,
+        workspaceTabGroupRepository: WorkspaceTabGroupRepository,
+        workspaceTabGroupSessionRepository: WorkspaceTabGroupSessionRepository,
     ) {
-        this.browserTabsService = browserTabsService;
         this.browserTabGroupService = browserTabGroupService;
+        this.workspaceTabGroupRepository = workspaceTabGroupRepository;
+        this.workspaceTabGroupSessionRepository = workspaceTabGroupSessionRepository;
     }
-/* 
-    async loadWorkspaceDefaultGroup(windowId: number, workspace: WorkspaceWindow) {
-        const emptyTab = await this.browserTabsService.createEmptyTab(windowId); //TODO: Get default default group tabs or create one empty tab
 
-        if (!emptyTab.id) {
-            throw new Error("Failed to create tab group");
-        }
+    async loadWorkspaceTabGroup(windowId: number, tabsGrouped: string[], groupId: string) {
+        const workspaceTabGroup = await this.workspaceTabGroupRepository.get(groupId);
 
-        const group = await this.browserTabGroupService.createGroup(workspace.name, workspace.color, emptyTab.id, windowId);
+        //create tabs group
+        const createdGroup = await this.browserTabGroupService.createGroup(
+                workspaceTabGroup.title,
+                workspaceTabGroup.color,
+                tabsGrouped,
+                windowId,
+            );
+        //associate group id with workspace tab group
 
-        if (!group.id) {
-            throw new Error("Failed to create tab group");
-        }
-
-        //TODO: register tab group in session storage
-    } */
+        await this.workspaceTabGroupSessionRepository.save(groupId, createdGroup.id);
+    }
 }

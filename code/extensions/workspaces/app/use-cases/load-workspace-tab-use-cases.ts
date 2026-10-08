@@ -1,29 +1,26 @@
 import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
-import type { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
 import { Tab } from "@repo/shared/domain/models/tab";
 import type { WorkspaceTabRepository } from "../domain/interfaces/workspace-tab-repository";
-import type { WorkspaceTabGroupRepository } from "../domain/interfaces/workspace-tab-group-repository";
-import type { WorkspaceTabGroupSessionRepository } from "../domain/interfaces/workspace-tab-group-session-repository";
+import type { WorkspaceTabSessionRepository } from "../domain/interfaces/workspace-tab-session-repository";
+import { WorkspaceTab } from "../domain/models/workspace-tab";
+import { LoadWorkspaceTabGroupUseCases } from "./load-workspace-tab-group-use-cases";
 
 export class LoadWorkspaceTabUseCases {
     private browserTabsService: BrowserTabsService;
-    private browserTabGroupService: BrowserTabGroupService;
     private workspaceTabRepository: WorkspaceTabRepository;
-    private workspaceTabGroupRepository: WorkspaceTabGroupRepository;
-    private workspaceTabGroupSessionRepository: WorkspaceTabGroupSessionRepository;
+    private workspaceTabSessionRepository: WorkspaceTabSessionRepository;
+    private loadWorkspaceTabGroupUseCases: LoadWorkspaceTabGroupUseCases;
 
     constructor(
         browserTabsService: BrowserTabsService,
-        browserTabGroupService: BrowserTabGroupService,
         workspaceTabRepository: WorkspaceTabRepository,
-        workspaceTabGroupRepository: WorkspaceTabGroupRepository,
-        workspaceTabGroupSessionRepository: WorkspaceTabGroupSessionRepository,
+        workspaceTabSessionRepository: WorkspaceTabSessionRepository,
+        loadWorkspaceTabGroupUseCases: LoadWorkspaceTabGroupUseCases
     ) {
         this.browserTabsService = browserTabsService;
-        this.browserTabGroupService = browserTabGroupService;
         this.workspaceTabRepository = workspaceTabRepository;
-        this.workspaceTabGroupRepository = workspaceTabGroupRepository;
-        this.workspaceTabGroupSessionRepository = workspaceTabGroupSessionRepository;
+        this.workspaceTabSessionRepository = workspaceTabSessionRepository;
+        this.loadWorkspaceTabGroupUseCases = loadWorkspaceTabGroupUseCases;
     }
 
     async loadWorkspaceDefaultTab(windowId: number, workspaceId: string): Promise<string> {
@@ -40,49 +37,58 @@ export class LoadWorkspaceTabUseCases {
     }
 
     async loadWorkspaceTabs(windowId: number, tabs: string[]) {
-        const tabGroupIdToSessionGroupId = new Map<string, number>();
-
+        let currentGroup: string = "";
+        let tabsGrouped: string[] = [];
         for (let i = 0; i < tabs.length; i++) {
             const tabId = tabs[i];
             const workspaceTab = await this.workspaceTabRepository.get(tabId);
+
+            const temporalTab = await this.loadWorkspaceTemporalTab(workspaceTab, windowId, i);
+
             const isPinned = workspaceTab.type === "pin" || workspaceTab.type === "ws";
+            await this.browserTabsService.setTabPinned(temporalTab.id, isPinned);
 
-            const createdTab = await this.browserTabsService.createTab(
-                new Tab(
-                    "",
-                    workspaceTab.checkpointUrl || undefined,
-                    i,
-                    undefined,
-                    isPinned,
-                    undefined,
-                    undefined,
-                    windowId,
-                ),
-            );
-
-            if (!createdTab.id) {
-                throw new Error(`Failed to create tab for workspace tab ${tabId}`);
-            }
-
-            if (workspaceTab.tabGroupId && !isPinned) {
-                let sessionGroupId = tabGroupIdToSessionGroupId.get(workspaceTab.tabGroupId);
-
-                if (sessionGroupId === undefined) {
-                    const tabGroup = await this.workspaceTabGroupRepository.get(workspaceTab.tabGroupId);
-                    const createdGroup = await this.browserTabGroupService.createGroup(
-                        tabGroup.title,
-                        tabGroup.color,
-                        createdTab.id,
-                        windowId,
-                    );
-                    sessionGroupId = createdGroup.id;
-                    tabGroupIdToSessionGroupId.set(workspaceTab.tabGroupId, sessionGroupId);
-                    await this.workspaceTabGroupSessionRepository.save(workspaceTab.tabGroupId, sessionGroupId);
+            if(workspaceTab.tabGroupId && !isPinned) {
+                if(currentGroup === "") {
+                    currentGroup = workspaceTab.tabGroupId;
+                    tabsGrouped.push(temporalTab.id);
                 } else {
-                    await chrome.tabs.group({ tabIds: parseInt(createdTab.id), groupId: sessionGroupId });
+                    if(currentGroup === workspaceTab.tabGroupId) {
+                        tabsGrouped.push(temporalTab.id);
+                    } else {
+                        this.loadWorkspaceTabGroupUseCases.loadWorkspaceTabGroup(windowId, tabsGrouped, currentGroup);
+                        currentGroup = workspaceTab.tabGroupId;
+                        tabsGrouped = [temporalTab.id];
+                    }
+                }
+                if (i === tabs.length - 1) {
+                    this.loadWorkspaceTabGroupUseCases.loadWorkspaceTabGroup(windowId, tabsGrouped, currentGroup);
                 }
             }
         }
+    }
+
+    private async loadWorkspaceTemporalTab(workspaceTab: WorkspaceTab, windowId: number, index: number) {
+
+        const createdTemporalTab = await this.browserTabsService.createTab(
+            new Tab(
+                "",
+                workspaceTab.checkpointUrl || undefined,
+                index,
+                undefined,
+                false, // Temporal tabs are not pinned and not in tab groups
+                undefined,
+                undefined,
+                windowId,
+            ),
+        );
+        if (!createdTemporalTab.id) {
+            throw new Error(`Failed to create tab for workspace tab ${workspaceTab.id}`);
+        }
+
+        this.workspaceTabSessionRepository.save(workspaceTab.id, parseInt(createdTemporalTab.id));
+
+        return createdTemporalTab;
     }
 
 }
