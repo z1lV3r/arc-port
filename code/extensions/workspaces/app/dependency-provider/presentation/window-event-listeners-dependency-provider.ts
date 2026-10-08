@@ -1,4 +1,6 @@
+import { OnWindowRemovedUnloadWorkspace } from "@/app/presentation/browser-events/window-event-listeners/on-window-removed-unload-workspace";
 import type { WindowEventListener } from "@repo/shared/domain/models/window-event-listener";
+import { UseCasesDependencyProvider } from "../use-cases-dependency-provider";
 
 export class WindowEventListenersDependencyProvider {
   private static onFocusedWindowEventListeners: WindowEventListener[];
@@ -29,7 +31,11 @@ export class WindowEventListenersDependencyProvider {
       return this.onRemovedWindowEventListeners;
     }
 
-    this.onRemovedWindowEventListeners = [];
+    this.onRemovedWindowEventListeners = [
+      new OnWindowRemovedUnloadWorkspace(
+        UseCasesDependencyProvider.getLoadWorkspaceWindowUseCases()
+      )
+    ];
 
     return this.onRemovedWindowEventListeners;
   }
