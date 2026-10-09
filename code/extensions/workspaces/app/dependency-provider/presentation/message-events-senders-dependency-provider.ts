@@ -41,6 +41,7 @@ export class MessageEventsSendersDependencyProvider {
     if (!this.getCurrentWorkspaceMessageEventSender) {
       this.getCurrentWorkspaceMessageEventSender = new GetCurrentWorkspaceMessageEventSender(
         BrowserDependencyProvider.getBrowserMessageService(),
+        BrowserDependencyProvider.getBrowserWindowService(),
         [new GetCurrentWorkspaceMessageEventListener(UseCasesDependencyProvider.getGetWorkspaceUseCases())]
       );
     }

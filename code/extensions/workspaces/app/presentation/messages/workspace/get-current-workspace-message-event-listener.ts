@@ -11,7 +11,7 @@ export class GetCurrentWorkspaceMessageEventListener implements MessageEventList
   name = "get-current-workspace-message-event-listener";
   description = "Get current workspace";
 
-  async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+  async command(request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
     const workspace = await this.getWorkspaceUseCases.getCurrentWorkspace();
     sendResponse({ success: true, data: workspace });
   }
