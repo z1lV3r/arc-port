@@ -1,7 +1,7 @@
 import { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
 import { WorkspaceWindow } from "../domain/models/workspace-window";
 
-export class ChromeStorageWorkspaceRepository implements WorkspaceWindowRepository {
+export class ChromeStorageWorkspaceWindowRepository implements WorkspaceWindowRepository {
     private postfix: string;
 
     constructor(postfix: string = "-workspace") {

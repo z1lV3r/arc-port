@@ -3,27 +3,19 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@repo/shared/presentation/button";
 import { Label } from "@repo/shared/presentation/label";
-import { CopyClipboardButton } from "@repo/shared/presentation/copy-clipboard-button";
 import {
   GroupCard,
   GroupCardContent,
   GroupCardHeader,
   GroupCardTitle,
 } from "@repo/shared/presentation/group-card";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@repo/shared/presentation/input-group";
-import { Separator } from "@repo/shared/presentation/separator";
 import { ScrollArea, ScrollBar } from "@repo/shared/presentation/scroll-area";
 import { cn } from "@repo/shared/lib/utils";
 
 import { MessageEventsSendersDependencyProvider } from "../../dependency-provider/presentation/message-events-senders-dependency-provider";
 import { ADD_VIEW_NAME } from "./add-workspace";
 import { useDragReorder } from "./use-drag-reorder";
-import { WorkspaceWindow } from "@/app/domain/models/workspace-window";
+import { Workspace } from "@/app/domain/models/workspace";
 
 export const LIST_VIEW_NAME = "list";
 export function WorkspaceList({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
@@ -33,9 +25,9 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
   const reorderWorkspaceSender = MessageEventsSendersDependencyProvider.getReorderWorkspaceMessageEventSender();
   const activateWorkspaceSender = MessageEventsSendersDependencyProvider.getActivateWorkspaceMessageEventSender();
   const [workspaceOrder, setWorkspaceOrder] = useState<string[]>([]);
-  const [workspaces, setWorkspaces] = useState<WorkspaceWindow[]>([]);
-  const [defaultWorkspace, setDefaultWorkspace] = useState<WorkspaceWindow | null>(null);
-  const [currentWorkspace, setCurrentWorkspace] = useState<WorkspaceWindow | null>(null);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
+  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const activeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -129,7 +121,7 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
     const byId = new Map(workspaces.map((workspace) => [workspace.id, workspace]));
     const ordered = workspaceOrder
       .map((id) => byId.get(id))
-      .filter((workspace): workspace is WorkspaceWindow => workspace !== undefined);
+      .filter((workspace): workspace is Workspace => workspace !== undefined);
     const known = new Set(ordered.map((workspace) => workspace.id));
     return [...ordered, ...workspaces.filter((workspace) => !known.has(workspace.id))];
   }, [workspaces, workspaceOrder]);

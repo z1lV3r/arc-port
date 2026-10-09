@@ -1,5 +1,5 @@
 import { WorkspaceWindowRepository } from "../../domain/interfaces/workspace-window-repository.ts";
-import { ChromeStorageWorkspaceRepository } from "../../infrastructure/chrome-storage-workspace-repository.ts";
+import { ChromeStorageWorkspaceWindowRepository } from "../../infrastructure/chrome-storage-workspace-window-repository.ts";
 import { WorkspaceOrderRepository } from "../../domain/interfaces/workspace-order-repository.ts";
 import { ChromeStorageWorkspaceOrderRepository } from "../../infrastructure/chrome-storage-workspace-order-repository.ts";
 import { WorkspaceWindowSessionRepository } from "../../domain/interfaces/workspace-window-session-repository.ts";
@@ -20,7 +20,7 @@ export class DataDependencyProvider {
       return this.workspaceRepository;
     }
 
-    this.workspaceRepository = new ChromeStorageWorkspaceRepository();
+    this.workspaceRepository = new ChromeStorageWorkspaceWindowRepository();
     return this.workspaceRepository;
   }
 

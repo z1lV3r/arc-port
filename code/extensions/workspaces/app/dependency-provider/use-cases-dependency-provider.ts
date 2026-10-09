@@ -63,7 +63,9 @@ export class UseCasesDependencyProvider {
     this.getWorkspaceUseCases = new GetWorkspaceUseCases(
       DataDependencyProvider.getWorkspaceRepository(),
       BrowserDependencyProvider.getBrowserWindowService(),
-      DataDependencyProvider.getWorkspaceWindowRepository()
+      DataDependencyProvider.getWorkspaceWindowRepository(),
+      DataDependencyProvider.getWorkspaceTabGroupRepository(),
+      DataDependencyProvider.getWorkspaceTabRepository(),
     );
 
     return this.getWorkspaceUseCases;

@@ -12,7 +12,9 @@ export class ListWorkspacesMessageEventListener implements MessageEventListener 
   description = "List workspaces";
 
   async command(_request: any, _sender: any, sendResponse: (response: any) => void): Promise<void> {
+    console.log("List workspaces message event listener");
     const workspaces = await this.getWorkspaceUseCases.listWorkspaces();
+    console.log("Workspaces:", workspaces);
     sendResponse({ success: true, data: workspaces });
   }
 }
