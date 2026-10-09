@@ -13,8 +13,13 @@ export class ChromeWindowService implements BrowserWindowService {
   }
 
   async getCurrentWindow(): Promise<Window> {
-    const window = await chrome.windows.getCurrent();
-    if (!window.id) {
+    // `chrome.windows.getCurrent()` is unreliable in a service worker (it falls
+    // back to the last active window, and can resolve the most recently opened
+    // window while a pop-up is visible), so list the windows and use the one
+    // that is actually focused.
+    const windows = await chrome.windows.getAll();
+    const window = windows.find((candidate) => candidate.focused);
+    if (!window?.id) {
       throw new Error("Failed to get current window");
     }
     return new Window(window.id, window.tabs?.map((tab) => new Tab(tab.id?.toString() || "", tab.url || "", tab.index, tab.groupId, tab.pinned, undefined, undefined, window.id)) || []);
