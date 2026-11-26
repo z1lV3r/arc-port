@@ -1,4 +1,4 @@
-import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-provider";
+import { TabEventListenersDependencyProvider as AppDependencyProvider } from "@/app/dependency-provider/presentation/tab-event-listeners-dependency-provider";
 
 import { DependencyProvider } from "../dependency-provider";
 import { TabEventListenerUseCases } from "../use-cases/tab-event-listener-use-cases";

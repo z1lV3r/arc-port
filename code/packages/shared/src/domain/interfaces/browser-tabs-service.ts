@@ -19,4 +19,5 @@ export interface BrowserTabsService {
   setTabIcon(id: string, customIcon: string): Promise<void>;
 
   setTabPinned(id: string, pinned: boolean): Promise<void>;
+  setTabUrl(id: string, url: string): Promise<void>;
 }

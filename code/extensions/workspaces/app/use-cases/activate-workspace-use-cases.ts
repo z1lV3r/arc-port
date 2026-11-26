@@ -1,80 +1,44 @@
 import type { BrowserWindowService } from "@repo/shared/domain/interfaces/browser-window-service";
-import type { BrowserTabsService } from "@repo/shared/domain/interfaces/browser-tabs-service";
-import type { BrowserTabGroupService } from "@repo/shared/domain/interfaces/browser-tab-group-service";
-import { WorkspaceSessionRepository } from "../domain/interfaces/workspace-session-repository";
-import { WorkspaceRepository } from "../domain/interfaces/workspace-repository";
-import { WorkspaceSession } from "../domain/models/workspace-session";
+import { WorkspaceWindowRepository } from "../domain/interfaces/workspace-window-repository";
+import { LoadWorkspaceWindowUseCases } from "./load-workspace-use-cases";
+import { WorkspaceWindowSessionRepository } from "../domain/interfaces/workspace-window-session-repository";
 
 export class ActivateWorkspaceUseCases {
   private browserWindowService: BrowserWindowService;
-  private browserTabsService: BrowserTabsService;
-  private browserTabGroupService: BrowserTabGroupService;
-  private workspaceSessionRepository: WorkspaceSessionRepository;
-  private workspaceRepository: WorkspaceRepository;
+  private workspaceRepository: WorkspaceWindowRepository;
+  private loadWorkspaceWindowUseCases: LoadWorkspaceWindowUseCases;
+  private workspaceWindowSessionRepository: WorkspaceWindowSessionRepository;
 
   constructor(
     browserWindowService: BrowserWindowService,
-    browserTabsService: BrowserTabsService,
-    browserTabGroupService: BrowserTabGroupService,
-    workspaceSessionRepository: WorkspaceSessionRepository,
-    workspaceRepository: WorkspaceRepository,
+    workspaceRepository: WorkspaceWindowRepository,
+    loadWorkspaceWindowUseCases: LoadWorkspaceWindowUseCases,
+    workspaceWindowSessionRepository: WorkspaceWindowSessionRepository,
   ) {
     this.browserWindowService = browserWindowService;
-    this.browserTabsService = browserTabsService;
-    this.browserTabGroupService = browserTabGroupService;
-    this.workspaceSessionRepository = workspaceSessionRepository;
     this.workspaceRepository = workspaceRepository;
+    this.loadWorkspaceWindowUseCases = loadWorkspaceWindowUseCases;
+    this.workspaceWindowSessionRepository = workspaceWindowSessionRepository;
   }
 
   async activateWorkspace(id: string): Promise<void> {
-    console.log(`Activating workspace with id: ${id}`);
+    console.log("[activateWorkspace] Starting", { id });
     const workspace = await this.workspaceRepository.get(id);
     if (!workspace) {
       throw new Error("Workspace not found");
     }
-    console.log(`Workspace found: ${workspace.name}`);
-    const session = await this.workspaceSessionRepository.get(id);
-    console.log(`Workspace session found: ${session}`);
-    if (session) {
-      await this.browserWindowService.focus(session.windowId);
+    console.log("[activateWorkspace] Found workspace", { workspace });
+
+    const workspaceWindowSession = await this.workspaceWindowSessionRepository.get(id);
+    console.log("[activateWorkspace] Found workspace window session", { workspaceWindowSession });
+
+    if (workspaceWindowSession) {
+      console.log("[activateWorkspace] Focusing window", { workspaceWindowSession });
+      await this.browserWindowService.focus(workspaceWindowSession);
     } else {
-      await this.newSession(workspace.name, workspace.color, workspace.id);
+      console.log("[activateWorkspace] Loading workspace", { workspace });
+      await this.loadWorkspaceWindowUseCases.loadWorkspace(workspace);
     }
-  }
-
-  private async newSession(name: string, color: string, id: string) {
-    // Create new window with extension page, passing workspace id as query param
-    const pageUrl = `${chrome.runtime.getURL("page.html")}?workspaceId=${encodeURIComponent(id)}`;
-    const newWindow = await this.browserWindowService.create(pageUrl);
-
-    // Pin the options tab
-    const pinnedTab = newWindow.tabs?.[0] ;
-    if (!pinnedTab?.id) {
-      throw new Error("Failed to create pinned tab");
-    }
-
-    await this.browserTabsService.setTabPinned(pinnedTab.id, true);
-
-    // Create new empty tab
-    const emptyTab = await this.browserTabsService.createEmptyTab(newWindow.id);
-
-    // Create tab group with empty tab
-    let group;
-    if (emptyTab.id) {
-      group = await this.browserTabGroupService.createGroup(name, color, emptyTab.id, newWindow.id);
-    }
-
-    if (!group?.id) {
-      throw new Error("Failed to create tab group");
-    }
-
-    await this.workspaceSessionRepository.create(
-      new WorkspaceSession(
-        id,
-        newWindow.id,
-        group.id,
-        pinnedTab.id,
-      ),
-    );
+    console.log("[activateWorkspace] Done", { id });
   }
 }

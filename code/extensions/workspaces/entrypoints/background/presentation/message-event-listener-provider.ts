@@ -1,4 +1,4 @@
-import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-provider";
+import { MessageEventsListenersDependencyProvider as AppDependencyProvider } from "@/app/dependency-provider/presentation/message-events-listeners-dependency-provider";
 
 import { DependencyProvider } from "../dependency-provider";
 import { MessageEventListenerUseCases } from "../use-cases/message-event-listeners-use-cases";

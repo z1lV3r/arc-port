@@ -1,4 +1,4 @@
-import { DependencyProvider as AppDependencyProvider } from "@/app/dependency-provider";
+import { ContextMenuListenersDependencyProvider as AppDependencyProvider } from "@/app/dependency-provider/presentation/context-menu-listeners-dependency-provider";
 
 import { DependencyProvider } from "../dependency-provider";
 import { ContextMenuListenerUseCases } from "../use-cases/context-menu-listener-use-cases";

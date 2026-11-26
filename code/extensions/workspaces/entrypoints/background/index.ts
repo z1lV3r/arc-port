@@ -5,6 +5,8 @@ import { SettingsEventListenerProvider } from "./presentation/settings-listener-
 import { ShortcutListenerProvider } from "./presentation/shortcut-listener-provider";
 import { StorageListenerProvider } from "./presentation/storage-listener-provider";
 import { TabEventListenerProvider } from "./presentation/tab-event-listener-provider";
+import { TabGroupsEventListenerProvider } from "./presentation/tab-groups-event-listener-provider";
+import { WindowEventListenerProvider } from "./presentation/window-event-listener-provider";
 
 export default defineBackground(() => {
   const extensionListenerProvider = new ExtensionListenerProvider();
@@ -24,6 +26,17 @@ export default defineBackground(() => {
   tabEventListenerProvider.registerFeaturesOnCloseTabEventListeners();
   tabEventListenerProvider.registerFeaturesOnUpdateTabEventListeners();
   tabEventListenerProvider.registerFeaturesOnCreateTabEventListeners();
+
+  const tabGroupsEventListenerProvider = new TabGroupsEventListenerProvider();
+  tabGroupsEventListenerProvider.registerFeaturesOnTabGroupChangedEventListeners();
+  tabGroupsEventListenerProvider.registerFeaturesOnTabGroupCreatedEventListeners();
+  tabGroupsEventListenerProvider.registerFeaturesOnTabGroupMovedEventListeners();
+  tabGroupsEventListenerProvider.registerFeaturesOnTabGroupRemovedEventListeners();
+
+  const windowEventListenerProvider = new WindowEventListenerProvider();
+  windowEventListenerProvider.registerFeaturesOnFocusedWindowEventListeners();
+  windowEventListenerProvider.registerFeaturesOnCreatedWindowEventListeners();
+  windowEventListenerProvider.registerFeaturesOnRemovedWindowEventListeners();
 
   const settingsEventListenerProvider = new SettingsEventListenerProvider();
   settingsEventListenerProvider.registerFeaturesSettingsEventListeners();

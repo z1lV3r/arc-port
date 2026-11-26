@@ -12,18 +12,21 @@ import { Separator } from "@repo/shared/presentation/separator";
 import { SettingsShortcuts } from "@repo/shared/presentation/settings-shortcuts";
 import { ToggleSetting } from "@repo/shared/presentation/toggle-setting";
 
-import { DependencyProvider } from "../dependency-provider";
+import { BrowserDependencyProvider } from "../dependency-provider/infrastructure/browser-dependency-provider";
+import { UseCasesDependencyProvider } from "../dependency-provider/use-cases-dependency-provider";
+import { ShortcutListenersDependencyProvider } from "../dependency-provider/presentation/shortcut-listeners-dependency-provider";
+import { ActionListenersDependencyProvider } from "../dependency-provider/presentation/action-listeners-dependency-provider";
 
 export function Settings() {
-  const tabsService = DependencyProvider.getBrowserTabsService();
+  const tabsService = BrowserDependencyProvider.getBrowserTabsService();
   const shortcutSettingsService =
-    DependencyProvider.getShortcutSettingsService();
-  const shortcutListeners = DependencyProvider.getShortcutListeners();
+    BrowserDependencyProvider.getShortcutSettingsService();
+  const shortcutListeners = ShortcutListenersDependencyProvider.getShortcutListeners();
   const showContextMenuSettingUseCases =
-    DependencyProvider.getShowContextMenuSettingUseCases();
+    UseCasesDependencyProvider.getShowContextMenuSettingUseCases();
   const extensionActionSettingUseCases =
-    DependencyProvider.getExtensionActionSettingUseCases();
-  const actionListeners = DependencyProvider.getActionListeners();
+    UseCasesDependencyProvider.getExtensionActionSettingUseCases();
+  const actionListeners = ActionListenersDependencyProvider.getActionListeners();
 
   const [extensionAction, setExtensionAction] = useState<string>("");
   const [showContextMenu, setShowContextMenu] = useState(true);

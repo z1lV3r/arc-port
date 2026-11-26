@@ -3,33 +3,27 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@repo/shared/presentation/button";
 import { Label } from "@repo/shared/presentation/label";
-import { CopyClipboardButton } from "@repo/shared/presentation/copy-clipboard-button";
 import {
   GroupCard,
   GroupCardContent,
   GroupCardHeader,
   GroupCardTitle,
 } from "@repo/shared/presentation/group-card";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@repo/shared/presentation/input-group";
-import { Separator } from "@repo/shared/presentation/separator";
 import { ScrollArea, ScrollBar } from "@repo/shared/presentation/scroll-area";
 import { cn } from "@repo/shared/lib/utils";
 
-import { DependencyProvider } from "../../dependency-provider";
+import { MessageEventsSendersDependencyProvider } from "../../dependency-provider/presentation/message-events-senders-dependency-provider";
 import { ADD_VIEW_NAME } from "./add-workspace";
 import { useDragReorder } from "./use-drag-reorder";
 import { Workspace } from "@/app/domain/models/workspace";
 
 export const LIST_VIEW_NAME = "list";
 export function WorkspaceList({ currentView, setCurrentView }: { currentView: string, setCurrentView: (currentView: string) => void }) {
-  const getWorkspaceUseCases = DependencyProvider.getGetWorkspaceUseCases();
-  const getWorkspaceOrderUseCases = DependencyProvider.getOrderWorkspaceUseCases();
-  const activateWorkspaceUseCases = DependencyProvider.getActivateWorkspaceUseCases();
+  const listWorkspacesSender = MessageEventsSendersDependencyProvider.getListWorkspacesMessageEventSender();
+  const getCurrentWorkspaceSender = MessageEventsSendersDependencyProvider.getGetCurrentWorkspaceMessageEventSender();
+  const getAllWorkspaceOrderSender = MessageEventsSendersDependencyProvider.getGetAllWorkspaceOrderMessageEventSender();
+  const reorderWorkspaceSender = MessageEventsSendersDependencyProvider.getReorderWorkspaceMessageEventSender();
+  const activateWorkspaceSender = MessageEventsSendersDependencyProvider.getActivateWorkspaceMessageEventSender();
   const [workspaceOrder, setWorkspaceOrder] = useState<string[]>([]);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [defaultWorkspace, setDefaultWorkspace] = useState<Workspace | null>(null);
@@ -40,14 +34,14 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
 
   useEffect(() => {
     const loadWorkspaces = async () => {
-      const workspaces = await getWorkspaceUseCases.listWorkspaces();
+      const workspaces = await listWorkspacesSender.sendListWorkspacesEventMessage();
       setWorkspaces(workspaces);
-      const workspaceOrder = await getWorkspaceOrderUseCases.getAll();
+      const workspaceOrder = await getAllWorkspaceOrderSender.sendGetAllWorkspaceOrderEventMessage();
       setWorkspaceOrder(workspaceOrder);
       // The pop-up can be opened from a window that isn't a workspace, in which
       // case there is no current workspace to fall back to.
       try {
-        const currentWorkspace = await getWorkspaceUseCases.getCurrentWorkspace();
+        const currentWorkspace = await getCurrentWorkspaceSender.sendGetCurrentWorkspaceEventMessage();
         setDefaultWorkspace(currentWorkspace);
         setCurrentWorkspace(currentWorkspace);
       } catch {
@@ -136,7 +130,7 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
     ids: orderedWorkspaces.map((workspace) => workspace.id),
     onReorder: (ids) => {
       setWorkspaceOrder(ids);
-      getWorkspaceOrderUseCases.reorder(ids);
+      reorderWorkspaceSender.sendReorderWorkspaceEventMessage(ids);
     },
   });
 
@@ -185,7 +179,7 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
                       }}
                       onClick={() => {
                         if (dragReorder.wasDragged()) return;
-                        activateWorkspaceUseCases.activateWorkspace(workspace.id);
+                        activateWorkspaceSender.sendActivateWorkspaceEventMessage(workspace.id);
                         setDefaultWorkspace(workspace);
                         setCurrentWorkspace(workspace);
                       }}
@@ -216,8 +210,8 @@ export function WorkspaceList({ currentView, setCurrentView }: { currentView: st
             </ScrollArea>
           </div>
           <div className="flex items-center gap-3 w-full justify-center">
-            <Button variant="outline" className="shrink-0 hover:border-yellow-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Archive className="text-yellow-500"/>{t("pop_up.button_archive")}</Button>
-            <Button variant="outline" className="shrink-0 hover:border-blue-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Plus className="text-blue-500"/>{t("pop_up.button_new")}</Button>
+            <Button variant="outline" className="shrink-0 hover:border-yellow-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Archive className="text-yellow-500" />{t("pop_up.button_archive")}</Button>
+            <Button variant="outline" className="shrink-0 hover:border-blue-500!" onClick={() => setCurrentView(ADD_VIEW_NAME)}><Plus className="text-blue-500" />{t("pop_up.button_new")}</Button>
           </div>
         </div>
       </GroupCardContent>
